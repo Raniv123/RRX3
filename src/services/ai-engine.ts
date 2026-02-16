@@ -47,7 +47,25 @@ export class AIEngine {
   // יצירת תרחיש וCasting - דינמי ומפתיע!
   async createScenario(): Promise<Scenario> {
     try {
-      const prompt = `
+      // Timeout של 10 שניות למקרה שה-API תקוע
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Scenario creation timeout')), 10000);
+      });
+
+      const scenarioPromise = this.generateScenarioWithAI();
+
+      // רק אחד מהם יגמר ראשון
+      return await Promise.race([scenarioPromise, timeoutPromise]);
+    } catch (error) {
+      console.error('Scenario Creation Error:', error);
+      // fallback - תרחיש דיפולטיבי
+      return this.getDefaultScenario();
+    }
+  }
+
+  // הפונקציה הפנימית שיוצרת תרחיש
+  private async generateScenarioWithAI(): Promise<Scenario> {
+    const prompt = `
 אתה יוצר תרחיש רולפליי אינטימי וחושני לזוג עם אלמנט של התנגדות ומתח מיני.
 
 🔥 עקרונות יצירת התרחיש:
@@ -127,12 +145,6 @@ export class AIEngine {
       }
 
       return parsed;
-
-    } catch (error) {
-      console.error('Scenario Creation Error:', error);
-      // fallback - תרחיש דיפולטיבי
-      return this.getDefaultScenario();
-    }
   }
 
   // יצירת אווטר CGI

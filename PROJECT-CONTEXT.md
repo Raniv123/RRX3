@@ -160,11 +160,10 @@ RRX3/
 
 ### צריך הגדרה ידנית 🔧
 
-- 🔧 **Gemini API Key** - צריך להשיג ולמלא ב-`.env`
-  - כנס ל-https://ai.google.dev
-  - לחץ "Get API Key"
-  - צור פרויקט והעתק מפתח
-  - מלא ב-`.env`: `VITE_GEMINI_API_KEY=your_key_here`
+- ✅ **Gemini API Key** - הושג ועודכן בכל המקומות:
+  - ✅ `.env` (לפיתוח מקומי)
+  - ✅ `.env.master` (גיבוי גלובלי)
+  - ✅ `index.html` (production ב-GitHub Pages)
 
 ---
 
@@ -245,6 +244,16 @@ npm run preview
 6. ✅ שימוש ב-underscore prefix למשתנים לא בשימוש (_gender, _targetPhase)
 7. ✅ פישוט קודי חיבור - מ-"rrx3-xxxxxxxxxxxx" ל-4 ספרות בלבד ("1900")
 8. ✅ החלפת אימוג'ים ב-`GenderSelection.tsx` - מילדותיים (👦👧) לרומנטיים (🕺💃)
+9. ✅ **שדרוג מפתח API** - המפתח הישן פג תוקף, עודכן מפתח חדש בכל המקומות:
+   - `index.html` (window.ENV)
+   - `.env` (פיתוח מקומי)
+   - `.env.master` (גיבוי גלובלי)
+10. ✅ **הפריסה ל-GitHub Pages** - האפליקציה חיה ב-https://raniv123.github.io/RRX3/
+11. ✅ **תיקון פריסה (2026-02-16 21:45)** - תוקן באג בכניסה לאפליקציה:
+   - הותקן `gh-pages` package
+   - נוספו `homepage`, `predeploy`, `deploy` ל-package.json
+   - הפריסה בוצעה בהצלחה ל-gh-pages branch
+   - האפליקציה עובדת מושלם ב-https://raniv123.github.io/RRX3/
 
 ---
 
@@ -271,8 +280,9 @@ git log --oneline
 
 ---
 
-📅 **עדכון אחרון:** 2026-02-16 14:45
-💬 **סטטוס:** ✅ **העיצוב עודכן לרומנטי! מחכה לפתרון deploy למובייל.**
-🔥 **גרסה:** 2.0.1
-🎨 **שינוי אחרון:** החלפת אימוג'ים בבחירת מגדר לסגנון רומנטי (🕺💃)
+📅 **עדכון אחרון:** 2026-02-16 21:45
+💬 **סטטוס:** ✅ **תוקן! הפריסה ל-GitHub Pages עובדת מושלם!**
+🔥 **גרסה:** 2.1.1
+🎨 **שינוי אחרון:** תיקון פריסה - הוספת gh-pages scripts + deploy מוצלח
 🔗 **GitHub:** https://github.com/Raniv123/RRX3
+🌐 **קישור חי:** https://raniv123.github.io/RRX3/ ✅ פעיל!
