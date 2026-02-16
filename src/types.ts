@@ -85,6 +85,7 @@ export interface Scenario {
       personality: string;
       accent?: Language;
       visualPrompt: string;  // לתמונת אווטר
+      forbidden?: string;    // למה זה אסור לו (בגידה, אתיקה, וכו')
     };
     WOMAN: {
       name: string;
@@ -92,6 +93,7 @@ export interface Scenario {
       personality: string;
       accent?: Language;
       visualPrompt: string;
+      forbidden?: string;    // למה זה אסור לה
     };
   };
   twists: string[];        // עלילות פתע אפשריות

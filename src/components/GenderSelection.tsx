@@ -46,7 +46,7 @@ export const GenderSelection: React.FC<GenderSelectionProps> = ({ onSelect }) =>
           >
             {/* אייקון */}
             <div className="text-6xl mb-4 text-center">
-              {selected === 'MAN' ? '👨' : '👨‍🦱'}
+              🕺
             </div>
 
             {/* טקסט */}
@@ -78,7 +78,7 @@ export const GenderSelection: React.FC<GenderSelectionProps> = ({ onSelect }) =>
           >
             {/* אייקון */}
             <div className="text-6xl mb-4 text-center">
-              {selected === 'WOMAN' ? '👩' : '👩‍🦰'}
+              💃
             </div>
 
             {/* טקסט */}
