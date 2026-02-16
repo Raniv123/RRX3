@@ -48,9 +48,12 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
 
   // חיבור לסנכרון
   useEffect(() => {
-    syncService.current.connect((message) => {
-      setMessages(prev => [...prev, message]);
-    });
+    syncService.current.connect(
+      (message) => {
+        setMessages(prev => [...prev, message]);
+      }
+      // לא צריכים הודעות מערכת כאן - רק הודעות צ'אט
+    );
 
     return () => {
       syncService.current.disconnect();

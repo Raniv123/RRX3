@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Screen, UserGender, Scenario } from './types';
 import { LoginScreen } from './components/LoginScreen';
 import { ConnectScreen } from './components/ConnectScreen';
 import { GenderSelection } from './components/GenderSelection';
 import { ProtocolScreen } from './components/ProtocolScreen';
 import { AIEngine } from './services/ai-engine';
-import { SCENARIOS } from './data/scenarios';
+import { SyncService, SystemMessage } from './services/sync-service';
 
 function App() {
   const [screen, setScreen] = useState<Screen>('LOGIN');
@@ -13,8 +13,10 @@ function App() {
   const [isHost, setIsHost] = useState(false);
   const [myGender, setMyGender] = useState<UserGender | null>(null);
   const [scenario, setScenario] = useState<Scenario | null>(null);
+  const [loadingScenario, setLoadingScenario] = useState(false);
 
-  const aiEngine = new AIEngine();
+  const aiEngine = useRef(new AIEngine());
+  const syncRef = useRef<SyncService | null>(null);
 
   // התחברות
   const handleLogin = (id: string, host: boolean) => {
@@ -25,12 +27,27 @@ function App() {
       // אם יוצר חדש - הצג את קוד החיבור
       setScreen('CONNECT');
     } else {
-      // אם מצטרף - ישר לבחירת מין
+      // אם מצטרף - שלח אות JOIN ועבור לבחירת מין
+      // צור SyncService זמני לשליחת JOIN
+      const tempSync = new SyncService(id, 'MAN');
+      tempSync.sendJoinSignal().then(() => {
+        // האזן לתרחיש מה-host
+        tempSync.connect(
+          () => {},
+          (sysMsg: SystemMessage) => {
+            if (sysMsg.type === 'SCENARIO' && sysMsg.data) {
+              setScenario(sysMsg.data);
+            }
+          }
+        );
+        syncRef.current = tempSync;
+      });
+
       setScreen('GENDER_SELECTION');
     }
   };
 
-  // חיבור שותף
+  // חיבור שותף - host עובר לבחירת מין
   const handlePartnerConnected = () => {
     setScreen('GENDER_SELECTION');
   };
@@ -39,24 +56,74 @@ function App() {
   const handleGenderSelect = async (gender: UserGender) => {
     setMyGender(gender);
 
-    // אם אני היוצר - צור תרחיש חדש
     if (isHost) {
+      // Host - צור תרחיש דינמי ושלח לשותף
+      setLoadingScenario(true);
       try {
-        const newScenario = await aiEngine.createScenario();
+        const newScenario = await aiEngine.current.createScenario();
         setScenario(newScenario);
+
+        // שלח את התרחיש לשותף
+        const sync = new SyncService(channelId, gender);
+        await sync.sendScenario(newScenario);
+        sync.disconnect();
       } catch (error) {
         console.error('Scenario creation error:', error);
-        // fallback - תרחיש מהרשימה
-        setScenario(SCENARIOS[0]);
-      }
-    } else {
-      // אם מצטרף - קבל תרחיש מהצד השני
-      // בינתיים fallback
-      setScenario(SCENARIOS[0]);
-    }
+        // fallback
+        const fallback = aiEngine.current.getDefaultScenarioPublic();
+        setScenario(fallback);
 
-    setScreen('PROTOCOL');
+        const sync = new SyncService(channelId, gender);
+        await sync.sendScenario(fallback);
+        sync.disconnect();
+      }
+      setLoadingScenario(false);
+      setScreen('PROTOCOL');
+    } else {
+      // Joiner - אם כבר יש תרחיש מה-host, עבור ישר
+      if (scenario) {
+        setScreen('PROTOCOL');
+      } else {
+        // חכה לתרחיש מה-host
+        setLoadingScenario(true);
+        // נמתין עד 30 שניות לתרחיש
+        const timeout = setTimeout(() => {
+          // אם עדיין אין תרחיש - השתמש ב-fallback
+          if (!scenario) {
+            const fallback = aiEngine.current.getDefaultScenarioPublic();
+            setScenario(fallback);
+            setLoadingScenario(false);
+            setScreen('PROTOCOL');
+          }
+        }, 30000);
+
+        // בדוק כל שניה אם התרחיש הגיע
+        const check = setInterval(() => {
+          // scenario is captured by closure, need to use state
+        }, 1000);
+
+        return () => {
+          clearTimeout(timeout);
+          clearInterval(check);
+        };
+      }
+    }
   };
+
+  // כשהתרחיש מגיע לjoiner - עבור למסך הפרוטוקול
+  useEffect(() => {
+    if (!isHost && scenario && loadingScenario) {
+      setLoadingScenario(false);
+      setScreen('PROTOCOL');
+    }
+  }, [scenario, isHost, loadingScenario]);
+
+  // ניקוי SyncService
+  useEffect(() => {
+    return () => {
+      syncRef.current?.disconnect();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -71,8 +138,31 @@ function App() {
         />
       )}
 
-      {screen === 'GENDER_SELECTION' && (
+      {screen === 'GENDER_SELECTION' && !loadingScenario && (
         <GenderSelection onSelect={handleGenderSelect} />
+      )}
+
+      {loadingScenario && (
+        <div className="min-h-screen bg-gradient-to-br from-bordeaux via-dark to-electric-blue flex items-center justify-center p-4">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sexy-fuchsia/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-blue/20 rounded-full blur-3xl animate-pulse delay-1000" />
+          </div>
+          <div className="relative z-10 text-center">
+            <div className="text-6xl mb-6 animate-bounce">🎭</div>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              {isHost ? 'יוצר תרחיש מפתיע...' : 'מקבל תרחיש מהשותף/ה...'}
+            </h2>
+            <p className="text-white/60 mb-8">
+              {isHost ? 'ה-AI בוחר משהו מיוחד עבורכם' : 'רגע, התרחיש בדרך...'}
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce" />
+              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce delay-100" />
+              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce delay-200" />
+            </div>
+          </div>
+        </div>
       )}
 
       {screen === 'PROTOCOL' && myGender && scenario && (

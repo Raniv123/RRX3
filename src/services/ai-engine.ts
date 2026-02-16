@@ -24,7 +24,7 @@ export class AIEngine {
       const prompt = buildAIPrompt(messages, tension, phase, gender, scenario);
 
       const response = await this.ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-2.0-flash',
         contents: prompt,
         config: { responseMimeType: 'application/json' }
       });
@@ -80,7 +80,7 @@ export class AIEngine {
 - twists - מה עלול לקרות שיעלה את המתח
 - scenarios - מצבים מסוכנים/מפתים
 
-החזר JSON:
+החזר JSON בלבד (בלי markdown, בלי backticks):
 {
   "id": "unique-id",
   "title": "...",
@@ -110,7 +110,7 @@ export class AIEngine {
       `;
 
       const response = await this.ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-2.0-flash',
         contents: prompt,
         config: { responseMimeType: 'application/json' }
       });
@@ -119,7 +119,14 @@ export class AIEngine {
         throw new Error('No response from AI');
       }
 
-      return JSON.parse(response.text);
+      const parsed = JSON.parse(response.text);
+
+      // ולידציה בסיסית - בדוק שיש את השדות החשובים
+      if (!parsed.title || !parsed.roles?.MAN || !parsed.roles?.WOMAN) {
+        throw new Error('Invalid scenario structure from AI');
+      }
+
+      return parsed;
 
     } catch (error) {
       console.error('Scenario Creation Error:', error);
@@ -187,6 +194,11 @@ export class AIEngine {
       phase: phase as any,
       currentGoal: 'המשך המסע'
     };
+  }
+
+  // גישה ציבורית לתרחיש ברירת מחדל
+  getDefaultScenarioPublic(): Scenario {
+    return this.getDefaultScenario();
   }
 
   // תרחיש דיפולטיבי (fallback בלבד)

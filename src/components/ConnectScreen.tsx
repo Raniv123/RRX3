@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { SyncService } from '../services/sync-service';
 
 interface ConnectScreenProps {
   channelId: string;
@@ -10,6 +11,8 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
   onPartnerConnected
 }) => {
   const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<'waiting' | 'connected'>('waiting');
+  const syncRef = useRef<SyncService | null>(null);
 
   // העתקה ללוח
   const handleCopy = async () => {
@@ -22,14 +25,29 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
     }
   };
 
-  // סימולציה - בפועל יהיה בדיקה אמיתית של חיבור השני
-  // כרגע פשוט ממשיכים אחרי 3 שניות (לבדיקות)
-  React.useEffect(() => {
-    // const timer = setTimeout(() => {
-    //   onPartnerConnected();
-    // }, 3000);
-    // return () => clearTimeout(timer);
-  }, []);
+  // האזנה להודעת JOIN מהשותף
+  useEffect(() => {
+    const sync = new SyncService(channelId, 'MAN');
+    syncRef.current = sync;
+
+    sync.connect(
+      () => {}, // לא צריכים הודעות צ'אט כאן
+      (sysMsg) => {
+        // כשהשותף שולח JOIN - נודיע שהתחבר
+        if (sysMsg.type === 'JOIN') {
+          setStatus('connected');
+          // המתן חצי שניה כדי שהמשתמש יראה את ההודעה
+          setTimeout(() => {
+            onPartnerConnected();
+          }, 800);
+        }
+      }
+    );
+
+    return () => {
+      sync.disconnect();
+    };
+  }, [channelId, onPartnerConnected]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bordeaux via-dark to-electric-blue flex items-center justify-center p-4">
@@ -43,11 +61,15 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
       <div className="relative z-10 max-w-md w-full">
         {/* כותרת */}
         <div className="text-center mb-8 animate-fade-in">
-          <div className="text-6xl mb-4 animate-bounce">🔗</div>
+          <div className="text-6xl mb-4 animate-bounce">
+            {status === 'connected' ? '✅' : '🔗'}
+          </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            מחכה לשותף/ה שלך...
+            {status === 'connected' ? 'השותף/ה התחבר/ה!' : 'מחכה לשותף/ה שלך...'}
           </h1>
-          <p className="text-white/60">שתפ/י את הקוד הזה כדי להתחבר</p>
+          <p className="text-white/60">
+            {status === 'connected' ? 'ממשיכים למסע...' : 'שתפ/י את הקוד הזה כדי להתחבר'}
+          </p>
         </div>
 
         {/* כרטיס קוד */}
@@ -58,7 +80,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
               קוד החיבור שלכם
             </label>
             <div className="relative">
-              <div className="bg-gradient-to-r from-electric-blue/20 to-sexy-fuchsia/20 backdrop-blur-sm rounded-xl p-4 border border-white/20 text-center">
+              <div className={`bg-gradient-to-r ${status === 'connected' ? 'from-green-500/20 to-green-600/20' : 'from-electric-blue/20 to-sexy-fuchsia/20'} backdrop-blur-sm rounded-xl p-4 border ${status === 'connected' ? 'border-green-500/40' : 'border-white/20'} text-center`}>
                 <code className="text-2xl font-mono text-white font-bold tracking-wider">
                   {channelId}
                 </code>
@@ -66,48 +88,64 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
             </div>
           </div>
 
-          {/* כפתור העתקה */}
-          <button
-            onClick={handleCopy}
-            className={`w-full py-4 px-6 rounded-xl text-white font-semibold text-lg transform transition-all shadow-lg ${
-              copied
-                ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-gradient-to-r from-sexy-fuchsia to-bordeaux hover:scale-105'
-            }`}
-          >
-            {copied ? '✅ הועתק!' : '📋 העתק קוד'}
-          </button>
+          {status === 'waiting' && (
+            <>
+              {/* כפתור העתקה */}
+              <button
+                onClick={handleCopy}
+                className={`w-full py-4 px-6 rounded-xl text-white font-semibold text-lg transform transition-all shadow-lg ${
+                  copied
+                    ? 'bg-green-500 hover:bg-green-600'
+                    : 'bg-gradient-to-r from-sexy-fuchsia to-bordeaux hover:scale-105'
+                }`}
+              >
+                {copied ? '✅ הועתק!' : '📋 העתק קוד'}
+              </button>
 
-          {/* הוראות */}
-          <div className="mt-6 space-y-3">
-            <div className="flex items-start gap-3">
-              <span className="text-sexy-fuchsia text-xl flex-shrink-0">1.</span>
-              <p className="text-white/60 text-sm">
-                העתק את הקוד (לחץ על הכפתור למעלה)
-              </p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-sexy-fuchsia text-xl flex-shrink-0">2.</span>
-              <p className="text-white/60 text-sm">
-                שלח את הקוד לשותף/ה שלך (WhatsApp, SMS, וכו')
-              </p>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-sexy-fuchsia text-xl flex-shrink-0">3.</span>
-              <p className="text-white/60 text-sm">
-                הוא/היא צריכ/ה ללחוץ "הצטרף למסע" ולהדביק את הקוד
-              </p>
-            </div>
-          </div>
+              {/* הוראות */}
+              <div className="mt-6 space-y-3">
+                <div className="flex items-start gap-3">
+                  <span className="text-sexy-fuchsia text-xl flex-shrink-0">1.</span>
+                  <p className="text-white/60 text-sm">
+                    העתק את הקוד (לחץ על הכפתור למעלה)
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-sexy-fuchsia text-xl flex-shrink-0">2.</span>
+                  <p className="text-white/60 text-sm">
+                    שלח את הקוד לשותף/ה שלך (WhatsApp, SMS, וכו')
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-sexy-fuchsia text-xl flex-shrink-0">3.</span>
+                  <p className="text-white/60 text-sm">
+                    הוא/היא צריכ/ה ללחוץ "הצטרף למסע" ולהדביק את הקוד
+                  </p>
+                </div>
+              </div>
 
-          {/* אנימציה של חיבור */}
-          <div className="mt-8 flex justify-center">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse" />
-              <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse delay-200" />
-              <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse delay-400" />
+              {/* אנימציה של חיבור */}
+              <div className="mt-8 flex justify-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse" />
+                  <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse delay-200" />
+                  <div className="w-3 h-3 bg-sexy-fuchsia rounded-full animate-pulse delay-400" />
+                </div>
+              </div>
+            </>
+          )}
+
+          {status === 'connected' && (
+            <div className="text-center">
+              <div className="text-green-400 text-lg font-semibold mb-2">
+                ✅ מחובר בהצלחה!
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-white/60">עוברים לשלב הבא...</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* טיפ */}
@@ -116,16 +154,6 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
             💡 <span className="font-semibold">טיפ:</span> ודאו ששני המכשירים מחוברים לאינטרנט
           </p>
         </div>
-
-        {/* כפתור דיבאג - להמשיך בלי חיבור (רק לפיתוח) */}
-        {process.env.NODE_ENV === 'development' && (
-          <button
-            onClick={onPartnerConnected}
-            className="w-full mt-4 py-2 text-white/30 hover:text-white/60 text-sm transition-colors"
-          >
-            [DEV] המשך בלי חיבור
-          </button>
-        )}
       </div>
     </div>
   );
