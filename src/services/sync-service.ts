@@ -90,12 +90,12 @@ export class SyncService {
   static generateChannelId(): string {
     // קוד פשוט בן 4 ספרות (1000-9999)
     const code = Math.floor(1000 + Math.random() * 9000);
-    return `rrx3-${code}`;
+    return code.toString();
   }
 
   // וולידציה ל-channel ID
   static isValidChannelId(channelId: string): boolean {
-    // חייב להתחיל ב-rrx3- ואחריו 4 ספרות
-    return /^rrx3-\d{4}$/.test(channelId);
+    // חייב להיות 4 ספרות בלבד
+    return /^\d{4}$/.test(channelId);
   }
 }

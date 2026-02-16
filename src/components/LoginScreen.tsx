@@ -112,7 +112,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     setChannelId(e.target.value);
                     setError('');
                   }}
-                  placeholder="rrx3-1900"
+                  placeholder="1900"
                   className="w-full px-4 py-4 bg-white/10 backdrop-blur-sm rounded-xl text-white placeholder-white/40 border border-white/20 focus:border-sexy-fuchsia focus:outline-none text-center text-lg font-mono"
                 />
                 {error && (
