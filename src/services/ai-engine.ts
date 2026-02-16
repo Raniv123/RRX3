@@ -2,7 +2,7 @@ import { GoogleGenAI } from '@google/genai';
 import { Message, AIResponse, Scenario, UserGender } from '../types';
 import { buildAIPrompt } from '../data/prompts';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
+const API_KEY = (import.meta.env.VITE_GEMINI_API_KEY || (window as any).ENV?.VITE_GEMINI_API_KEY) as string;
 
 // AI המנוע המרכזי של ה
 export class AIEngine {
