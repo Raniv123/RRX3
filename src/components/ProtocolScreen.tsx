@@ -90,6 +90,106 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
 // Keep a flat array for fallback only
 const MAGICAL_SCENES = Object.values(SCENES_BY_PHASE).flat();
 
+// ===== מיפוי נושאים → תמונות Unsplash ספציפיות (לא source.unsplash.com) =====
+const THEME_PHOTO_MAP: Array<{ keywords: string[]; url: string; name: string }> = [
+  // ספרייה / ארכיון / ספרים
+  {
+    keywords: ['library', 'book', 'archive', 'study', 'ספרייה'],
+    url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=85&auto=format&fit=crop',
+    name: '📚 ספרייה'
+  },
+  // מסעדה / אוכל / ארוחה
+  {
+    keywords: ['restaurant', 'dining', 'dinner', 'cafe', 'מסעדה'],
+    url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&auto=format&fit=crop',
+    name: '🍷 מסעדה'
+  },
+  // בר / יין / שתייה
+  {
+    keywords: ['bar', 'wine', 'cocktail', 'pub', 'בר'],
+    url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=85&auto=format&fit=crop',
+    name: '🥂 בר'
+  },
+  // משרד / עבודה / עסקי
+  {
+    keywords: ['office', 'work', 'business', 'corporate', 'meeting', 'משרד'],
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=85&auto=format&fit=crop',
+    name: '💼 משרד'
+  },
+  // לובי מלון / קבלה
+  {
+    keywords: ['lobby', 'hotel entrance', 'reception', 'לובי'],
+    url: 'https://images.unsplash.com/photo-1549294413-26f195200c16?w=1920&q=85&auto=format&fit=crop',
+    name: '🏨 לובי מלון'
+  },
+  // גלריה / אמנות / תערוכה
+  {
+    keywords: ['gallery', 'art', 'museum', 'exhibition', 'גלריה'],
+    url: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1920&q=85&auto=format&fit=crop',
+    name: '🎨 גלריה'
+  },
+  // גן / טבע לילה / פארק
+  {
+    keywords: ['garden', 'park', 'nature', 'night garden', 'גן'],
+    url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1920&q=85&auto=format&fit=crop',
+    name: '🌿 גן לילה'
+  },
+  // מרפסת / גג / נוף
+  {
+    keywords: ['balcony', 'rooftop', 'terrace', 'view', 'מרפסת'],
+    url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1920&q=85&auto=format&fit=crop',
+    name: '🌙 מרפסת'
+  },
+  // חדר מלון / סוויטה
+  {
+    keywords: ['hotel room', 'suite', 'hotel suite', 'luxury room', 'חדר מלון'],
+    url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1920&q=85&auto=format&fit=crop',
+    name: '✨ סוויטה'
+  },
+  // וילה / בית פרטי
+  {
+    keywords: ['villa', 'house', 'private', 'home', 'וילה'],
+    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop',
+    name: '🌙 וילה'
+  },
+  // חדר שינה / נרות / אינטימי
+  {
+    keywords: ['bedroom', 'candle', 'intimate', 'dark', 'sensual', 'חדר שינה'],
+    url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop',
+    name: '🕯️ חדר נרות'
+  },
+  // ספא / אמבטיה / מים
+  {
+    keywords: ['spa', 'bath', 'water', 'pool', 'ספא'],
+    url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop',
+    name: '💆 ספא'
+  },
+  // חוף ים / ים / שמש
+  {
+    keywords: ['beach', 'sea', 'ocean', 'sunset', 'חוף'],
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85&auto=format&fit=crop',
+    name: '🌊 חוף הים'
+  },
+  // רכבת / נסיעה / תחבורה
+  {
+    keywords: ['train', 'travel', 'journey', 'airport', 'רכבת'],
+    url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1920&q=85&auto=format&fit=crop',
+    name: '🚂 רכבת'
+  },
+];
+
+// מצא תמונה לפי מילות מפתח
+function findScenePhoto(keyword: string): { url: string; name: string } | null {
+  if (!keyword) return null;
+  const lower = keyword.toLowerCase();
+  for (const theme of THEME_PHOTO_MAP) {
+    if (theme.keywords.some(k => lower.includes(k) || k.includes(lower.split(' ')[0]))) {
+      return { url: theme.url, name: theme.name };
+    }
+  }
+  return null;
+}
+
 
 // ===== אווטר CGI =====
 const CGIAvatar: React.FC<{
@@ -486,15 +586,13 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     } catch { /* ignore storage errors */ }
   }, [messages, tensionState, sceneIndex, SESSION_KEY]);
 
-  // ===== סצינה נוכחית — לפי שלב =====
-  // אם לסיטואציה יש מילות מפתח → תמונה דינמית ממנה, אחרת curated fallback
+  // ===== סצינה נוכחית — לפי שלב + תרחיש =====
   const phaseScenes = SCENES_BY_PHASE[tensionState.phase] || SCENES_BY_PHASE.ICE;
   const scenarioKeyword = scenario.sceneKeywords?.[tensionState.phase as keyof typeof scenario.sceneKeywords];
-  const dynamicSceneUrl = scenarioKeyword
-    ? `https://source.unsplash.com/1920x1080/?${encodeURIComponent(scenarioKeyword)}&sig=${sceneIndex}`
-    : null;
-  const currentScene = dynamicSceneUrl
-    ? { url: dynamicSceneUrl, name: phaseScenes[sceneIndex % phaseScenes.length].name, overlay: phaseScenes[sceneIndex % phaseScenes.length].overlay }
+  // מנסה למצוא תמונה מתאימה לפי מילות המפתח של הסיטואציה
+  const themePhoto = scenarioKeyword ? findScenePhoto(scenarioKeyword) : null;
+  const currentScene = themePhoto
+    ? { url: themePhoto.url, name: `${themePhoto.name} · ${scenario.location}`, overlay: phaseScenes[0].overlay }
     : phaseScenes[sceneIndex % phaseScenes.length];
 
   // ===== כשהשלב משתנה — עבור לסצינה מתאימה =====
