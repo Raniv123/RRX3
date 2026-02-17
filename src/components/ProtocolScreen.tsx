@@ -110,44 +110,122 @@ const CGIAvatar: React.FC<{
     );
   }
 
-  // fallback — SVG silhouette יפה
+  // fallback — פרצוף SVG יפה ומפורט
   return (
     <div className={`${dim} rounded-full flex-shrink-0 overflow-hidden border-2 ${
       isMan
         ? 'border-blue-400/50 shadow-lg shadow-blue-500/30'
         : 'border-fuchsia-400/50 shadow-lg shadow-fuchsia-500/30'
     }`}>
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <defs>
-          <linearGradient id={`grad-${gender}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            {isMan ? (
-              <>
-                <stop offset="0%" stopColor="#1e40af" />
-                <stop offset="100%" stopColor="#3b82f6" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#86198f" />
-                <stop offset="100%" stopColor="#d946ef" />
-              </>
-            )}
-          </linearGradient>
-        </defs>
-        <rect width="100" height="100" fill={`url(#grad-${gender})`} />
-        {/* Head */}
-        <ellipse cx="50" cy="30" rx="18" ry="20" fill="rgba(255,255,255,0.25)" />
-        {/* Body */}
-        <path
-          d={isMan
-            ? "M22 100 C22 70 35 60 50 60 C65 60 78 70 78 100 Z"
-            : "M20 100 C20 68 32 56 50 60 C68 56 80 68 80 100 Z"
-          }
-          fill="rgba(255,255,255,0.20)"
-        />
-        {/* Subtle glow */}
-        <ellipse cx="50" cy="50" rx="48" ry="48" fill="none"
-          stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-      </svg>
+      {isMan ? (
+        // גבר יפה — עם לסת חזקה ומבט מסתורי
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <defs>
+            <linearGradient id="man-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1a2744" />
+              <stop offset="100%" stopColor="#0f172a" />
+            </linearGradient>
+            <linearGradient id="man-skin" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#c8956c" />
+              <stop offset="100%" stopColor="#a0694a" />
+            </linearGradient>
+            <radialGradient id="man-light" cx="35%" cy="35%">
+              <stop offset="0%" stopColor="rgba(255,200,150,0.3)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#man-bg)" />
+          {/* צוואר */}
+          <rect x="41" y="61" width="18" height="14" rx="5" fill="url(#man-skin)" />
+          {/* כתפיים + חולצה */}
+          <path d="M8 100 C8 78 25 70 50 68 C75 70 92 78 92 100 Z" fill="#1e3a5f" />
+          {/* עניבה/כפתור */}
+          <path d="M47 70 L50 82 L53 70" fill="#0ea5e9" opacity="0.7" />
+          {/* ראש */}
+          <ellipse cx="50" cy="40" rx="22" ry="25" fill="url(#man-skin)" />
+          {/* שיניים/לסת חזקה */}
+          <path d="M30 50 Q50 58 70 50 Q68 65 50 67 Q32 65 30 50 Z" fill="#c8956c" />
+          {/* פה — סמייל עדין */}
+          <path d="M40 55 Q50 60 60 55" stroke="#8b5c3e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          {/* אף */}
+          <path d="M48 44 L46 51 Q50 53 54 51 L52 44" fill="none" stroke="#a0694a" strokeWidth="1.2" />
+          {/* עיניים — כהות ומסתוריות */}
+          <ellipse cx="40" cy="38" rx="5" ry="4" fill="#2d1810" />
+          <ellipse cx="60" cy="38" rx="5" ry="4" fill="#2d1810" />
+          <ellipse cx="41" cy="37" rx="1.5" ry="1.5" fill="rgba(255,255,255,0.5)" />
+          <ellipse cx="61" cy="37" rx="1.5" ry="1.5" fill="rgba(255,255,255,0.5)" />
+          {/* גבות חזקות */}
+          <path d="M34 32 Q40 29 46 31" stroke="#4a2c17" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M54 31 Q60 29 66 32" stroke="#4a2c17" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* שיער */}
+          <path d="M28 36 Q28 14 50 13 Q72 14 72 36 Q68 20 50 19 Q32 20 28 36 Z" fill="#2c1a0e" />
+          {/* תאורה דרמטית */}
+          <rect width="100" height="100" fill="url(#man-light)" />
+        </svg>
+      ) : (
+        // אישה יפה — אלגנטית וחושנית
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <defs>
+            <linearGradient id="woman-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2d1135" />
+              <stop offset="100%" stopColor="#1a0a22" />
+            </linearGradient>
+            <linearGradient id="woman-skin" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#e8b48a" />
+              <stop offset="100%" stopColor="#c9895a" />
+            </linearGradient>
+            <radialGradient id="woman-glow" cx="40%" cy="30%">
+              <stop offset="0%" stopColor="rgba(255,180,180,0.25)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#woman-bg)" />
+          {/* שמלה/גוף */}
+          <path d="M5 100 C5 75 22 65 50 63 C78 65 95 75 95 100 Z" fill="#7c1d4a" />
+          {/* מחשוף */}
+          <path d="M40 65 Q50 72 60 65 L56 63 Q50 68 44 63 Z" fill="#e8b48a" />
+          {/* צוואר */}
+          <rect x="43" y="59" width="14" height="12" rx="6" fill="url(#woman-skin)" />
+          {/* שרשרת */}
+          <path d="M38 67 Q50 72 62 67" stroke="rgba(255,215,0,0.6)" strokeWidth="1" fill="none" />
+          <circle cx="50" cy="71" r="2" fill="rgba(255,215,0,0.7)" />
+          {/* ראש */}
+          <ellipse cx="50" cy="38" rx="20" ry="23" fill="url(#woman-skin)" />
+          {/* אוזניים */}
+          <ellipse cx="30" cy="40" rx="4" ry="5" fill="url(#woman-skin)" />
+          <ellipse cx="70" cy="40" rx="4" ry="5" fill="url(#woman-skin)" />
+          {/* עגיל */}
+          <circle cx="30" cy="44" r="2.5" fill="rgba(255,215,0,0.8)" />
+          {/* שיניים/לחיים */}
+          <path d="M33 48 Q50 55 67 48 Q64 63 50 65 Q36 63 33 48 Z" fill="#e8b48a" />
+          {/* שפתיים — אדומות */}
+          <path d="M40 54 Q45 57 50 56 Q55 57 60 54 Q55 60 50 59 Q45 60 40 54 Z" fill="#cc2244" />
+          <path d="M40 54 Q50 51 60 54" stroke="#ee3355" strokeWidth="1" fill="none" />
+          {/* אף עדין */}
+          <ellipse cx="50" cy="48" rx="3" ry="2" fill="rgba(160,100,60,0.3)" />
+          {/* עיניים — גדולות וכהות */}
+          <ellipse cx="39" cy="36" rx="6" ry="5" fill="#1a0a0a" />
+          <ellipse cx="61" cy="36" rx="6" ry="5" fill="#1a0a0a" />
+          {/* קו עיניים */}
+          <path d="M33 33 Q39 29 45 32" stroke="#1a0a0a" strokeWidth="1.5" fill="none" />
+          <path d="M55 32 Q61 29 67 33" stroke="#1a0a0a" strokeWidth="1.5" fill="none" />
+          {/* נצנוץ */}
+          <ellipse cx="41" cy="34" rx="2" ry="2" fill="rgba(255,255,255,0.6)" />
+          <ellipse cx="63" cy="34" rx="2" ry="2" fill="rgba(255,255,255,0.6)" />
+          {/* גבות */}
+          <path d="M33 28 Q39 25 45 27" stroke="#5c2d0a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          <path d="M55 27 Q61 25 67 28" stroke="#5c2d0a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          {/* ריסים */}
+          <path d="M33 33 L31 30 M36 31 L35 28 M39 30 L38 27" stroke="#1a0a0a" strokeWidth="1" />
+          <path d="M67 33 L69 30 M64 31 L65 28 M61 30 L62 27" stroke="#1a0a0a" strokeWidth="1" />
+          {/* שיער — ארוך ומתולתל */}
+          <path d="M30 36 Q24 18 50 15 Q76 18 70 36 Q66 10 50 11 Q34 10 30 36 Z" fill="#3d1a08" />
+          <path d="M30 38 Q18 55 22 80 Q28 70 30 55" fill="#3d1a08" opacity="0.9" />
+          <path d="M70 38 Q82 55 78 80 Q72 70 70 55" fill="#3d1a08" opacity="0.9" />
+          {/* תאורה */}
+          <rect width="100" height="100" fill="url(#woman-glow)" />
+        </svg>
+      )}
     </div>
   );
 };
@@ -437,6 +515,12 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const [activeMission, setActiveMission] = useState<IntimacyMission | null>(null);
   const [completedMissions, setCompletedMissions] = useState<string[]>([]);
 
+  // Woman readiness — "מוכנה?" system
+  const [womanReadinessShown, setWomanReadinessShown] = useState(false);
+  const [womanReady, setWomanReady] = useState<null | 'SLOW' | 'READY'>(null);
+  const [partnerReadySignal, setPartnerReadySignal] = useState<null | 'SLOW' | 'READY'>(null);
+  const [showSecretCard, setShowSecretCard] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const syncService = useRef(new SyncService(channelId, myGender));
@@ -489,10 +573,21 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   // ===== חיבור לסנכרון =====
   useEffect(() => {
     syncService.current.connect((message) => {
+      // זיהוי סיגנל מוכנות מהצד השני
+      if (message.type === 'ACTION' && message.senderGender !== myGender) {
+        if (message.text === '💫 READY') {
+          setPartnerReadySignal('READY');
+          return; // לא מוסיפים לצ'אט — סיגנל שקט
+        }
+        if (message.text === '💆 SLOW') {
+          setPartnerReadySignal('SLOW');
+          return; // לא מוסיפים לצ'אט — סיגנל שקט
+        }
+      }
       setMessages(prev => [...prev, message]);
     });
     return () => { syncService.current.disconnect(); };
-  }, []);
+  }, [myGender]);
 
   // ===== גלילה אוטומטית =====
   useEffect(() => {
@@ -752,9 +847,91 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                       <span className="text-[10px] text-red-400/60">{myRole.forbidden}</span>
                     )}
                   </div>
+                  {/* כפתור סוד קטן — HOT+ בלבד */}
+                  {tensionState.level >= 50 && scenario.secrets && (
+                    <button
+                      onClick={() => setShowSecretCard(true)}
+                      className="px-2 py-0.5 rounded-full text-[10px] border border-amber-500/30 bg-amber-500/10 text-amber-300/70 hover:bg-amber-500/20 hover:text-amber-300 transition-all flex-shrink-0"
+                      title="הסוד שלו/שלה"
+                    >
+                      🔐 סוד
+                    </button>
+                  )}
                 </div>
               ) : null;
             })()}
+
+            {/* סיגנל מוכנות — לגבר בלבד, כשהאשה שלחה סיגנל */}
+            {myGender === 'MAN' && partnerReadySignal && (
+              <div className={`mb-2 flex items-center gap-2 px-3 py-2 rounded-xl border animate-pulse ${
+                partnerReadySignal === 'READY'
+                  ? 'bg-emerald-500/10 border-emerald-500/30'
+                  : 'bg-pink-500/10 border-pink-500/30'
+              }`}>
+                <span className="text-lg">{partnerReadySignal === 'READY' ? '✨' : '💆'}</span>
+                <div className="flex-1">
+                  <div className={`text-xs font-medium ${
+                    partnerReadySignal === 'READY' ? 'text-emerald-300' : 'text-pink-300'
+                  }`}>
+                    {partnerReadySignal === 'READY' ? 'היא מוכנה 🔥' : 'היא רוצה חימום לאט'}
+                  </div>
+                  <div className="text-[10px] text-white/40 mt-0.5">
+                    {partnerReadySignal === 'READY'
+                      ? 'קחו את זה לשלב הבא — קדימה!'
+                      : 'התחל בעדינות: נשיקות על הצוואר, חיבוק מאחור, מגע לאט'}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setPartnerReadySignal(null)}
+                  className="text-white/20 hover:text-white/50 text-xs"
+                >✕</button>
+              </div>
+            )}
+
+            {/* "מוכנה?" — לאשה בלבד, כשמגיעים ל-HOT */}
+            {myGender === 'WOMAN' && tensionState.level >= 50 && !womanReadinessShown && !womanReady && (
+              <div className="mb-2 bg-fuchsia-500/10 border border-fuchsia-500/25 rounded-xl px-3 py-2.5">
+                <div className="text-xs text-white/70 mb-2">איך את רוצה להמשיך?</div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setWomanReady('SLOW');
+                      setWomanReadinessShown(true);
+                      const msg: Message = {
+                        id: Date.now().toString(),
+                        senderGender: 'WOMAN',
+                        text: '💆 SLOW',
+                        timestamp: Date.now(),
+                        deviceId: channelId,
+                        type: 'ACTION'
+                      };
+                      syncService.current.sendMessage(msg);
+                    }}
+                    className="flex-1 py-2 rounded-lg text-[11px] text-pink-300 border border-pink-500/30 bg-pink-500/10 hover:bg-pink-500/20 transition-all"
+                  >
+                    💆 חימום לאט
+                  </button>
+                  <button
+                    onClick={() => {
+                      setWomanReady('READY');
+                      setWomanReadinessShown(true);
+                      const msg: Message = {
+                        id: Date.now().toString(),
+                        senderGender: 'WOMAN',
+                        text: '💫 READY',
+                        timestamp: Date.now(),
+                        deviceId: channelId,
+                        type: 'ACTION'
+                      };
+                      syncService.current.sendMessage(msg);
+                    }}
+                    className="flex-1 py-2 rounded-lg text-[11px] text-emerald-300 border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all"
+                  >
+                    ✨ מוכנה!
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Loading dots */}
             {loading && (
@@ -808,12 +985,24 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                   </div>
                 </div>
 
-                {/* RIGHT: Action tip — character-specific behavior */}
-                <div className="w-[95px] flex-shrink-0">
-                  <div className="text-[10px] text-white/30 mb-1 uppercase tracking-widest">🤫 מה לעשות</div>
-                  <div className="bg-black/30 border border-white/10 rounded-xl p-2 text-[11px] text-white/60 leading-snug">
-                    {aiResponse.actionTip || '🤫 קרב/י מעט ואל תאמר/י מילה'}
-                  </div>
+                {/* RIGHT: 2 action tips */}
+                <div className="w-[105px] flex-shrink-0 flex flex-col gap-1.5">
+                  <div className="text-[10px] text-white/30 uppercase tracking-widest">🤫 מה לעשות</div>
+                  {(aiResponse.actionTips && aiResponse.actionTips.length >= 2
+                    ? aiResponse.actionTips
+                    : [aiResponse.actionTip, null]
+                  ).map((tip, i) => tip ? (
+                    <div
+                      key={i}
+                      className={`rounded-xl p-2 text-[11px] leading-snug border ${
+                        i === 0
+                          ? 'bg-black/30 border-white/10 text-white/60'
+                          : 'bg-amber-500/8 border-amber-500/20 text-amber-200/60'
+                      }`}
+                    >
+                      {tip}
+                    </div>
+                  ) : null)}
                 </div>
               </div>
             )}
@@ -873,6 +1062,38 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ===== SECRET CARD OVERLAY ===== */}
+      {showSecretCard && scenario.secrets && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-5">
+          <div className="max-w-sm w-full bg-white/5 backdrop-blur-xl rounded-3xl border border-amber-500/25 overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-6 pt-5 pb-3 border-b border-amber-500/15 text-center">
+              <div className="text-3xl mb-1">🔐</div>
+              <div className="text-amber-300/60 text-[10px] uppercase tracking-widest">הסוד שלו/שלה</div>
+              <h2 className="text-white font-semibold text-base mt-1">
+                מה הכי מטריף את {myGender === 'MAN'
+                  ? scenario.roles.WOMAN.name
+                  : scenario.roles.MAN.name}
+              </h2>
+            </div>
+            <div className="px-6 py-5 text-center">
+              <p className="text-white/85 text-base leading-relaxed italic">
+                "{ myGender === 'MAN' ? scenario.secrets.WOMAN : scenario.secrets.MAN }"
+              </p>
+              <p className="text-white/30 text-xs mt-3">רק אתה/את רואה את זה</p>
+            </div>
+            <div className="px-5 pb-5">
+              <button
+                onClick={() => setShowSecretCard(false)}
+                className="w-full py-3 rounded-2xl text-white font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all"
+                style={{ background: 'linear-gradient(135deg, #d97706cc, #92400ecc)' }}
+              >
+                קיבלתי 🔥
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== INTIMACY MISSION OVERLAY ===== */}
       {activeMission && (

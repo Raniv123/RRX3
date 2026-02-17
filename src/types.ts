@@ -37,6 +37,7 @@ export interface AIResponse {
   };
   wordChips: string[];      // full sentences (6-12 words) to append to input
   actionTip: string;        // what to DO right now (behavior, not text to send)
+  actionTips?: string[];    // 2 specific recommendations for the current stage
   gameCard?: GameCard;      // optional game trigger
   tension: number;          // 0-100
   phase: Phase;
@@ -82,6 +83,10 @@ export interface Scenario {
     WARM: string;  // e.g. "candlelit private garden night"
     HOT: string;   // e.g. "luxury hotel suite balcony"
     FIRE: string;  // e.g. "intimate bedroom candles dark sensual"
+  };
+  secrets?: {
+    MAN: string;   // מה הכי מטריף את הגבר (האשה תראה)
+    WOMAN: string; // מה הכי מטריפה את האשה (הגבר יראה)
   };
 }
 

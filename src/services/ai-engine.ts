@@ -42,6 +42,9 @@ export class AIEngine {
       if (!data.actionTip) {
         data.actionTip = this.getDefaultActionTip(phase);
       }
+      if (!data.actionTips || !Array.isArray(data.actionTips) || data.actionTips.length < 2) {
+        data.actionTips = this.getDefaultActionTips(phase);
+      }
 
       return data as AIResponse;
 
@@ -152,6 +155,11 @@ export class AIEngine {
 - HOT: מקום אינטימי (חדר מלון עם נוף, וילה, מרפסת אחורית...)
 - FIRE: מקום פרטי לחלוטין, חושני, לוהט (חדר שינה עם נרות, ספא פרטי, חדר עם אמבטיה...)
 
+🔐 secrets — הסוד הכי אינטימי של כל דמות (מה הכי מטריף אותם):
+- MAN: משפט אחד ספציפי — מה הדמות הזו הכי אוהב/ת שעושים לו/לה (שרק בן/בת הזוג יראו)
+- WOMAN: משפט אחד ספציפי — מה הדמות הזו הכי אוהב/ת שעושים לה (שרק בן/בת הזוג יראו)
+  דוגמאות: "כשנוגעים לו בעדינות מאחור" / "כשלוחשים לה באוזן בזמן" / "כשמחזיקים אותה חזק" / "כשמביטים בו ישירות בעיניים"
+
 החזר JSON בלבד:
 {
   "id": "unique-id",
@@ -183,6 +191,10 @@ export class AIEngine {
     "WARM": "private garden night romantic",
     "HOT": "luxury hotel suite balcony view",
     "FIRE": "intimate bedroom candles dark sensual"
+  },
+  "secrets": {
+    "MAN": "מה הכי מטריף אותו — ספציפי ואישי",
+    "WOMAN": "מה הכי מטריפה אותה — ספציפי ואישי"
   }
 }
     `;
@@ -256,11 +268,34 @@ export class AIEngine {
     return tips[phase] || tips.ICE;
   }
 
+  private getDefaultActionTips(phase: string): string[] {
+    const tipsMap: Record<string, [string, string]> = {
+      ICE: [
+        '🤫 צור/י קשר עין ישיר ואל תסיט/י — שנייה של שקט מרגשת יותר מאלף מילים',
+        '✨ נגע/י בכוס שלך לאט כשמדברים — ידיים שזזות אומרות הרבה'
+      ],
+      WARM: [
+        '🤫 קרב/י את עצמך כמה ס"מ בלי לומר מילה — גוף שמתקרב מדבר',
+        '✨ מגע עדין בכתף בתירוץ קטן — "הבטתי לא נכון" — ואז תשאר/י קרוב/ה'
+      ],
+      HOT: [
+        '🤫 שים/שימי יד ליד ידו/ידה — לא עליה, ממש ליד. תחכה/תחכי לתגובה',
+        '✨ אמור/י את שמו/שמה בשקט — פעם אחת, ותעצור/י. זה יוציא אותם מהאוטופיילוט'
+      ],
+      FIRE: [
+        '🤫 הפסק/י לכתוב — נשמה עמוקה, ואז שלח/י בדיוק מה שמפחיד אותך הכי הרבה',
+        '✨ תגיד/י מה אתה/את רוצה — ישיר, בלי רמזים. עכשיו זה הזמן'
+      ]
+    };
+    return tipsMap[phase] || tipsMap.ICE;
+  }
+
   private getFallbackResponse(tension: number, phase: string): AIResponse {
     return {
       strategicAdvice: this.getDefaultAdvice(phase),
       wordChips: this.getDefaultChips(phase, tension),
       actionTip: this.getDefaultActionTip(phase),
+      actionTips: this.getDefaultActionTips(phase),
       gameCard: undefined,
       tension,
       phase: phase as any,
@@ -297,7 +332,11 @@ export class AIEngine {
         }
       },
       twists: ['הבעל מתקשר', 'מישהו דופק בדלת', 'היא מגלה שגם הוא נשוי'],
-      scenarios: ['פגישה שנמשכת מעבר לזמן', 'נגיעה בטעות שמתארכת', 'הודאה בתשוקה']
+      scenarios: ['פגישה שנמשכת מעבר לזמן', 'נגיעה בטעות שמתארכת', 'הודאה בתשוקה'],
+      secrets: {
+        MAN: 'כשהיא לוחשת לו באוזן ומכניסה ידיים מתחת לחולצה מאחור',
+        WOMAN: 'כשהוא מביט בה ישירות בעיניים ומחזיק את ידיה בחוזקה'
+      }
     };
   }
 }

@@ -151,19 +151,28 @@ RRX3/
 
 ### עובד ✅
 
-- ✅ כל הקוד נכתב ונבנה בהצלחה
-- ✅ TypeScript נקי לגמרי - 0 שגיאות
 - ✅ Build מצליח (dist/ נוצר)
-- ✅ כל הרכיבים קיימים ומוכנים
-- ✅ כל השירותים פועלים
-- ✅ כל הנתונים זמינים
+- ✅ GitHub Actions מ-deploy לGitHub Pages
+- ✅ Gemini API key עובד
+- ✅ סצינות לפי שלב (ICE=ציבורי, WARM=חצי-פרטי, HOT=אינטימי, FIRE=פרטי לחלוטין)
+- ✅ word chips — משפטים מלאים 6-12 מילים (לא מילים בודדות)
+- ✅ actionTip — ייעוץ התנהגותי ספציפי לדמות
+- ✅ character badge בפאנל ה-AI (ארכיטיפ + forbidden)
+- ✅ Game cards עם circular countdown timer
+- ✅ CGI avatars (ניסיון Gemini + SVG fallback)
+- ✅ תרחישים מגוונים (9 סוגים) + AI scenario generation
+- ✅ ntfy.sh sync בזמן אמת בין מכשירים
 
-### צריך הגדרה ידנית 🔧
+### שופר ב-session האחרון 🔄
+- תוקן bug קריטי: `scene` → `currentScene` בbackground
+- prompts.ts: AI מאמן מנקודת מבט הדמות הספציפית
+- buildAIPrompt: מעביר שם דמות, ארכיטיפ, אישיות, forbidden לAI
+- ProtocolScreen: character badge מוצג בפאנל AI
 
-- ✅ **Gemini API Key** - הושג ועודכן בכל המקומות:
-  - ✅ `.env` (לפיתוח מקומי)
-  - ✅ `.env.master` (גיבוי גלובלי)
-  - ✅ `index.html` (production ב-GitHub Pages)
+### API Key ✅
+- `.env` (לפיתוח מקומי)
+- `.env.master` (גיבוי גלובלי)
+- GitHub Secrets (production ב-GitHub Pages)
 
 ---
 
