@@ -9,6 +9,7 @@ import {
   selectSurprise,
   updateSurpriseTracking
 } from '../services/surprise-engine';
+import { IntimacyMission, IntimacyChoice, getNextMission } from '../data/intimacy-missions';
 
 // ===== סצינות לפי שלב — מציבורי לאינטימי =====
 const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay: string }>> = {
@@ -298,6 +299,108 @@ const GameCardOverlay: React.FC<{
   );
 };
 
+// ===== Mission Card =====
+const MissionCard: React.FC<{
+  mission: IntimacyMission;
+  phase: string;
+  onChoice?: (choice: IntimacyChoice) => void;
+  onDone: () => void;
+  onSkip: () => void;
+}> = ({ mission, phase, onChoice, onDone, onSkip }) => {
+  const [selected, setSelected] = useState<IntimacyChoice | null>(null);
+  const [seconds, setSeconds] = useState(mission.duration || 0);
+
+  useEffect(() => {
+    if (!mission.duration) return;
+    if (selected && seconds > 0) {
+      const t = setInterval(() => setSeconds(p => p > 0 ? p - 1 : 0), 1000);
+      return () => clearInterval(t);
+    }
+  }, [selected, mission.duration, seconds]);
+
+  const phaseGradient = {
+    ICE: 'from-blue-600/30 to-cyan-700/30',
+    WARM: 'from-pink-600/30 to-rose-700/30',
+    HOT: 'from-orange-600/30 to-red-700/30',
+    FIRE: 'from-red-600/30 to-pink-900/30'
+  }[phase] || 'from-fuchsia-600/30 to-purple-700/30';
+
+  const phaseColor = {
+    ICE: '#60a5fa', WARM: '#f472b6', HOT: '#f97316', FIRE: '#ef4444'
+  }[phase] || '#f472b6';
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-end justify-center z-50 p-4 pb-6">
+      <div className="w-full max-w-sm bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 overflow-hidden">
+
+        {/* Header */}
+        <div className={`bg-gradient-to-r ${phaseGradient} px-5 pt-5 pb-3 border-b border-white/10`}>
+          <div className="flex items-center justify-between">
+            <span className="text-white/40 text-[10px] uppercase tracking-widest">משימה אינטימית</span>
+            <button onClick={onSkip} className="text-white/25 hover:text-white/50 text-xs">דלג ↩</button>
+          </div>
+          <h2 className="text-white font-semibold text-lg mt-1">{mission.title}</h2>
+          <p className="text-white/70 text-sm mt-1 leading-relaxed">{mission.instruction}</p>
+        </div>
+
+        {/* Choices */}
+        {mission.choices && (
+          <div className="px-4 py-3 grid grid-cols-2 gap-2">
+            {mission.choices.map(choice => (
+              <button
+                key={choice.id}
+                onClick={() => { setSelected(choice); onChoice?.(choice); setSeconds(mission.duration || 60); }}
+                className={`p-3 rounded-2xl text-right border transition-all ${
+                  selected?.id === choice.id
+                    ? 'border-white/40 bg-white/15 scale-[0.98]'
+                    : 'border-white/10 bg-white/5 hover:bg-white/10'
+                }`}
+              >
+                <div className="text-xl mb-1">{choice.emoji}</div>
+                <div className="text-white text-xs font-medium">{choice.label}</div>
+                <div className="text-white/45 text-[10px] mt-0.5 leading-tight">{choice.description}</div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Timer + Done */}
+        <div className="px-4 pb-4 flex items-center gap-3">
+          {selected && mission.duration ? (
+            <div className="flex-1 text-center">
+              <div className="text-white/30 text-[10px] mb-1">זמן שנשאר</div>
+              <div
+                className="text-3xl font-bold font-mono"
+                style={{ color: seconds > 10 ? phaseColor : '#ef4444' }}
+              >
+                {seconds}s
+              </div>
+            </div>
+          ) : !mission.choices ? (
+            <div className="flex-1" />
+          ) : null}
+
+          <button
+            onClick={onDone}
+            disabled={!!mission.choices && !selected}
+            className={`flex-1 py-3 rounded-2xl font-semibold text-sm transition-all ${
+              !mission.choices || selected
+                ? 'text-white hover:scale-[1.02] active:scale-[0.98]'
+                : 'text-white/30 cursor-not-allowed'
+            }`}
+            style={!mission.choices || selected ? {
+              background: `linear-gradient(135deg, ${phaseColor}cc, ${phaseColor}88)`,
+              boxShadow: `0 0 20px ${phaseColor}40`
+            } : { background: 'rgba(255,255,255,0.05)' }}
+          >
+            {selected ? 'נהנינו! ✅' : !mission.choices ? 'סיימנו ✅' : 'בחר/י קודם'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ===== MAIN COMPONENT =====
 interface ProtocolScreenProps {
   channelId: string;
@@ -329,6 +432,10 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   // Surprise
   const [surpriseTracking, setSurpriseTracking] = useState(initSurpriseTracking());
   const [currentSurprise, setCurrentSurprise] = useState<any>(null);
+
+  // Intimacy Missions
+  const [activeMission, setActiveMission] = useState<IntimacyMission | null>(null);
+  const [completedMissions, setCompletedMissions] = useState<string[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -471,6 +578,14 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     setInputText('');
     inputRef.current?.focus();
 
+    // בדיקת מיסיה אינטימית
+    if (!activeMission) {
+      const mission = getNextMission(newTension.level, completedMissions);
+      if (mission) {
+        setTimeout(() => setActiveMission(mission), 800);
+      }
+    }
+
     // בדיקת הפתעה
     if (shouldTriggerSurprise(newTension.level, messages.length + 1, surpriseTracking)) {
       const surprise = selectSurprise(newTension.level, messages.length + 1, surpriseTracking);
@@ -479,6 +594,18 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         setSurpriseTracking(prev => updateSurpriseTracking(prev, surprise.id));
       }
     }
+  };
+
+  // ===== לחצן התקדמות שקט — לגבר בלבד =====
+  const handleAdvancePhase = () => {
+    const jump = tensionState.phase === 'ICE' ? 26
+      : tensionState.phase === 'WARM' ? 20
+      : tensionState.phase === 'HOT' ? 15
+      : 0;
+    if (jump === 0) return;
+    const timeSinceStart = Date.now() - sessionStartTime.current;
+    const boosted = updateTension(tensionState, jump, messages.length, timeSinceStart);
+    setTensionState(boosted);
   };
 
   // ===== tap על chip — מוסיף לinput =====
@@ -700,6 +827,19 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           } focus-within:border-white/30`}
             style={inputText ? { boxShadow: `0 0 0 1px ${phaseColor}30` } : {}}
           >
+            {/* לחצן התקדמות שקט — לגבר בלבד */}
+            {myGender === 'MAN' && tensionState.phase !== 'FIRE' && (
+              <button
+                onClick={handleAdvancePhase}
+                title="התקדם שלב"
+                className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-white/15 hover:text-white/35 hover:bg-white/5 transition-all"
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                  <polygon points="0,10 5,0 10,10" />
+                </svg>
+              </button>
+            )}
+
             <input
               ref={inputRef}
               type="text"
@@ -733,6 +873,33 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ===== INTIMACY MISSION OVERLAY ===== */}
+      {activeMission && (
+        <MissionCard
+          mission={activeMission}
+          phase={tensionState.phase}
+          onChoice={(choice) => {
+            // שלח הודעה מיוחדת לצד השני
+            const msg: Message = {
+              id: Date.now().toString(),
+              senderGender: myGender,
+              text: `🔥 בחרתי: ${choice.label}`,
+              timestamp: Date.now(),
+              deviceId: channelId,
+              type: 'ACTION'
+            };
+            syncService.current.sendMessage(msg);
+          }}
+          onDone={() => {
+            if (activeMission) {
+              setCompletedMissions(prev => [...prev, activeMission.id]);
+            }
+            setActiveMission(null);
+          }}
+          onSkip={() => setActiveMission(null)}
+        />
+      )}
 
       {/* ===== GAME CARD OVERLAY ===== */}
       {activeGame && (
