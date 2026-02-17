@@ -83,7 +83,6 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const fetchAIRecommendation = async () => {
     setLoading(true);
     try {
-      console.log('[AI] Fetching recommendation, messages:', messages.length);
       const response = await aiEngine.current.getRecommendation(
         messages,
         tensionState.level,
@@ -92,10 +91,9 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         scenario
       );
 
-      console.log('[AI] Response received:', JSON.stringify(response).substring(0, 200));
       setAiResponse(response);
     } catch (error) {
-      console.error('[AI] Recommendation Error:', error);
+      console.error('AI Recommendation Error:', error);
       // Fallback — אם הקריאה נכשלת, תן אפשרויות בסיסיות
       setAiResponse({
         contextAnalysis: {
