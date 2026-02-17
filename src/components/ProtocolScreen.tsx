@@ -60,7 +60,12 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     };
   }, []);
 
-  // קבלת המלצות AI אחרי כל הודעה
+  // קריאת AI ראשונית בטעינת המסך - יוצר אפשרויות פתיחה
+  useEffect(() => {
+    fetchAIRecommendation();
+  }, []);
+
+  // קבלת המלצות AI אחרי כל הודעה חדשה
   useEffect(() => {
     if (messages.length > 0) {
       fetchAIRecommendation();
