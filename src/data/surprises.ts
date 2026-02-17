@@ -5,7 +5,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'dare-secret-touch',
     type: 'DARE',
-    title: 'Mission: Secret Touch',
+    title: 'משימה: מגע סודי',
     description: 'תוך 30 שניות הבאים - גע/י במקום שהצד השני לא מצפה לו',
     forWho: 'BOTH',
     minTension: 30,
@@ -16,7 +16,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'dare-whisper',
     type: 'DARE',
-    title: 'Whisper Challenge',
+    title: 'אתגר הלחישה',
     description: 'לחש/י משהו מלוכלך באוזן - רק לוחש/ת, לא אומר/ת בקול',
     forWho: 'BOTH',
     minTension: 40,
@@ -26,7 +26,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'dare-slow-undress',
     type: 'DARE',
-    title: 'Slow Motion',
+    title: 'הילוך איטי',
     description: 'הסר/י פריט בגד אחד - אבל לאט, מאוד לאט',
     forWho: 'BOTH',
     minTension: 50,
@@ -38,7 +38,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'game-yes-master',
     type: 'GAME',
-    title: 'Yes Master Game',
+    title: 'משחק כן אדוני',
     description: 'למשך דקה - צד אחד שואל, השני חייב/ת לענות "כן, אדוני/גברתי"',
     forWho: 'BOTH',
     minTension: 50,
@@ -49,7 +49,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'game-freeze',
     type: 'GAME',
-    title: 'Freeze Game',
+    title: 'משחק הקפאה',
     description: 'קפאו באמצע! אסור לזוז למשך 20 שניות - רק נשימות',
     forWho: 'BOTH',
     minTension: 45,
@@ -60,7 +60,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'game-mirror',
     type: 'GAME',
-    title: 'Mirror Me',
+    title: 'חקה אותי',
     description: 'צד אחד עושה תנועה לאטית - השני מחקה בדיוק',
     forWho: 'BOTH',
     minTension: 35,
@@ -73,7 +73,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'challenge-language-switch',
     type: 'CHALLENGE',
-    title: 'Language Switch',
+    title: 'החלפת שפה',
     description: 'עברו לדבר רק בצרפתית/ספרדית/איטלקית למשך דקה',
     forWho: 'BOTH',
     minTension: 40,
@@ -84,7 +84,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'challenge-no-hands',
     type: 'CHALLENGE',
-    title: 'No Hands',
+    title: 'בלי ידיים',
     description: 'אסור לגעת בידיים - רק שאר הגוף',
     forWho: 'BOTH',
     minTension: 55,
@@ -95,7 +95,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'challenge-eyes-closed',
     type: 'CHALLENGE',
-    title: 'Eyes Closed',
+    title: 'עיניים עצומות',
     description: 'אחד סוגר עיניים - השני מפתיע',
     forWho: 'BOTH',
     minTension: 50,
@@ -108,7 +108,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'twist-phone-ring',
     type: 'TWIST',
-    title: 'Phone Ring',
+    title: 'צלצול טלפון',
     description: 'מישהו מתקשר! המשיכו תוך כדי שיחה שקטה',
     forWho: 'BOTH',
     minTension: 60,
@@ -118,7 +118,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'twist-neighbor',
     type: 'TWIST',
-    title: 'Neighbor Alert',
+    title: 'התראת שכן',
     description: 'שכן דופק על הדלת! תתנהגו נורמלי (אבל תמשיכו בחשאי)',
     forWho: 'BOTH',
     minTension: 65,
@@ -128,7 +128,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'twist-lights-out',
     type: 'TWIST',
-    title: 'Lights Out',
+    title: 'חושך מוחלט',
     description: 'כבו את כל האורות - המשיכו בחושך',
     forWho: 'BOTH',
     minTension: 55,
@@ -140,7 +140,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'legendary-roleswitch',
     type: 'TWIST',
-    title: 'Role Switch',
+    title: 'החלפת תפקידים',
     description: 'החליפו תפקידים! השולט נהיה נשלט והפוך',
     forWho: 'BOTH',
     minTension: 70,
@@ -150,7 +150,7 @@ export const SURPRISES: Surprise[] = [
   {
     id: 'legendary-timer-challenge',
     type: 'CHALLENGE',
-    title: 'Beat The Clock',
+    title: 'נגד השעון',
     description: 'יש לכם רק 2 דקות להביא את השני לקצה - אחר כך תפסיקו',
     forWho: 'BOTH',
     minTension: 75,

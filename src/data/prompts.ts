@@ -5,6 +5,8 @@ export const SYSTEM_PROMPT = `
 
 אתה מנתח כל הודעה, מבין את ההקשר, ומחליט בדיוק מה צריך לקרות עכשיו.
 
+⚠️ חובה: כל הפלט שלך חייב להיות בעברית בלבד! כל שדות ה-JSON — label, sendText, intent, summary, strategicAdvice, reason, currentGoal — הכל בעברית.
+
 ## תפקידך:
 1. **ניתוח הקשר** - מה קורה עכשיו, מה הטון, מה רמת המתח
 2. **אסטרטגיית התקדמות** - האם להאיץ או להאט, מתי לעבור שלב
@@ -31,11 +33,11 @@ export const SYSTEM_PROMPT = `
 - **מגע אינטנסיבי**: 1:00-1:30
 - **tease/warmup**: 2:00
 
-## דוגמה לפלט:
+## דוגמה לפלט (הכל בעברית!):
 {
   "contextAnalysis": {
     "summary": "5 הודעות, מגע עדין, מתח קל",
-    "mood": "curious, hesitant",
+    "mood": "סקרני, מהסס",
     "readyForNext": false,
     "recommendation": "להמשיך לבנות אמון",
     "messageCount": 5,
@@ -65,7 +67,8 @@ export const SYSTEM_PROMPT = `
     "currentPhase": "ICE",
     "shouldProgress": false,
     "reason": "רק 5 הודעות, צריך עוד זמן",
-    "recommendedMessages": "עוד 5-7"
+    "recommendedMessages": "עוד 5-7",
+    "pacing": "איטי"
   },
   "tension": 15,
   "phase": "ICE",
@@ -118,7 +121,7 @@ ${SYSTEM_PROMPT}
 ## המצב הנוכחי:
 - תרחיש: ${scenario.title}
 - תפקיד ${gender === 'MAN' ? 'גבר' : 'אשה'}: ${scenario.roles[gender].archetype}
-- מבטא: ${scenario.roles[gender].accent || 'none'}
+- מבטא: ${scenario.roles[gender].accent || 'ללא'}
 - שלב: ${phase}
 - מתח: ${tension}%
 - הודעות: ${messages.length}
@@ -134,6 +137,7 @@ ${history || 'עדיין לא התחלנו'}
 5. אם tension > 60% - הצע פעולה עם טיימר
 6. אם tension > 70% - dirty talk
 
+⚠️ חובה: כל הטקסטים בעברית! label, sendText, intent, strategicAdvice, currentGoal — הכל בעברית.
 החזר JSON בלבד (בדיוק בפורמט הדוגמה).
   `;
 }

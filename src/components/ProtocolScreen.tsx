@@ -224,7 +224,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-sexy-fuchsia">{tensionState.level}%</div>
-            <div className="text-white/60 text-xs">{tensionState.phase}</div>
+            <div className="text-white/60 text-xs">{tensionState.phase === 'ICE' ? 'קרח' : tensionState.phase === 'WARM' ? 'חימום' : tensionState.phase === 'HOT' ? 'לוהט' : 'אש'}</div>
           </div>
         </div>
 
