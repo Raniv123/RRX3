@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Message, UserGender, Scenario, AIResponse, GameCard, AvatarImages } from '../types';
+import { Message, UserGender, Scenario, AIResponse, AvatarImages } from '../types';
 import { AIEngine } from '../services/ai-engine';
 import { SyncService } from '../services/sync-service';
 import { initTensionState, updateTension } from '../services/tension-engine';
@@ -110,122 +110,48 @@ const CGIAvatar: React.FC<{
     );
   }
 
-  // fallback — פרצוף SVG יפה ומפורט
+  // fallback — תמונות portrait ריאליסטיות מ-Unsplash
+  // גברים: לסת חזקה, מבט מסתורי, תאורה דרמטית
+  const MAN_PHOTOS = [
+    'photo-1506794778202-cad84cf45f1d', // גבר אלגנטי, תאורה כחולה
+    'photo-1500648767791-00dcc994a43e', // גבר עם ביטחון
+    'photo-1519085360753-af0119f7cbe7', // גבר עסקי מסתורי
+    'photo-1472099645785-5658abf4ff4e', // גבר ישיר בעיניים
+    'photo-1560250097-0b93528c311a', // גבר לסת חזקה
+  ];
+  // נשים: יפות, חושניות, אלגנטיות
+  const WOMAN_PHOTOS = [
+    'photo-1531746020798-e6953c6e8e04', // אישה עם מבט ישיר חושני
+    'photo-1529626455594-4ff0802cfb7e', // אישה אלגנטית, תאורה רכה
+    'photo-1546961342-ea5f62d5a27b', // אישה מסתורית
+    'photo-1488426862026-3ee34a7d66df', // אישה יפה עם שיער
+    'photo-1504703395950-b89145a5425b', // אישה עם עיניים יפות
+  ];
+
+  const photoList = isMan ? MAN_PHOTOS : WOMAN_PHOTOS;
+  // בחירה לפי gender בלבד (עקבית)
+  const photoId = photoList[isMan ? 0 : 0];
+  const photoUrl = `https://images.unsplash.com/${photoId}?w=200&h=200&fit=crop&crop=face&q=85`;
+
   return (
     <div className={`${dim} rounded-full flex-shrink-0 overflow-hidden border-2 ${
       isMan
         ? 'border-blue-400/50 shadow-lg shadow-blue-500/30'
         : 'border-fuchsia-400/50 shadow-lg shadow-fuchsia-500/30'
     }`}>
-      {isMan ? (
-        // גבר יפה — עם לסת חזקה ומבט מסתורי
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="man-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1a2744" />
-              <stop offset="100%" stopColor="#0f172a" />
-            </linearGradient>
-            <linearGradient id="man-skin" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#c8956c" />
-              <stop offset="100%" stopColor="#a0694a" />
-            </linearGradient>
-            <radialGradient id="man-light" cx="35%" cy="35%">
-              <stop offset="0%" stopColor="rgba(255,200,150,0.3)" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-          </defs>
-          <rect width="100" height="100" fill="url(#man-bg)" />
-          {/* צוואר */}
-          <rect x="41" y="61" width="18" height="14" rx="5" fill="url(#man-skin)" />
-          {/* כתפיים + חולצה */}
-          <path d="M8 100 C8 78 25 70 50 68 C75 70 92 78 92 100 Z" fill="#1e3a5f" />
-          {/* עניבה/כפתור */}
-          <path d="M47 70 L50 82 L53 70" fill="#0ea5e9" opacity="0.7" />
-          {/* ראש */}
-          <ellipse cx="50" cy="40" rx="22" ry="25" fill="url(#man-skin)" />
-          {/* שיניים/לסת חזקה */}
-          <path d="M30 50 Q50 58 70 50 Q68 65 50 67 Q32 65 30 50 Z" fill="#c8956c" />
-          {/* פה — סמייל עדין */}
-          <path d="M40 55 Q50 60 60 55" stroke="#8b5c3e" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          {/* אף */}
-          <path d="M48 44 L46 51 Q50 53 54 51 L52 44" fill="none" stroke="#a0694a" strokeWidth="1.2" />
-          {/* עיניים — כהות ומסתוריות */}
-          <ellipse cx="40" cy="38" rx="5" ry="4" fill="#2d1810" />
-          <ellipse cx="60" cy="38" rx="5" ry="4" fill="#2d1810" />
-          <ellipse cx="41" cy="37" rx="1.5" ry="1.5" fill="rgba(255,255,255,0.5)" />
-          <ellipse cx="61" cy="37" rx="1.5" ry="1.5" fill="rgba(255,255,255,0.5)" />
-          {/* גבות חזקות */}
-          <path d="M34 32 Q40 29 46 31" stroke="#4a2c17" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          <path d="M54 31 Q60 29 66 32" stroke="#4a2c17" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          {/* שיער */}
-          <path d="M28 36 Q28 14 50 13 Q72 14 72 36 Q68 20 50 19 Q32 20 28 36 Z" fill="#2c1a0e" />
-          {/* תאורה דרמטית */}
-          <rect width="100" height="100" fill="url(#man-light)" />
-        </svg>
-      ) : (
-        // אישה יפה — אלגנטית וחושנית
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <defs>
-            <linearGradient id="woman-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#2d1135" />
-              <stop offset="100%" stopColor="#1a0a22" />
-            </linearGradient>
-            <linearGradient id="woman-skin" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#e8b48a" />
-              <stop offset="100%" stopColor="#c9895a" />
-            </linearGradient>
-            <radialGradient id="woman-glow" cx="40%" cy="30%">
-              <stop offset="0%" stopColor="rgba(255,180,180,0.25)" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-          </defs>
-          <rect width="100" height="100" fill="url(#woman-bg)" />
-          {/* שמלה/גוף */}
-          <path d="M5 100 C5 75 22 65 50 63 C78 65 95 75 95 100 Z" fill="#7c1d4a" />
-          {/* מחשוף */}
-          <path d="M40 65 Q50 72 60 65 L56 63 Q50 68 44 63 Z" fill="#e8b48a" />
-          {/* צוואר */}
-          <rect x="43" y="59" width="14" height="12" rx="6" fill="url(#woman-skin)" />
-          {/* שרשרת */}
-          <path d="M38 67 Q50 72 62 67" stroke="rgba(255,215,0,0.6)" strokeWidth="1" fill="none" />
-          <circle cx="50" cy="71" r="2" fill="rgba(255,215,0,0.7)" />
-          {/* ראש */}
-          <ellipse cx="50" cy="38" rx="20" ry="23" fill="url(#woman-skin)" />
-          {/* אוזניים */}
-          <ellipse cx="30" cy="40" rx="4" ry="5" fill="url(#woman-skin)" />
-          <ellipse cx="70" cy="40" rx="4" ry="5" fill="url(#woman-skin)" />
-          {/* עגיל */}
-          <circle cx="30" cy="44" r="2.5" fill="rgba(255,215,0,0.8)" />
-          {/* שיניים/לחיים */}
-          <path d="M33 48 Q50 55 67 48 Q64 63 50 65 Q36 63 33 48 Z" fill="#e8b48a" />
-          {/* שפתיים — אדומות */}
-          <path d="M40 54 Q45 57 50 56 Q55 57 60 54 Q55 60 50 59 Q45 60 40 54 Z" fill="#cc2244" />
-          <path d="M40 54 Q50 51 60 54" stroke="#ee3355" strokeWidth="1" fill="none" />
-          {/* אף עדין */}
-          <ellipse cx="50" cy="48" rx="3" ry="2" fill="rgba(160,100,60,0.3)" />
-          {/* עיניים — גדולות וכהות */}
-          <ellipse cx="39" cy="36" rx="6" ry="5" fill="#1a0a0a" />
-          <ellipse cx="61" cy="36" rx="6" ry="5" fill="#1a0a0a" />
-          {/* קו עיניים */}
-          <path d="M33 33 Q39 29 45 32" stroke="#1a0a0a" strokeWidth="1.5" fill="none" />
-          <path d="M55 32 Q61 29 67 33" stroke="#1a0a0a" strokeWidth="1.5" fill="none" />
-          {/* נצנוץ */}
-          <ellipse cx="41" cy="34" rx="2" ry="2" fill="rgba(255,255,255,0.6)" />
-          <ellipse cx="63" cy="34" rx="2" ry="2" fill="rgba(255,255,255,0.6)" />
-          {/* גבות */}
-          <path d="M33 28 Q39 25 45 27" stroke="#5c2d0a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-          <path d="M55 27 Q61 25 67 28" stroke="#5c2d0a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-          {/* ריסים */}
-          <path d="M33 33 L31 30 M36 31 L35 28 M39 30 L38 27" stroke="#1a0a0a" strokeWidth="1" />
-          <path d="M67 33 L69 30 M64 31 L65 28 M61 30 L62 27" stroke="#1a0a0a" strokeWidth="1" />
-          {/* שיער — ארוך ומתולתל */}
-          <path d="M30 36 Q24 18 50 15 Q76 18 70 36 Q66 10 50 11 Q34 10 30 36 Z" fill="#3d1a08" />
-          <path d="M30 38 Q18 55 22 80 Q28 70 30 55" fill="#3d1a08" opacity="0.9" />
-          <path d="M70 38 Q82 55 78 80 Q72 70 70 55" fill="#3d1a08" opacity="0.9" />
-          {/* תאורה */}
-          <rect width="100" height="100" fill="url(#woman-glow)" />
-        </svg>
-      )}
+      <img
+        src={photoUrl}
+        alt={gender}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          // אם תמונה נכשלת — gradient פשוט
+          const el = e.currentTarget.parentElement;
+          if (el) el.style.background = isMan
+            ? 'linear-gradient(135deg, #1e40af, #1e3a8a)'
+            : 'linear-gradient(135deg, #86198f, #701a75)';
+          e.currentTarget.style.display = 'none';
+        }}
+      />
     </div>
   );
 };
@@ -386,15 +312,16 @@ const MissionCard: React.FC<{
   onSkip: () => void;
 }> = ({ mission, phase, onChoice, onDone, onSkip }) => {
   const [selected, setSelected] = useState<IntimacyChoice | null>(null);
+  const [timerStarted, setTimerStarted] = useState(false); // טיימר מתחיל רק אחרי לחיצה
   const [seconds, setSeconds] = useState(mission.duration || 0);
 
   useEffect(() => {
     if (!mission.duration) return;
-    if (selected && seconds > 0) {
+    if (timerStarted && seconds > 0) {
       const t = setInterval(() => setSeconds(p => p > 0 ? p - 1 : 0), 1000);
       return () => clearInterval(t);
     }
-  }, [selected, mission.duration, seconds]);
+  }, [timerStarted, mission.duration, seconds]);
 
   const phaseGradient = {
     ICE: 'from-blue-600/30 to-cyan-700/30',
@@ -427,7 +354,12 @@ const MissionCard: React.FC<{
             {mission.choices.map(choice => (
               <button
                 key={choice.id}
-                onClick={() => { setSelected(choice); onChoice?.(choice); setSeconds(mission.duration || 60); }}
+                onClick={() => {
+                  setSelected(choice);
+                  onChoice?.(choice);
+                  setSeconds(mission.duration || 60);
+                  setTimerStarted(false); // אפשר להתחיל טיימר אחרי בחירה
+                }}
                 className={`p-3 rounded-2xl text-right border transition-all ${
                   selected?.id === choice.id
                     ? 'border-white/40 bg-white/15 scale-[0.98]'
@@ -444,15 +376,27 @@ const MissionCard: React.FC<{
 
         {/* Timer + Done */}
         <div className="px-4 pb-4 flex items-center gap-3">
+          {/* טיימר — מציג רק אחרי הפעלה */}
           {selected && mission.duration ? (
             <div className="flex-1 text-center">
-              <div className="text-white/30 text-[10px] mb-1">זמן שנשאר</div>
-              <div
-                className="text-3xl font-bold font-mono"
-                style={{ color: seconds > 10 ? phaseColor : '#ef4444' }}
-              >
-                {seconds}s
-              </div>
+              {!timerStarted ? (
+                <button
+                  onClick={() => setTimerStarted(true)}
+                  className="w-full py-2 rounded-xl text-sm font-medium text-white border border-white/25 bg-white/10 hover:bg-white/20 transition-all"
+                >
+                  ▶ התחל טיימר
+                </button>
+              ) : (
+                <>
+                  <div className="text-white/30 text-[10px] mb-0.5">שניות</div>
+                  <div
+                    className="text-3xl font-bold font-mono"
+                    style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
+                  >
+                    {seconds}
+                  </div>
+                </>
+              )}
             </div>
           ) : !mission.choices ? (
             <div className="flex-1" />
@@ -491,21 +435,24 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   myGender,
   scenario
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [tensionState, setTensionState] = useState(initTensionState());
+  // ===== Session Persistence — שמור/שחזר מ-localStorage =====
+  const SESSION_KEY = `rrx3_session_${channelId}`;
+  const savedSession = (() => {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; }
+  })();
+
+  const [messages, setMessages] = useState<Message[]>(savedSession?.messages || []);
+  const [tensionState, setTensionState] = useState(savedSession?.tensionState || initTensionState());
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputText, setInputText] = useState('');
   const [showAIPanel, setShowAIPanel] = useState(true);
   const [avatars, setAvatars] = useState<AvatarImages>({ MAN: null, WOMAN: null });
-  const [sceneIndex, setSceneIndex] = useState(0); // within-phase scene index
+  const [sceneIndex, setSceneIndex] = useState(savedSession?.sceneIndex || 0);
   const [sceneOpacity, setSceneOpacity] = useState(1);
-  const [lastPhase, setLastPhase] = useState<string>('ICE');
+  const [lastPhase, setLastPhase] = useState<string>(savedSession?.tensionState?.phase || 'ICE');
 
-  // Game state
-  const [activeGame, setActiveGame] = useState<GameCard | null>(null);
-  const [gameTimerTotal, setGameTimerTotal] = useState(0);
-  const [gameTimerRemaining, setGameTimerRemaining] = useState(0);
+  // (game cards removed)
 
   // Surprise
   const [surpriseTracking, setSurpriseTracking] = useState(initSurpriseTracking());
@@ -526,7 +473,18 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const syncService = useRef(new SyncService(channelId, myGender));
   const aiEngine = useRef(new AIEngine());
   const sessionStartTime = useRef(Date.now());
-  const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // ===== שמירה אוטומטית ל-localStorage =====
+  useEffect(() => {
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        messages,
+        tensionState,
+        sceneIndex,
+        savedAt: Date.now()
+      }));
+    } catch { /* ignore storage errors */ }
+  }, [messages, tensionState, sceneIndex, SESSION_KEY]);
 
   // ===== סצינה נוכחית — לפי שלב =====
   // אם לסיטואציה יש מילות מפתח → תמונה דינמית ממנה, אחרת curated fallback
@@ -606,11 +564,6 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         scenario
       );
       setAiResponse(response);
-
-      // אם AI הציע game card — הצג אותו
-      if (response.gameCard) {
-        triggerGame(response.gameCard);
-      }
     } catch (error) {
       console.error('AI Error:', error);
     } finally {
@@ -623,31 +576,6 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   useEffect(() => {
     if (messages.length === 0) fetchAI();
   }, []);
-
-  // ===== הפעלת Game =====
-  const triggerGame = (game: GameCard) => {
-    setActiveGame(game);
-    if (game.duration) {
-      setGameTimerTotal(game.duration);
-      setGameTimerRemaining(game.duration);
-      if (gameTimerRef.current) clearInterval(gameTimerRef.current);
-      gameTimerRef.current = setInterval(() => {
-        setGameTimerRemaining(prev => {
-          if (prev <= 1) {
-            if (gameTimerRef.current) clearInterval(gameTimerRef.current);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-  };
-
-  const closeGame = () => {
-    setActiveGame(null);
-    if (gameTimerRef.current) clearInterval(gameTimerRef.current);
-    setGameTimerRemaining(0);
-  };
 
   // ===== שליחת הודעה =====
   const handleSend = async (text?: string) => {
@@ -973,15 +901,6 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                       </button>
                     ))}
 
-                    {/* Game card */}
-                    {aiResponse.gameCard && (
-                      <button
-                        onClick={() => triggerGame(aiResponse.gameCard!)}
-                        className="w-full text-right px-3 py-2 rounded-xl text-xs font-medium text-white border border-fuchsia-500/40 bg-fuchsia-500/12 hover:bg-fuchsia-500/22 active:scale-[0.98] transition-all"
-                      >
-                        🎲 {aiResponse.gameCard.title}
-                      </button>
-                    )}
                   </div>
                 </div>
 
@@ -1119,18 +1038,6 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             setActiveMission(null);
           }}
           onSkip={() => setActiveMission(null)}
-        />
-      )}
-
-      {/* ===== GAME CARD OVERLAY ===== */}
-      {activeGame && (
-        <GameCardOverlay
-          game={activeGame}
-          totalTime={gameTimerTotal}
-          remaining={gameTimerRemaining}
-          phase={tensionState.phase}
-          onDone={closeGame}
-          onSkip={closeGame}
         />
       )}
 
