@@ -4,6 +4,7 @@ export type UserGender = 'MAN' | 'WOMAN';
 export type Phase = 'ICE' | 'WARM' | 'HOT' | 'FIRE';
 export type ActionType = 'SAY' | 'DO' | 'ORDER' | 'SURPRISE';
 export type Language = 'french' | 'spanish' | 'italian' | 'english';
+export type GameType = 'TRUTH' | 'DARE' | 'SEXY_CARD';
 
 // Message Types
 export interface Message {
@@ -14,62 +15,39 @@ export interface Message {
   deviceId: string;
   type: 'CHAT' | 'ACTION' | 'DIRECTIVE' | 'SURPRISE';
   language?: Language;
-  translation?: string;  // תרגום אם יש
+  translation?: string;
   payload?: any;
 }
 
-// AI Director Types
-export interface DirectorOption {
-  label: string;          // מה המשתמש רואה (תיאור הפעולה)
-  sendText: string;       // מה שנשלח לצד השני
-  type: ActionType;
-  intent: string;         // למה אנחנו עושים את זה
-  intensity: number;      // 1-10
-  language?: Language;
-  translation?: string;   // תרגום אם זה בשפה זרה
-  timer?: number;         // טיימר בשניות (אם רלוונטי)
-  isDirty?: boolean;      // האם זה dirty talk
+// Game Card — for truth/dare/sexy cards
+export interface GameCard {
+  type: GameType;
+  title: string;
+  content: string;      // The challenge or question
+  duration?: number;    // Countdown seconds
+  forWho: 'MAN' | 'WOMAN' | 'BOTH';
+  intensity: number;    // 1-10
 }
 
-// Context Analysis
-export interface ContextAnalysis {
-  summary: string;                 // מה קורה עכשיו
-  mood: string;                    // מצב הרוח הנוכחי
-  readyForNext: boolean;           // האם מוכן לשלב הבא
-  recommendation: string;          // מה לעשות עכשיו
-  messageCount: number;            // כמה הודעות עד כה
-  timeSinceStart: number;          // זמן מתחילת השיחה
-}
-
-// Progression Strategy
-export interface ProgressionStrategy {
-  currentPhase: Phase;
-  shouldProgress: boolean | 'soon';
-  reason: string;
-  recommendedMessages: string;     // כמה הודעות עוד
-  pacing: 'slow' | 'normal' | 'fast';
-}
-
-// AI Response
+// AI Response — simplified with word chips
 export interface AIResponse {
-  contextAnalysis: ContextAnalysis;
   strategicAdvice: {
     forMan: string;
     forWoman: string;
   };
-  options: DirectorOption[];
-  pacing: ProgressionStrategy;
-  tension: number;                  // 0-100
+  wordChips: string[];      // short 3-6 word phrases to append to input
+  gameCard?: GameCard;      // optional game trigger
+  tension: number;          // 0-100
   phase: Phase;
   currentGoal: string;
 }
 
 // Tension State
 export interface TensionState {
-  level: number;          // 0-100
+  level: number;
   phase: Phase;
-  rate: number;           // מהירות עליה (כמה % לעלות בכל הודעה)
-  goal: string;           // המטרה הנוכחית
+  rate: number;
+  goal: string;
 }
 
 // Scenario & Casting
@@ -84,8 +62,8 @@ export interface Scenario {
       archetype: string;
       personality: string;
       accent?: Language;
-      visualPrompt: string;  // לתמונת אווטר
-      forbidden?: string;    // למה זה אסור לו (בגידה, אתיקה, וכו')
+      visualPrompt: string;
+      forbidden?: string;
     };
     WOMAN: {
       name: string;
@@ -93,11 +71,17 @@ export interface Scenario {
       personality: string;
       accent?: Language;
       visualPrompt: string;
-      forbidden?: string;    // למה זה אסור לה
+      forbidden?: string;
     };
   };
-  twists: string[];        // עלילות פתע אפשריות
-  scenarios: string[];     // תרחישים אפשריים
+  twists: string[];
+  scenarios: string[];
+}
+
+// Avatar Images (CGI generated or fallback)
+export interface AvatarImages {
+  MAN: string | null;
+  WOMAN: string | null;
 }
 
 // Surprise System
@@ -110,19 +94,19 @@ export interface Surprise {
   title: string;
   description: string;
   forWho: 'MAN' | 'WOMAN' | 'BOTH';
-  minTension: number;      // מתי להפעיל (רמת tension מינימלית)
-  maxTension: number;      // עד מתי (רמת tension מקסימלית)
+  minTension: number;
+  maxTension: number;
   rarity: SurpriseRarity;
-  duration?: number;       // כמה זמן (שניות) - אם רלוונטי
-  language?: Language;     // אם ההפתעה כוללת שפה מסוימת
+  duration?: number;
+  language?: Language;
 }
 
 // Gamification
 export interface UserProgress {
-  streak: number;              // ימים רצופים
-  totalSessions: number;       // סך הכל סשנים
-  favoriteScenarios: string[];   // תרחישים מועדפים
-  achievements: string[];      // הישגים
-  level: number;               // רמה (1-100)
-  experience: number;          // נקודות ניסיון
+  streak: number;
+  totalSessions: number;
+  favoriteScenarios: string[];
+  achievements: string[];
+  level: number;
+  experience: number;
 }

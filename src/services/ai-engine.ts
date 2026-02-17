@@ -1,10 +1,9 @@
 import { GoogleGenAI } from '@google/genai';
-import { Message, AIResponse, Scenario, UserGender } from '../types';
+import { Message, AIResponse, Scenario, UserGender, AvatarImages } from '../types';
 import { buildAIPrompt } from '../data/prompts';
 
 const API_KEY = (import.meta.env.VITE_GEMINI_API_KEY || (window as any).ENV?.VITE_GEMINI_API_KEY) as string;
 
-// AI המנוע המרכזי של ה
 export class AIEngine {
   private ai: GoogleGenAI;
 
@@ -12,7 +11,7 @@ export class AIEngine {
     this.ai = new GoogleGenAI({ apiKey: API_KEY });
   }
 
-  // חכמה AIפונקציה מרכזית - קבלת המלצת
+  // המלצת AI — מחזיר word chips + game card
   async getRecommendation(
     messages: Message[],
     tension: number,
@@ -29,78 +28,103 @@ export class AIEngine {
         config: { responseMimeType: 'application/json' }
       });
 
-      if (!response.text) {
-        throw new Error('No response from AI');
-      }
+      if (!response.text) throw new Error('No response from AI');
 
       const data = JSON.parse(response.text);
-      return data;
+
+      // ולידציה בסיסית
+      if (!data.wordChips || !Array.isArray(data.wordChips)) {
+        data.wordChips = this.getDefaultChips(phase, tension);
+      }
+      if (!data.strategicAdvice) {
+        data.strategicAdvice = this.getDefaultAdvice(phase);
+      }
+
+      return data as AIResponse;
 
     } catch (error) {
       console.error('AI Engine Error:', error);
-
-      // fallback - תשובה בסיסית אם יש שגיאה
-      return this.getFallbackResponse(tension, phase, gender);
+      return this.getFallbackResponse(tension, phase);
     }
   }
 
-  // יצירת תרחיש וCasting - דינמי ומפתיע!
-  async createScenario(): Promise<Scenario> {
+  // יצירת אווטרים CGI לשני הדמויות
+  async generateAvatars(scenario: Scenario): Promise<AvatarImages> {
+    const results: AvatarImages = { MAN: null, WOMAN: null };
+
     try {
-      // Timeout של 10 שניות למקרה שה-API תקוע
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Scenario creation timeout')), 10000);
+      const [manAvatar, womanAvatar] = await Promise.allSettled([
+        this.generateSingleAvatar(scenario.roles.MAN.visualPrompt, 'male'),
+        this.generateSingleAvatar(scenario.roles.WOMAN.visualPrompt, 'female')
+      ]);
+
+      if (manAvatar.status === 'fulfilled' && manAvatar.value) {
+        results.MAN = manAvatar.value;
+      }
+      if (womanAvatar.status === 'fulfilled' && womanAvatar.value) {
+        results.WOMAN = womanAvatar.value;
+      }
+    } catch (error) {
+      console.error('Avatar generation failed:', error);
+    }
+
+    return results;
+  }
+
+  private async generateSingleAvatar(visualPrompt: string, gender: 'male' | 'female'): Promise<string | null> {
+    try {
+      const prompt = `Cinematic CGI portrait, photorealistic, dark luxury atmosphere, ${visualPrompt}. ${
+        gender === 'male'
+          ? 'Handsome man, strong jawline, mysterious expression, blue-tinted dramatic lighting'
+          : 'Beautiful woman, elegant, sensual expression, warm pink-tinted dramatic lighting'
+      }. Ultra detailed, 8K, film photography style, shallow depth of field. NO text, NO watermark.`;
+
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.0-flash-exp',
+        contents: prompt,
+        config: {
+          responseModalities: ['IMAGE', 'TEXT'],
+        } as any
       });
 
-      const scenarioPromise = this.generateScenarioWithAI();
+      const part = response.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData);
+      if (part?.inlineData?.data) {
+        return `data:image/png;base64,${part.inlineData.data}`;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
 
-      // רק אחד מהם יגמר ראשון
-      return await Promise.race([scenarioPromise, timeoutPromise]);
+  // יצירת תרחיש עם AI
+  async createScenario(): Promise<Scenario> {
+    try {
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout')), 10000)
+      );
+      return await Promise.race([this.generateScenarioWithAI(), timeoutPromise]);
     } catch (error) {
       console.error('Scenario Creation Error:', error);
-      // fallback - תרחיש דיפולטיבי
       return this.getDefaultScenario();
     }
   }
 
-  // הפונקציה הפנימית שיוצרת תרחיש
   private async generateScenarioWithAI(): Promise<Scenario> {
     const prompt = `
 אתה יוצר תרחיש רולפליי אינטימי וחושני לזוג עם אלמנט של התנגדות ומתח מיני.
 
 ⚠️ חובה: כל הטקסטים בעברית! כותרת, מיקום, אווירה, שמות, ארכיטיפים, אישיות, סיבות — הכל בעברית.
 
-🔥 עקרונות יצירת התרחיש:
+🔥 עקרונות:
 1. תפקידים שבחיים לא היו נפגשים באופן רומנטי
 2. יש אלמנט של "אסור" - בגידה, הפרת כללים, חציית גבולות
 3. מצב של התנגדות שמתמוססת לתשוקה
 4. מפתיע, מפתה, מסוכן רגשית
 
-דוגמאות לתפקידים (אל תשתמש בהם - המצא חדשים!):
-- בוס נשוי + עובדת צעירה (אסור במקום עבודה, הפרת אמונים)
-- כומר + אישה נשואה שבאה להתוודות (אסור דתי, בגידה)
-- שוטר + עבריינית בחקירה (ניגוד אינטרסים, משחק כוח)
-- מורה פרטי + אם התלמיד (חוצה גבולות מקצועיים)
-- רופא + מטופלת נשואה (הפרת אתיקה, בגידה)
-- שכן נשוי + שכנה לבדה (בגידה, סכנת חשיפה)
-
 חשוב: לא הרבצות, כאב, או סדו-מזו קשה. רק תשוקה, פיתוי, והתנגדות שנשברת.
 
-צור תרחיש עם:
-- כותרת מרתקת בעברית שמרמזת על האסור
-- מיקום מפורט בעברית שמוסיף מתח (מקום סגור, סכנת חשיפה)
-- אווירה טעונה בעברית
-- 2 תפקידים (MAN, WOMAN) עם:
-  * שמות מציאותיים (יכולים להיות בכל שפה)
-  * ארכיטיפים מעניינים בעברית
-  * אישיות מנוגדת שמושכת בעברית
-  * למה הם לא צריכים להיפגש (נשוי? אתיקה? כללים?) בעברית
-- מבטא לכל תפקיד (french/spanish/italian)
-- visual prompts לאווטרים באנגלית (סגנון קולנועי, אלגנטי)
-- twists בעברית - מה עלול לקרות שיעלה את המתח
-- scenarios בעברית - מצבים מסוכנים/מפתים
-
-החזר JSON בלבד (בלי markdown, בלי backticks):
+החזר JSON בלבד:
 {
   "id": "unique-id",
   "title": "כותרת בעברית",
@@ -112,7 +136,7 @@ export class AIEngine {
       "archetype": "ארכיטיפ בעברית",
       "personality": "אישיות בעברית",
       "accent": "french|spanish|italian",
-      "visualPrompt": "English visual description for avatar",
+      "visualPrompt": "English visual description for CGI avatar",
       "forbidden": "למה זה אסור לו בעברית"
     },
     "WOMAN": {
@@ -120,102 +144,69 @@ export class AIEngine {
       "archetype": "ארכיטיפ בעברית",
       "personality": "אישיות בעברית",
       "accent": "french|spanish|italian",
-      "visualPrompt": "English visual description for avatar",
+      "visualPrompt": "English visual description for CGI avatar",
       "forbidden": "למה זה אסור לה בעברית"
     }
   },
-  "twists": ["טוויסט בעברית", "טוויסט בעברית", "טוויסט בעברית"],
-  "scenarios": ["מצב בעברית", "מצב בעברית", "מצב בעברית"]
+  "twists": ["טוויסט בעברית", "טוויסט בעברית"],
+  "scenarios": ["מצב בעברית", "מצב בעברית"]
 }
-      `;
+    `;
 
-      const response = await this.ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: prompt,
-        config: { responseMimeType: 'application/json' }
-      });
+    const response = await this.ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
+      config: { responseMimeType: 'application/json' }
+    });
 
-      if (!response.text) {
-        throw new Error('No response from AI');
-      }
-
-      const parsed = JSON.parse(response.text);
-
-      // ולידציה בסיסית - בדוק שיש את השדות החשובים
-      if (!parsed.title || !parsed.roles?.MAN || !parsed.roles?.WOMAN) {
-        throw new Error('Invalid scenario structure from AI');
-      }
-
-      return parsed;
-  }
-
-  // יצירת אווטר CGI
-  async generateAvatar(visualPrompt: string): Promise<string> {
-    try {
-      const response = await this.ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [{
-            text: `High-fashion cinematic portrait in a dark luxury setting, ${visualPrompt}. Moody shadows, dramatic lighting, 4k.`
-          }]
-        }
-      });
-
-      const part = response.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData);
-      if (part?.inlineData?.data) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
-
-      return '';
-    } catch (error) {
-      console.error('Avatar Generation Error:', error);
-      return '';
+    if (!response.text) throw new Error('No response');
+    const parsed = JSON.parse(response.text);
+    if (!parsed.title || !parsed.roles?.MAN || !parsed.roles?.WOMAN) {
+      throw new Error('Invalid structure');
     }
+    return parsed;
   }
 
-  // fallback response
-  private getFallbackResponse(tension: number, phase: string, _gender: UserGender): AIResponse {
+  private getDefaultChips(phase: string, tension: number): string[] {
+    const chipsMap: Record<string, string[]> = {
+      ICE: ['אני שם לב ש...', 'מה זה היה?', 'המבט שלך...', 'אולי...'],
+      WARM: ['אני לא יכול להפסיק...', 'ספר/י לי...', 'כשאתה/את...', 'רגע —'],
+      HOT: ['רוצה לגעת ב...', 'תגיד/י לי...', 'לא מצליח/ה להפסיק...', 'עכשיו...'],
+      FIRE: ['אני רוצה...', 'תן/תני לי...', 'עכשיו. כאן.', 'לא מסוגל/ת...']
+    };
+    return chipsMap[phase] || chipsMap.ICE;
+  }
+
+  private getDefaultAdvice(phase: string) {
     return {
-      contextAnalysis: {
-        summary: 'המערכת פועלת במצב fallback',
-        mood: 'neutral',
-        readyForNext: false,
-        recommendation: 'המשך כרגיל',
-        messageCount: 0,
-        timeSinceStart: 0
-      },
-      strategicAdvice: {
-        forMan: 'המשך בקצב שלך',
-        forWoman: 'המשיכי בקצב שלך'
-      },
-      options: [
-        {
-          label: 'המשך השיחה',
-          sendText: 'אני נהנה מזה',
-          type: 'SAY',
-          intent: 'המשך',
-          intensity: 5
-        }
-      ],
-      pacing: {
-        currentPhase: phase as any,
-        shouldProgress: false,
-        reason: 'fallback mode',
-        recommendedMessages: '5-10',
-        pacing: 'normal'
-      },
-      tension: tension,
-      phase: phase as any,
-      currentGoal: 'המשך המסע'
+      forMan: phase === 'ICE'
+        ? '💫 קח נשימה — עכשיו הזמן להראות לה שאתה שם לב לפרטים...'
+        : phase === 'WARM'
+        ? '🔥 היא מרגישה אותך — תהיה אמיץ, מילה אחת נועזת שווה אלף'
+        : '🌶️ אל תעצור — האוויר בינכם בוער, תן לזה לקרות',
+      forWoman: phase === 'ICE'
+        ? '✨ הוא רואה אותך — תני לו לראות שגם את מרגישה משהו...'
+        : phase === 'WARM'
+        ? '💋 היא/הוא מחכה — מבט אחד ישיר יגיד הכל'
+        : '🔥 עכשיו את בשליטה — תני לתשוקה שלך לדבר'
     };
   }
 
-  // גישה ציבורית לתרחיש ברירת מחדל
+  private getFallbackResponse(tension: number, phase: string): AIResponse {
+    return {
+      strategicAdvice: this.getDefaultAdvice(phase),
+      wordChips: this.getDefaultChips(phase, tension),
+      gameCard: undefined,
+      tension,
+      phase: phase as any,
+      currentGoal: 'המשך המסע ביחד'
+    };
+  }
+
   getDefaultScenarioPublic(): Scenario {
     return this.getDefaultScenario();
   }
 
-  // תרחיש דיפולטיבי (fallback בלבד)
   private getDefaultScenario(): Scenario {
     return {
       id: 'default-forbidden',
@@ -228,7 +219,7 @@ export class AIEngine {
           archetype: 'פסיכולוג מוערך',
           personality: 'אמפטי, מקצועי, נאבק עם הרגשות',
           accent: 'french',
-          visualPrompt: 'Elegant psychologist in dimly lit office, conflicted expression',
+          visualPrompt: 'Elegant psychologist in dimly lit office, conflicted expression, dark suit',
           forbidden: 'הפרת אתיקה מקצועית - הוא המטפל שלה'
         },
         WOMAN: {
@@ -236,20 +227,12 @@ export class AIEngine {
           archetype: 'אישה נשואה בקשיים',
           personality: 'פגיעה, מושכת, מחפשת נחמה',
           accent: 'italian',
-          visualPrompt: 'Married woman in elegant dress, vulnerable yet seductive',
+          visualPrompt: 'Married woman in elegant red dress, vulnerable yet seductive, soft lighting',
           forbidden: 'נשואה - בוגדת בבעלה עם המטפל'
         }
       },
-      twists: [
-        'הבעל מתקשר באמצע הפגישה',
-        'מישהו דופק בדלת',
-        'היא מגלה שגם הוא נשוי'
-      ],
-      scenarios: [
-        'פגישה שנמשכת מעבר לזמן',
-        'נגיעה "בטעות" שמתארכת',
-        'הודאה בתשוקה שלא צריכה להיות'
-      ]
+      twists: ['הבעל מתקשר', 'מישהו דופק בדלת', 'היא מגלה שגם הוא נשוי'],
+      scenarios: ['פגישה שנמשכת מעבר לזמן', 'נגיעה בטעות שמתארכת', 'הודאה בתשוקה']
     };
   }
 }
