@@ -7,6 +7,8 @@ import { ProtocolScreen } from './components/ProtocolScreen';
 import { AIEngine } from './services/ai-engine';
 import { SyncService, SystemMessage } from './services/sync-service';
 
+const LAST_SESSION_KEY = 'rrx3_last_session';
+
 function App() {
   const [screen, setScreen] = useState<Screen>('LOGIN');
   const [channelId, setChannelId] = useState('');
@@ -17,6 +19,27 @@ function App() {
 
   const aiEngine = useRef(new AIEngine());
   const syncRef = useRef<SyncService | null>(null);
+
+  // שמירת סשן אחרון בכל כניסה למסך PROTOCOL
+  useEffect(() => {
+    if (screen === 'PROTOCOL' && myGender && scenario && channelId) {
+      localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({ channelId, myGender, scenario }));
+    }
+  }, [screen, myGender, scenario, channelId]);
+
+  // חזרה למסע שהופסק
+  const handleResume = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LAST_SESSION_KEY) || 'null');
+      if (saved?.channelId && saved?.myGender && saved?.scenario) {
+        setChannelId(saved.channelId);
+        setMyGender(saved.myGender);
+        setScenario(saved.scenario);
+        setIsHost(false); // לא רלוונטי בחזרה
+        setScreen('PROTOCOL');
+      }
+    } catch { /* ignore parse errors */ }
+  };
 
   // התחברות
   const handleLogin = (id: string, host: boolean) => {
@@ -118,7 +141,7 @@ function App() {
   return (
     <div className="min-h-screen">
       {screen === 'LOGIN' && (
-        <LoginScreen onLogin={handleLogin} />
+        <LoginScreen onLogin={handleLogin} onResume={handleResume} />
       )}
 
       {screen === 'CONNECT' && (

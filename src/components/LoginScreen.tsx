@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SyncService } from '../services/sync-service';
 
 interface LoginScreenProps {
   onLogin: (channelId: string, isHost: boolean) => void;
+  onResume?: () => void;
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume }) => {
   const [mode, setMode] = useState<'select' | 'create' | 'join'>('select');
   const [channelId, setChannelId] = useState('');
   const [error, setError] = useState('');
+  const [hasLastSession, setHasLastSession] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('rrx3_last_session') || 'null');
+      setHasLastSession(!!(saved?.channelId && saved?.myGender && saved?.scenario));
+    } catch {
+      setHasLastSession(false);
+    }
+  }, []);
 
   // יצירת ערוץ חדש
   const handleCreate = () => {
@@ -54,6 +65,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         <div className="bg-dark/40 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
           {mode === 'select' && (
             <div className="space-y-4 animate-slide-up">
+              {/* כפתור חזרה למסע — מופיע רק אם יש סשן שמור */}
+              {hasLastSession && onResume && (
+                <button
+                  onClick={onResume}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-emerald-700/60 to-emerald-600/60 border border-emerald-400/40 rounded-xl text-emerald-200 font-semibold text-lg hover:scale-105 transform transition-all shadow-lg hover:shadow-emerald-500/30 backdrop-blur-sm"
+                >
+                  🔄 חזור למסע שהתחלתם
+                </button>
+              )}
+
               <button
                 onClick={() => setMode('create')}
                 className="w-full py-4 px-6 bg-gradient-to-r from-sexy-fuchsia to-bordeaux rounded-xl text-white font-semibold text-lg hover:scale-105 transform transition-all shadow-lg hover:shadow-sexy-fuchsia/50"
