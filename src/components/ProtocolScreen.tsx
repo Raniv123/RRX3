@@ -83,6 +83,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const fetchAIRecommendation = async () => {
     setLoading(true);
     try {
+      console.log('[AI] Fetching recommendation, messages:', messages.length);
       const response = await aiEngine.current.getRecommendation(
         messages,
         tensionState.level,
@@ -91,9 +92,58 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         scenario
       );
 
+      console.log('[AI] Response received:', JSON.stringify(response).substring(0, 200));
       setAiResponse(response);
     } catch (error) {
-      console.error('AI Recommendation Error:', error);
+      console.error('[AI] Recommendation Error:', error);
+      // Fallback — אם הקריאה נכשלת, תן אפשרויות בסיסיות
+      setAiResponse({
+        contextAnalysis: {
+          summary: 'התחלת מסע חדש',
+          mood: 'curious',
+          readyForNext: false,
+          recommendation: 'התחל בהיכרות',
+          messageCount: 0,
+          timeSinceStart: 0
+        },
+        strategicAdvice: {
+          forMan: 'התחל בעדינות. הצג את עצמך בתפקיד.',
+          forWoman: 'היכנסי לתפקיד. תני לו להוביל.'
+        },
+        options: [
+          {
+            label: 'היכרות ראשונה',
+            sendText: 'שלום... אני לא בטוח/ה שאנחנו צריכים להיות כאן ביחד',
+            type: 'SAY',
+            intent: 'פתיחת שיחה עם מתח',
+            intensity: 2
+          },
+          {
+            label: 'כניסה לתפקיד',
+            sendText: 'אני מרגיש/ה משהו מוזר... משיכה שלא צריכה להיות',
+            type: 'SAY',
+            intent: 'יצירת מתח ראשוני',
+            intensity: 3
+          },
+          {
+            label: 'מבט ראשון',
+            sendText: '[מביט/ה בך לרגע ארוך מדי, ומיד מסיט/ה מבט]',
+            type: 'DO',
+            intent: 'שפת גוף מרמזת',
+            intensity: 2
+          }
+        ],
+        pacing: {
+          currentPhase: 'ICE' as any,
+          shouldProgress: false,
+          reason: 'התחלה',
+          recommendedMessages: '5-10',
+          pacing: 'slow'
+        },
+        tension: 0,
+        phase: 'ICE' as any,
+        currentGoal: 'לבנות אמון ונוחות, מגע עדין ראשוני'
+      });
     } finally {
       setLoading(false);
     }
