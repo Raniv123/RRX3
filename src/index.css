@@ -105,6 +105,113 @@ a:hover {
   color: white;
 }
 
+/* === אנימציות חלקיקים לפי שלב === */
+
+/* קרח — חלקיקים נופלים */
+@keyframes float-down {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-down {
+  animation: float-down 8s linear infinite;
+}
+
+/* חימום — בועות עולות */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-float-up {
+  animation: float-up 7s ease-out infinite;
+}
+
+/* לוהט — להבות עולות */
+@keyframes flame-rise {
+  0% {
+    transform: translateY(0) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-40vh) scale(1.1) rotate(15deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.6) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
+.animate-flame-rise {
+  animation: flame-rise 4s ease-out infinite;
+}
+
+/* אש — התפרצות */
+@keyframes fire-burst {
+  0% {
+    transform: translateY(0) scale(0.5) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+    transform: translateY(-10vh) scale(1.2) rotate(10deg);
+  }
+  40% {
+    transform: translateY(-40vh) scale(1) rotate(-5deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.3) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+.animate-fire-burst {
+  animation: fire-burst 3s ease-out infinite;
+}
+
+/* פולסציה עדינה להודעות בשלב אש */
+@keyframes pulse-subtle {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(249, 115, 22, 0.3);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
 /* מניעת zoom במובייל */
 @media screen and (max-width: 768px) {
   input,
