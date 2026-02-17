@@ -77,6 +77,12 @@ export interface Scenario {
   };
   twists: string[];
   scenarios: string[];
+  sceneKeywords?: {
+    ICE: string;   // e.g. "elegant restaurant paris evening"
+    WARM: string;  // e.g. "candlelit private garden night"
+    HOT: string;   // e.g. "luxury hotel suite balcony"
+    FIRE: string;  // e.g. "intimate bedroom candles dark sensual"
+  };
 }
 
 // Avatar Images (CGI generated or fallback)

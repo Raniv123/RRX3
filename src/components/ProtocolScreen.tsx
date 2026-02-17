@@ -338,8 +338,15 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ===== סצינה נוכחית — לפי שלב =====
+  // אם לסיטואציה יש מילות מפתח → תמונה דינמית ממנה, אחרת curated fallback
   const phaseScenes = SCENES_BY_PHASE[tensionState.phase] || SCENES_BY_PHASE.ICE;
-  const currentScene = phaseScenes[sceneIndex % phaseScenes.length];
+  const scenarioKeyword = scenario.sceneKeywords?.[tensionState.phase as keyof typeof scenario.sceneKeywords];
+  const dynamicSceneUrl = scenarioKeyword
+    ? `https://source.unsplash.com/1920x1080/?${encodeURIComponent(scenarioKeyword)}&sig=${sceneIndex}`
+    : null;
+  const currentScene = dynamicSceneUrl
+    ? { url: dynamicSceneUrl, name: phaseScenes[sceneIndex % phaseScenes.length].name, overlay: phaseScenes[sceneIndex % phaseScenes.length].overlay }
+    : phaseScenes[sceneIndex % phaseScenes.length];
 
   // ===== כשהשלב משתנה — עבור לסצינה מתאימה =====
   useEffect(() => {
