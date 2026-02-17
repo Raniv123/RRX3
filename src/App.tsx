@@ -27,22 +27,22 @@ function App() {
       // אם יוצר חדש - הצג את קוד החיבור
       setScreen('CONNECT');
     } else {
-      // אם מצטרף - שלח אות JOIN ועבור לבחירת מין
-      // צור SyncService זמני לשליחת JOIN
+      // אם מצטרף - קודם להאזין, ואז לשלוח JOIN (מניעת race condition)
       const tempSync = new SyncService(id, 'MAN');
-      tempSync.sendJoinSignal().then(() => {
-        // האזן לתרחיש מה-host
-        tempSync.connect(
-          () => {},
-          (sysMsg: SystemMessage) => {
-            if (sysMsg.type === 'SCENARIO' && sysMsg.data) {
-              setScenario(sysMsg.data);
-            }
-          }
-        );
-        syncRef.current = tempSync;
-      });
 
+      // חיבור מיידי לפני JOIN כדי לא לפספס הודעות
+      tempSync.connect(
+        () => {},
+        (sysMsg: SystemMessage) => {
+          if (sysMsg.type === 'SCENARIO' && sysMsg.data) {
+            setScenario(sysMsg.data);
+          }
+        }
+      );
+
+      // שלח JOIN אחרי שמאזינים
+      tempSync.sendJoinSignal();
+      syncRef.current = tempSync;
       setScreen('GENDER_SELECTION');
     }
   };
@@ -85,27 +85,17 @@ function App() {
         setScreen('PROTOCOL');
       } else {
         // חכה לתרחיש מה-host
+        // useEffect יזהה כשיגיע התרחיש ויעבור ל-PROTOCOL
         setLoadingScenario(true);
-        // נמתין עד 30 שניות לתרחיש
-        const timeout = setTimeout(() => {
-          // אם עדיין אין תרחיש - השתמש ב-fallback
-          if (!scenario) {
-            const fallback = aiEngine.current.getDefaultScenarioPublic();
-            setScenario(fallback);
-            setLoadingScenario(false);
-            setScreen('PROTOCOL');
-          }
+
+        // fallback אחרי 30 שניות אם ה-host לא שלח תרחיש
+        setTimeout(() => {
+          setScenario(prev => {
+            if (!prev) return aiEngine.current.getDefaultScenarioPublic();
+            return prev;
+          });
+          setLoadingScenario(false);
         }, 30000);
-
-        // בדוק כל שניה אם התרחיש הגיע
-        const check = setInterval(() => {
-          // scenario is captured by closure, need to use state
-        }, 1000);
-
-        return () => {
-          clearTimeout(timeout);
-          clearInterval(check);
-        };
       }
     }
   };
