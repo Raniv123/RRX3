@@ -10,49 +10,85 @@ import {
   updateSurpriseTracking
 } from '../services/surprise-engine';
 
-// ===== סצינות קסומות =====
-const MAGICAL_SCENES = [
-  {
-    url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=85&auto=format&fit=crop',
-    name: 'פריז בלילה',
-    overlay: 'from-black/60 via-black/30 to-black/60'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1540202404-1b927e27fa8b?w=1920&q=85&auto=format&fit=crop',
-    name: 'ונציה הקסומה',
-    overlay: 'from-black/60 via-black/20 to-black/70'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=85&auto=format&fit=crop',
-    name: 'הרים כחולים',
-    overlay: 'from-black/70 via-black/30 to-black/60'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85&auto=format&fit=crop',
-    name: 'חוף פרטי',
-    overlay: 'from-black/50 via-black/20 to-black/60'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1518209916812-65c4e1a5e8d0?w=1920&q=85&auto=format&fit=crop',
-    name: 'בקתה קסומה',
-    overlay: 'from-black/60 via-black/30 to-black/70'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1920&q=85&auto=format&fit=crop',
-    name: 'מלדיביים',
-    overlay: 'from-black/40 via-black/20 to-black/60'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1445308394107-257d9bf5b9b5?w=1920&q=85&auto=format&fit=crop',
-    name: 'יער נגוהות',
-    overlay: 'from-black/60 via-black/30 to-black/60'
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=85&auto=format&fit=crop',
-    name: 'הרים בלילה',
-    overlay: 'from-black/60 via-black/20 to-black/70'
-  }
-];
+// ===== סצינות לפי שלב — מציבורי לאינטימי =====
+const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay: string }>> = {
+  // ❄️ ICE — מקומות ציבוריים, אווירת פגישה ראשונה
+  ICE: [
+    {
+      url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&auto=format&fit=crop',
+      name: '🍷 מסעדה אלגנטית בפריז',
+      overlay: 'from-black/65 via-black/35 to-black/65'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=85&auto=format&fit=crop',
+      name: '🥂 בר מלון יוקרתי',
+      overlay: 'from-black/60 via-black/30 to-black/65'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=1920&q=85&auto=format&fit=crop',
+      name: '🎨 פתיחת תערוכה',
+      overlay: 'from-black/60 via-black/25 to-black/60'
+    }
+  ],
+  // 🌡️ WARM — מקומות חצי פרטיים, אווירה מתחממת
+  WARM: [
+    {
+      url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1920&q=85&auto=format&fit=crop',
+      name: '🌿 גן פרטי בלילה',
+      overlay: 'from-black/65 via-black/30 to-black/65'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1574096079513-d8259312b785?w=1920&q=85&auto=format&fit=crop',
+      name: '🕯️ ארוחה פרטית לאור נרות',
+      overlay: 'from-black/60 via-black/20 to-black/70'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1481833761820-0509d3217039?w=1920&q=85&auto=format&fit=crop',
+      name: '🎷 בר ג\'אז קסום',
+      overlay: 'from-black/70 via-black/30 to-black/65'
+    }
+  ],
+  // 🌶️ HOT — מקומות אינטימיים, רומנטיים
+  HOT: [
+    {
+      url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1920&q=85&auto=format&fit=crop',
+      name: '🌊 מרפסת נסתרת מול הים',
+      overlay: 'from-black/60 via-black/20 to-black/70'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1920&q=85&auto=format&fit=crop',
+      name: '✨ סוויטה עם נוף',
+      overlay: 'from-black/65 via-black/25 to-black/65'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop',
+      name: '🌙 וילה פרטית בלילה',
+      overlay: 'from-black/55 via-black/20 to-black/65'
+    }
+  ],
+  // 🔥 FIRE — מקומות אינטימיים לחלוטין
+  FIRE: [
+    {
+      url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop',
+      name: '🕯️ חדר נרות אינטימי',
+      overlay: 'from-black/70 via-black/30 to-black/75'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop',
+      name: '💆 ספא פרטי',
+      overlay: 'from-black/65 via-black/25 to-black/70'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=1920&q=85&auto=format&fit=crop',
+      name: '🌹 ליל שישי פרטי',
+      overlay: 'from-black/70 via-black/30 to-black/70'
+    }
+  ]
+};
+
+// Keep a flat array for fallback only
+const MAGICAL_SCENES = Object.values(SCENES_BY_PHASE).flat();
+
 
 // ===== אווטר CGI =====
 const CGIAvatar: React.FC<{
@@ -281,8 +317,9 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const [inputText, setInputText] = useState('');
   const [showAIPanel, setShowAIPanel] = useState(true);
   const [avatars, setAvatars] = useState<AvatarImages>({ MAN: null, WOMAN: null });
-  const [currentScene, setCurrentScene] = useState(0);
+  const [sceneIndex, setSceneIndex] = useState(0); // within-phase scene index
   const [sceneOpacity, setSceneOpacity] = useState(1);
+  const [lastPhase, setLastPhase] = useState<string>('ICE');
 
   // Game state
   const [activeGame, setActiveGame] = useState<GameCard | null>(null);
@@ -300,18 +337,33 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const sessionStartTime = useRef(Date.now());
   const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ===== סצינות קסומות — מחליפות כל 3 דקות =====
+  // ===== סצינה נוכחית — לפי שלב =====
+  const phaseScenes = SCENES_BY_PHASE[tensionState.phase] || SCENES_BY_PHASE.ICE;
+  const currentScene = phaseScenes[sceneIndex % phaseScenes.length];
+
+  // ===== כשהשלב משתנה — עבור לסצינה מתאימה =====
   useEffect(() => {
-    const rotateScene = () => {
-      // fade out
+    if (tensionState.phase !== lastPhase) {
+      setLastPhase(tensionState.phase);
       setSceneOpacity(0);
       setTimeout(() => {
-        setCurrentScene(prev => (prev + 1) % MAGICAL_SCENES.length);
+        setSceneIndex(0); // התחל מסצינה ראשונה בשלב החדש
+        setSceneOpacity(1);
+      }, 1500);
+    }
+  }, [tensionState.phase, lastPhase]);
+
+  // ===== סצינות מתחלפות בתוך שלב — כל 4 דקות =====
+  useEffect(() => {
+    const rotateScene = () => {
+      setSceneOpacity(0);
+      setTimeout(() => {
+        setSceneIndex(prev => prev + 1);
         setSceneOpacity(1);
       }, 1500);
     };
 
-    const interval = setInterval(rotateScene, 3 * 60 * 1000); // כל 3 דקות
+    const interval = setInterval(rotateScene, 4 * 60 * 1000); // כל 4 דקות בתוך אותו שלב
     return () => clearInterval(interval);
   }, []);
 
@@ -457,7 +509,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
 
   const phaseIcon = { ICE: '❄️', WARM: '🌡️', HOT: '🌶️', FIRE: '🔥' }[tensionState.phase] || '❄️';
 
-  const scene = MAGICAL_SCENES[currentScene];
+  // currentScene already computed from phaseScenes above
 
   return (
     <div className="h-screen flex flex-col relative overflow-hidden">
@@ -466,13 +518,13 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${scene.url})`,
+          backgroundImage: `url(${currentScene.url})`,
           opacity: sceneOpacity,
           transition: 'opacity 1.5s ease-in-out'
         }}
       />
       {/* Overlay gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-b ${scene.overlay}`} />
+      <div className={`absolute inset-0 bg-gradient-to-b ${currentScene.overlay}`} />
 
       {/* Phase tint overlay */}
       <div
@@ -488,7 +540,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         className="absolute top-16 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-[10px] text-white/30 border border-white/10 backdrop-blur-sm pointer-events-none"
         style={{ opacity: sceneOpacity, transition: 'opacity 1.5s ease-in-out' }}
       >
-        📍 {scene.name}
+        📍 {currentScene.name}
       </div>
 
       {/* ===== HEADER ===== */}
@@ -553,58 +605,82 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         </button>
 
         {showAIPanel && (
-          <div className="px-4 pb-2">
-            {/* Strategic advice */}
-            {aiResponse && !loading && (
-              <div className={`mb-2.5 px-3 py-2 rounded-xl text-xs leading-relaxed text-white/75 border ${
-                tensionState.phase === 'ICE' ? 'bg-blue-500/10 border-blue-500/15' :
-                tensionState.phase === 'WARM' ? 'bg-pink-500/10 border-pink-500/15' :
-                tensionState.phase === 'HOT' ? 'bg-red-500/10 border-red-500/15' :
-                'bg-orange-500/10 border-orange-500/15'
-              }`}>
-                {myGender === 'MAN'
-                  ? aiResponse.strategicAdvice.forMan
-                  : aiResponse.strategicAdvice.forWoman}
-              </div>
-            )}
+          <div className="px-3 pb-2">
+            {/* Character badge — who am I playing */}
+            {(() => {
+              const myRole = scenario.roles[myGender];
+              return myRole ? (
+                <div className="flex items-center gap-1.5 mb-1.5 px-1">
+                  <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] text-white/50">{myRole.archetype} · </span>
+                    {myRole.forbidden && (
+                      <span className="text-[10px] text-red-400/60">{myRole.forbidden}</span>
+                    )}
+                  </div>
+                </div>
+              ) : null;
+            })()}
 
             {/* Loading dots */}
             {loading && (
-              <div className="flex items-center gap-1.5 py-2 px-2">
+              <div className="flex items-center gap-1.5 py-2 px-1">
                 {[0, 100, 200].map(delay => (
-                  <div
-                    key={delay}
-                    className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-bounce"
-                    style={{ animationDelay: `${delay}ms` }}
-                  />
+                  <div key={delay} className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-bounce"
+                    style={{ animationDelay: `${delay}ms` }} />
                 ))}
-                <span className="text-white/25 text-[10px] mr-1">מחפש השראה...</span>
+                <span className="text-white/25 text-[10px] mr-1">מכנס לתוך הדמות...</span>
               </div>
             )}
 
-            {/* Word chips — tap to add to input */}
-            {aiResponse && aiResponse.wordChips.length > 0 && !loading && (
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {aiResponse.wordChips.map((chip, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleChipTap(chip)}
-                    className="px-3 py-1.5 rounded-full text-xs text-white/80 border border-white/15 bg-white/5 hover:bg-white/12 hover:border-white/30 hover:text-white active:scale-95 transition-all"
-                    style={{ boxShadow: `0 0 0 0 ${phaseColor}` }}
-                  >
-                    {chip}
-                  </button>
-                ))}
+            {aiResponse && !loading && (
+              <div className="flex gap-2">
+                {/* LEFT: Word chips + advice */}
+                <div className="flex-1 min-w-0">
+                  {/* Strategic advice — in-character coaching */}
+                  <div className="text-[10px] text-white/30 mb-1 uppercase tracking-widest">💬 מה לומר</div>
+                  <div className={`mb-2 px-2.5 py-1.5 rounded-xl text-xs leading-relaxed text-white/70 border ${
+                    tensionState.phase === 'ICE' ? 'bg-blue-500/10 border-blue-500/15' :
+                    tensionState.phase === 'WARM' ? 'bg-pink-500/10 border-pink-500/15' :
+                    tensionState.phase === 'HOT' ? 'bg-red-500/10 border-red-500/15' :
+                    'bg-orange-500/10 border-orange-500/15'
+                  }`}>
+                    {myGender === 'MAN'
+                      ? aiResponse.strategicAdvice.forMan
+                      : aiResponse.strategicAdvice.forWoman}
+                  </div>
 
-                {/* Game card button — if AI suggested one */}
-                {aiResponse.gameCard && (
-                  <button
-                    onClick={() => triggerGame(aiResponse.gameCard!)}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium text-white border border-fuchsia-500/40 bg-fuchsia-500/15 hover:bg-fuchsia-500/25 active:scale-95 transition-all"
-                  >
-                    🎲 {aiResponse.gameCard.title}
-                  </button>
-                )}
+                  {/* Word chips — tap to add to input */}
+                  <div className="flex flex-col gap-1.5">
+                    {aiResponse.wordChips.map((chip, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleChipTap(chip)}
+                        className="w-full text-right px-3 py-2 rounded-xl text-xs text-white/75 border border-white/12 bg-white/5 hover:bg-white/10 hover:border-white/25 hover:text-white active:scale-[0.98] transition-all leading-relaxed"
+                      >
+                        {chip}
+                      </button>
+                    ))}
+
+                    {/* Game card */}
+                    {aiResponse.gameCard && (
+                      <button
+                        onClick={() => triggerGame(aiResponse.gameCard!)}
+                        className="w-full text-right px-3 py-2 rounded-xl text-xs font-medium text-white border border-fuchsia-500/40 bg-fuchsia-500/12 hover:bg-fuchsia-500/22 active:scale-[0.98] transition-all"
+                      >
+                        🎲 {aiResponse.gameCard.title}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* RIGHT: Action tip — character-specific behavior */}
+                <div className="w-[95px] flex-shrink-0">
+                  <div className="text-[10px] text-white/30 mb-1 uppercase tracking-widest">🤫 מה לעשות</div>
+                  <div className="bg-black/30 border border-white/10 rounded-xl p-2 text-[11px] text-white/60 leading-snug">
+                    {aiResponse.actionTip || '🤫 קרב/י מעט ואל תאמר/י מילה'}
+                  </div>
+                </div>
               </div>
             )}
           </div>

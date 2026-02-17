@@ -35,7 +35,8 @@ export interface AIResponse {
     forMan: string;
     forWoman: string;
   };
-  wordChips: string[];      // short 3-6 word phrases to append to input
+  wordChips: string[];      // full sentences (6-12 words) to append to input
+  actionTip: string;        // what to DO right now (behavior, not text to send)
   gameCard?: GameCard;      // optional game trigger
   tension: number;          // 0-100
   phase: Phase;
