@@ -7,6 +7,7 @@ import { BreathSyncScreen } from './components/BreathSyncScreen';
 import { ProtocolScreen } from './components/ProtocolScreen';
 import { InvitationScreen } from './components/InvitationScreen';
 import { InvitationComposerScreen, InvitationReceiverScreen, Invitation } from './components/InvitationComposerScreen';
+import { WaitingScreen } from './components/WaitingScreen';
 import { AIEngine } from './services/ai-engine';
 import { SyncService, SystemMessage } from './services/sync-service';
 
@@ -34,20 +35,33 @@ function parseSpecialInvite(): Invitation | null {
   return null;
 }
 
-type AppScreen = Screen | 'INVITATION' | 'BREATH_SYNC' | 'INVITE_COMPOSE' | 'INVITE_RECEIVED';
+// זיהוי URL params — מסך הכנה (30 דקות לפני)
+function parsePrepParams(): { code: string; time: string } | null {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('prepare');
+    const time = params.get('time');
+    if (code && time) return { code, time };
+  } catch {}
+  return null;
+}
+
+type AppScreen = Screen | 'INVITATION' | 'BREATH_SYNC' | 'INVITE_COMPOSE' | 'INVITE_RECEIVED' | 'WAITING' | 'PREP';
 
 function App() {
   const inviteParams = parseInviteParams();
   const specialInvite = parseSpecialInvite();
+  const prepParams = parsePrepParams();
   const [screen, setScreen] = useState<AppScreen>(
-    specialInvite ? 'INVITE_RECEIVED' : inviteParams ? 'INVITATION' : 'LOGIN'
+    prepParams ? 'PREP' : specialInvite ? 'INVITE_RECEIVED' : inviteParams ? 'INVITATION' : 'LOGIN'
   );
-  const [channelId, setChannelId] = useState(inviteParams?.code || '');
+  const [channelId, setChannelId] = useState(prepParams?.code || inviteParams?.code || '');
   const [isHost, setIsHost] = useState(false);
   const [myGender, setMyGender] = useState<UserGender | null>(null);
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [loadingScenario, setLoadingScenario] = useState(false);
   const [pendingInvitation, setPendingInvitation] = useState<Invitation | null>(specialInvite);
+  const [meetingTime, setMeetingTime] = useState(prepParams?.time || '');
 
   const aiEngine = useRef(new AIEngine());
   const syncRef = useRef<SyncService | null>(null);
@@ -216,21 +230,36 @@ function App() {
         <InvitationReceiverScreen
           invitation={pendingInvitation}
           onAccept={(time) => {
+            const code = inviteParams?.code || '';
+            setMeetingTime(time);
+            setChannelId(code);
             setPendingInvitation(null);
             window.history.replaceState({}, '', window.location.pathname);
-            // אם יש קוד הזמנה — הצטרף ישירות
-            if (inviteParams?.code) {
-              handleLogin(inviteParams.code, false);
-            } else {
-              setScreen('LOGIN');
-            }
-            console.log(`Accepted invitation for ${time}`);
+            // הציג מסך המתנה — לא נכנסים למשחק מיד
+            setScreen('WAITING');
           }}
           onDecline={() => {
             setPendingInvitation(null);
             window.history.replaceState({}, '', window.location.pathname);
             setScreen('LOGIN');
           }}
+        />
+      )}
+
+      {screen === 'WAITING' && meetingTime && channelId && (
+        <WaitingScreen
+          meetingTime={meetingTime}
+          channelCode={channelId}
+          onEnter={() => handleLogin(channelId, false)}
+        />
+      )}
+
+      {screen === 'PREP' && prepParams && (
+        <WaitingScreen
+          meetingTime={prepParams.time}
+          channelCode={prepParams.code}
+          isPrepMode={true}
+          onEnter={() => handleLogin(prepParams.code, false)}
         />
       )}
 
