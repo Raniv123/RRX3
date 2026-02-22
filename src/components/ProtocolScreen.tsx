@@ -14,75 +14,75 @@ import audioService from '../services/audio-service';
 
 // ===== סצינות לפי שלב — מציבורי לאינטימי =====
 const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay: string }>> = {
-  // ❄️ ICE — מקומות ציבוריים, אווירת פגישה ראשונה
+  // ❄️ ICE — מסעדה/בר מנקודת מבט יושב, ללא אנשים
   ICE: [
     {
       url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🍷 מסעדה אלגנטית בפריז',
+      name: '🍷 שולחן מסעדה לאור נרות',
       overlay: 'from-black/65 via-black/35 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🥂 בר מלון יוקרתי',
+      url: 'https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🥂 בר חשוך אינטימי',
       overlay: 'from-black/60 via-black/30 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🎨 פתיחת תערוכה',
+      url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🎨 מסעדה אלגנטית',
       overlay: 'from-black/60 via-black/25 to-black/60'
     }
   ],
-  // 🌡️ WARM — מקומות חצי פרטיים, אווירה מתחממת
+  // 🌡️ WARM — גן/מרפסת ממבט ראשון, ללא אנשים
   WARM: [
     {
-      url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🌿 גן פרטי בלילה',
+      url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🌿 שביל גן מוסתר',
       overlay: 'from-black/65 via-black/30 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1574096079513-d8259312b785?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🕯️ ארוחה פרטית לאור נרות',
+      url: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🕯️ שקיעה ממרפסת',
       overlay: 'from-black/60 via-black/20 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1481833761820-0509d3217039?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🎷 בר ג\'אז קסום',
+      url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🎷 נוף לילי שקט',
       overlay: 'from-black/70 via-black/30 to-black/65'
     }
   ],
-  // 🌶️ HOT — מקומות אינטימיים, רומנטיים
+  // 🌶️ HOT — מלון/חדר POV, ללא אנשים
   HOT: [
     {
-      url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🌊 מרפסת נסתרת מול הים',
+      url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🌊 חדר מלון יוקרתי',
       overlay: 'from-black/60 via-black/20 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '✨ סוויטה עם נוף',
+      url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '✨ בריכה פרטית במלון',
       overlay: 'from-black/65 via-black/25 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🌙 וילה פרטית בלילה',
+      url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🌙 סוויטה עם נוף',
       overlay: 'from-black/55 via-black/20 to-black/65'
     }
   ],
-  // 🔥 FIRE — מקומות אינטימיים לחלוטין
+  // 🔥 FIRE — חדר אינטימי, נרות, ללא אנשים
   FIRE: [
     {
-      url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🕯️ חדר נרות אינטימי',
+      url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🕯️ חדר שינה לאור נרות',
       overlay: 'from-black/70 via-black/30 to-black/75'
     },
     {
-      url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '💆 ספא פרטי',
+      url: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '💆 חדר אינטימי חשוך',
       overlay: 'from-black/65 via-black/25 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&h=1200&q=85&auto=format&fit=crop',
-      name: '🌹 ליל שישי פרטי',
+      url: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&h=1200&q=85&auto=format&fit=crop',
+      name: '🌹 מיטה רומנטית',
       overlay: 'from-black/70 via-black/30 to-black/70'
     }
   ]
@@ -218,72 +218,72 @@ const SCENARIO_RING_COLORS: Record<string, string> = {
 const SCENARIO_SCENES: Record<string, Record<string, Array<{ url: string; name: string; overlay: string }>>> = {
   'massage-therapist': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧴 לובי הספא', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧴 לובי הספא', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1200&q=85&auto=format&fit=crop', name: '💆 חדר הטיפולים', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1200&q=85&auto=format&fit=crop', name: '💆 מיטת טיפולים', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ ספא אינטימי', overlay: 'from-black/65 via-black/30 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ ספא אינטימי', overlay: 'from-black/65 via-black/30 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 ספא פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 ספא פרטי לאור נרות', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'boss-assistant': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1200&q=85&auto=format&fit=crop', name: '💼 משרד המנכ"ל', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1200&q=85&auto=format&fit=crop', name: '💼 משרד ריק', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌆 משרד בלילה', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌆 משרד בלילה', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ קומה 40 בלילה', overlay: 'from-black/65 via-black/25 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ נוף מקומה גבוהה', overlay: 'from-black/65 via-black/25 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=1200&q=85&auto=format&fit=crop', name: '🔐 משרד פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&h=1200&q=85&auto=format&fit=crop', name: '🔐 חדר פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'doctor-patient': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=1200&q=85&auto=format&fit=crop', name: '🏥 חדר המתנה', overlay: 'from-black/50 via-black/20 to-black/55' },
+      { url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&h=1200&q=85&auto=format&fit=crop', name: '🏥 חדר המתנה', overlay: 'from-black/50 via-black/20 to-black/55' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&h=1200&q=85&auto=format&fit=crop', name: '🩺 חדר הבדיקה', overlay: 'from-black/55 via-black/25 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&h=1200&q=85&auto=format&fit=crop', name: '🩺 חדר בדיקה', overlay: 'from-black/55 via-black/25 to-black/60' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&h=1200&q=85&auto=format&fit=crop', name: '💉 חדר בדיקה פרטי', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '💉 חדר פרטי חשוך', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 פגישה פרטית', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 חדר אינטימי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'yoga-instructor': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧘 אולפן יוגה', overlay: 'from-black/50 via-black/15 to-black/55' },
+      { url: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧘 אולפן יוגה ריק', overlay: 'from-black/50 via-black/15 to-black/55' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌿 יוגה פרטית', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌿 טבע שקט', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ פינה אינטימית', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ פינה חשוכה', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ שיעור פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ חדר נרות', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'photographer-model': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=1200&q=85&auto=format&fit=crop', name: '📸 אולפן צילום', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&h=1200&q=85&auto=format&fit=crop', name: '📸 אולפן צילום ריק', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=1200&q=85&auto=format&fit=crop', name: '💡 סט תאורה', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&h=1200&q=85&auto=format&fit=crop', name: '💡 סט תאורה דרמטית', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1470137430879-d51bf16bc0a8?w=800&h=1200&q=85&auto=format&fit=crop', name: '🎨 סט דרמטי', overlay: 'from-black/65 via-black/25 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=1200&q=85&auto=format&fit=crop', name: '🎨 בריכה פרטית', overlay: 'from-black/65 via-black/25 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 צילום פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 חדר שינה אינטימי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
 };
@@ -649,6 +649,11 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
 
   const [audioEnabled, setAudioEnabled] = useState(false);
 
+  // Typing indicator
+  const [partnerTyping, setPartnerTyping] = useState(false);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTypingSentRef = useRef<number>(0);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const syncService = useRef(new SyncService(channelId, myGender));
@@ -742,7 +747,18 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           return; // לא מוסיפים לצ'אט — סיגנל שקט
         }
       }
+      // כשמגיעה הודעה מהשותף — הוא כבר לא מקליד
+      if (message.senderGender !== myGender) {
+        setPartnerTyping(false);
+      }
       setMessages(prev => [...prev, message]);
+    }, (sysMsg) => {
+      // טיפול בהודעות מערכת — כולל Typing Indicator
+      if (sysMsg.type === 'TYPING') {
+        setPartnerTyping(true);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => setPartnerTyping(false), 2500);
+      }
     });
     return () => { syncService.current.disconnect(); };
   }, [myGender]);
@@ -973,6 +989,17 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             scenarioId={scenario.id}
           />
         ))}
+        {/* Typing indicator */}
+        {partnerTyping && (
+          <div className="flex items-center gap-2 px-4 py-2" dir="rtl">
+            <div className="flex gap-1 items-center">
+              <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span className="text-white/30 text-xs">מקליד/ה...</span>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -1188,7 +1215,15 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               ref={inputRef}
               type="text"
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+              onChange={(e) => {
+                setInputText(e.target.value);
+                // שלח typing signal (throttle — פעם בשנייה)
+                const now = Date.now();
+                if (now - lastTypingSentRef.current > 1000) {
+                  lastTypingSentRef.current = now;
+                  syncService.current.sendSystemMessage('TYPING');
+                }
+              }}
               onKeyDown={handleKeyDown}
               placeholder="כתוב/י בעצמך... הלחישות למעלה הן השראה"
               className="flex-1 bg-transparent text-white text-sm placeholder-white/25 outline-none py-1"

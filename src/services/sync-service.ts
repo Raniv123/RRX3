@@ -6,7 +6,7 @@ const NTFY_SERVER = 'https://ntfy.sh';
 
 // סוגי הודעות מערכת (לא הודעות צ'אט)
 export interface SystemMessage {
-  type: 'JOIN' | 'SCENARIO' | 'GENDER' | 'READY' | 'PING' | 'BREATH_START';
+  type: 'JOIN' | 'SCENARIO' | 'GENDER' | 'READY' | 'PING' | 'BREATH_START' | 'TYPING';
   data?: any;
   sender?: string;
   timestamp: number;

@@ -212,8 +212,10 @@ function App() {
             navigator.clipboard.writeText(url).catch(() => {});
             alert(`💌 הקישור הועתק!\n\nשלח לפרטנרית שלך:\n${url}\n\n⏰ שעת הפגישה: ${invitation.time}`);
             setChannelId(code);
+            setMeetingTime(invitation.time);
             setIsHost(true);
-            setScreen('CONNECT'); // ← ממתין לפרטנרית במסך החיבור
+            // הגבר ממתין גם הוא — לא ישאר על CONNECT כל היום
+            setScreen('WAITING');
           }}
         />
       )}
@@ -242,7 +244,11 @@ function App() {
         <WaitingScreen
           meetingTime={meetingTime}
           channelCode={channelId}
-          onEnter={() => handleLogin(channelId, false)}
+          isHost={isHost}
+          onEnter={isHost
+            ? () => setScreen('CONNECT')       // גבר → CONNECT (ממתין לה)
+            : () => handleLogin(channelId, false) // אשה → join + BREATH_SYNC
+          }
         />
       )}
 

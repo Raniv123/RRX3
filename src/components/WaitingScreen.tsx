@@ -4,6 +4,7 @@ interface WaitingScreenProps {
   meetingTime: string;     // "20:00"
   channelCode: string;     // קוד החיבור
   isPrepMode?: boolean;    // האם זה מסך ההכנה (30 דקות לפני)
+  isHost?: boolean;        // האם זה הגבר (host)
   onEnter: () => void;     // כניסה למסע
 }
 
@@ -97,19 +98,28 @@ function googleCalLink(meetingTime: string, channelCode: string, isPrepEvent: bo
   }
 }
 
-const PREP_TIPS = [
+const PREP_TIPS_WOMAN = [
   { icon: '👗', title: 'להתלבש יפה', text: 'בשביל עצמך — בחרי משהו שאת מרגישה בו מדהימה' },
   { icon: '🕯️', title: 'נרות ותאורה', text: 'כבי את האורות הגדולים, הדליקי נר אחד לפחות' },
   { icon: '🌸', title: 'בושם', text: 'ריח שאת אוהבת — על הצוואר ועל הפרק' },
   { icon: '📵', title: 'בלי הסחות', text: 'השתקי התראות ושמרי את הטלפון לערב הזה בלבד' },
 ];
 
+const PREP_TIPS_MAN = [
+  { icon: '🌹', title: 'מגע קטן', text: 'פרח, מתנה קטנה — משהו שיאמר "חשבתי עלייך"' },
+  { icon: '🕯️', title: 'אווירה', text: 'נרות, תאורה עדינה — הכן את הסביבה לפני שהיא מגיעה' },
+  { icon: '📱', title: 'טלפון מוכן', text: 'ודא שהטלפון טעון ומחובר לרשת — לא ניצור קשר בלעדיו' },
+  { icon: '✨', title: 'להיות נוכח', text: 'הכי חשוב — להיות כאן, ברגע הזה, בשבילה' },
+];
+
 export const WaitingScreen: React.FC<WaitingScreenProps> = ({
   meetingTime,
   channelCode,
   isPrepMode = false,
+  isHost = false,
   onEnter,
 }) => {
+  const PREP_TIPS = isHost ? PREP_TIPS_MAN : PREP_TIPS_WOMAN;
   const [timeLeft, setTimeLeft] = useState(() => getTimeUntil(meetingTime));
   const [revealed, setRevealed] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -198,7 +208,10 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
           </h1>
           {!isPrepMode && (
             <p className="text-white/35 text-sm mt-3 leading-relaxed">
-              שמרי את הקישור הזה — כאן תיכנסי בשעה {meetingTime}
+              {isHost
+                ? `שמור את הקישור הזה — כאן תיכנס בשעה ${meetingTime}`
+                : `שמרי את הקישור הזה — כאן תיכנסי בשעה ${meetingTime}`
+              }
             </p>
           )}
         </div>
@@ -355,7 +368,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
           >
             <span className="flex items-center justify-center gap-2">
               <span>🔥</span>
-              <span>כנסי למסע</span>
+              <span>{isHost ? 'כנסו למסע' : 'כנסי למסע'}</span>
               <span>🔥</span>
             </span>
           </button>
