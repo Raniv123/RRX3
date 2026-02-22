@@ -392,8 +392,10 @@ const ChatBubble: React.FC<{
   isMine: boolean;
   phase: string;
   avatarUrl: string | null;
-  scenarioId?: string;  // לאווטר ספציפי לתרחיש
-}> = ({ msg, isMine, phase, avatarUrl, scenarioId }) => {
+  scenarioId?: string;
+  roleName?: string;        // שם הדמות (ליד האווטר)
+  onAvatarClick?: () => void; // לחיצה על האווטר
+}> = ({ msg, isMine, phase, avatarUrl, scenarioId, roleName, onAvatarClick }) => {
   const isAction = msg.type === 'ACTION';
 
   const phaseGlow = {
@@ -405,7 +407,21 @@ const ChatBubble: React.FC<{
 
   return (
     <div className={`flex items-end gap-2 ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
-      <CGIAvatar gender={msg.senderGender} avatarUrl={avatarUrl} size="sm" scenarioId={scenarioId} />
+      {/* אווטר + שם */}
+      <div className={`flex flex-col items-center gap-0.5 flex-shrink-0 ${isMine ? 'items-end' : 'items-start'}`}>
+        <button
+          onClick={onAvatarClick}
+          className={`block rounded-full transition-transform active:scale-90 ${onAvatarClick ? 'cursor-pointer' : 'cursor-default'}`}
+          style={{ padding: 0, background: 'none', border: 'none' }}
+        >
+          <CGIAvatar gender={msg.senderGender} avatarUrl={avatarUrl} size="sm" scenarioId={scenarioId} />
+        </button>
+        {roleName && (
+          <span className="text-[9px] text-white/35 max-w-[44px] truncate text-center leading-tight">
+            {roleName}
+          </span>
+        )}
+      </div>
 
       <div className={`max-w-[72%] ${isMine ? 'items-end' : 'items-start'} flex flex-col gap-0.5`}>
         {isAction && (
@@ -1092,16 +1108,22 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
         )}
 
-        {messages.map((msg) => (
-          <ChatBubble
-            key={msg.id}
-            msg={msg}
-            isMine={msg.senderGender === myGender}
-            phase={tensionState.phase}
-            avatarUrl={avatars[msg.senderGender]}
-            scenarioId={scenario.id}
-          />
-        ))}
+        {messages.map((msg) => {
+          const isMine = msg.senderGender === myGender;
+          const myRole = scenario.roles[myGender];
+          return (
+            <ChatBubble
+              key={msg.id}
+              msg={msg}
+              isMine={isMine}
+              phase={tensionState.phase}
+              avatarUrl={avatars[msg.senderGender]}
+              scenarioId={scenario.id}
+              roleName={isMine ? myRole?.name : '???'}
+              onAvatarClick={isMine ? () => setShowIdentityCard(true) : undefined}
+            />
+          );
+        })}
         {/* Typing indicator */}
         {partnerTyping && (
           <div className="flex items-center gap-2 px-4 py-2" dir="rtl">
