@@ -10,6 +10,7 @@ import {
   updateSurpriseTracking
 } from '../services/surprise-engine';
 import { IntimacyMission, IntimacyChoice, getNextMission } from '../data/intimacy-missions';
+import audioService from '../services/audio-service';
 
 // ===== סצינות לפי שלב — מציבורי לאינטימי =====
 const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay: string }>> = {
@@ -660,6 +661,8 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const [partnerReadySignal, setPartnerReadySignal] = useState<null | 'SLOW' | 'READY'>(null);
   const [showSecretCard, setShowSecretCard] = useState(false);
 
+  const [audioEnabled, setAudioEnabled] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const syncService = useRef(new SyncService(channelId, myGender));
@@ -694,17 +697,21 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     ? { url: themePhoto.url, name: `${themePhoto.name} · ${scenario.location}`, overlay: phaseScenes[0].overlay }
     : phaseScenes[sceneIndex % phaseScenes.length];                         // fallback גנרי
 
-  // ===== כשהשלב משתנה — עבור לסצינה מתאימה =====
+  // ===== כשהשלב משתנה — עבור לסצינה מתאימה + מעבר מוזיקה =====
   useEffect(() => {
     if (tensionState.phase !== lastPhase) {
       setLastPhase(tensionState.phase);
       setSceneOpacity(0);
       setTimeout(() => {
-        setSceneIndex(0); // התחל מסצינה ראשונה בשלב החדש
+        setSceneIndex(0);
         setSceneOpacity(1);
       }, 1500);
+      // מעבר חלק למוזיקה של השלב החדש
+      if (audioEnabled) {
+        audioService.transition(scenario.id, tensionState.phase);
+      }
     }
-  }, [tensionState.phase, lastPhase]);
+  }, [tensionState.phase, lastPhase, audioEnabled, scenario.id]);
 
   // ===== סצינות מתחלפות בתוך שלב — כל 4 דקות =====
   useEffect(() => {
@@ -724,6 +731,11 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   useEffect(() => {
     aiEngine.current.generateAvatars(scenario).then(setAvatars);
   }, [scenario]);
+
+  // ===== ניקוי מוזיקה ביציאה =====
+  useEffect(() => {
+    return () => { audioService.destroy(); };
+  }, []);
 
   // ===== חיבור לסנכרון =====
   useEffect(() => {
@@ -802,7 +814,13 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     if (!activeMission) {
       const mission = getNextMission(newTension.level, completedMissions);
       if (mission) {
-        setTimeout(() => setActiveMission(mission), 800);
+        setTimeout(() => {
+          setActiveMission(mission);
+          // מוזיקה מיוחדת למשימה
+          if (audioEnabled) {
+            audioService.setMissionMood(newTension.level >= 75 ? 'intense' : 'soft');
+          }
+        }, 800);
       }
     }
 
@@ -907,9 +925,30 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               <p className="text-white/40 text-[10px]">{scenario.location}</p>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-white">{tensionState.level}%</div>
-            <div className="text-white/40 text-[10px]">מתח</div>
+          <div className="flex items-center gap-2">
+            {/* כפתור מוזיקה דיסקרטי */}
+            <button
+              onClick={() => {
+                audioService.init();
+                const enabled = audioService.toggle();
+                setAudioEnabled(enabled);
+                if (enabled) {
+                  audioService.play(scenario.id, tensionState.phase);
+                }
+              }}
+              title={audioEnabled ? 'כבה מוזיקה' : 'הפעל מוזיקת רקע'}
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                audioEnabled
+                  ? 'text-fuchsia-300/70 bg-fuchsia-500/15'
+                  : 'text-white/20 hover:text-white/40'
+              }`}
+            >
+              {audioEnabled ? '🎵' : '🔇'}
+            </button>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-white">{tensionState.level}%</div>
+              <div className="text-white/40 text-[10px]">מתח</div>
+            </div>
           </div>
         </div>
         {/* Tension bar */}
