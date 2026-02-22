@@ -21,9 +21,6 @@ export const InvitationScreen: React.FC<InvitationScreenProps> = ({
   const [phase, setPhase] = useState<'landing' | 'accepted'>('landing');
   const [bgIndex] = useState(() => Math.floor(Math.random() * BG_IMAGES.length));
   const [revealed, setRevealed] = useState(false);
-  const [breathPhase, setBreathPhase] = useState<'in' | 'hold' | 'out'>('in');
-  const [breathSeconds, setBreathSeconds] = useState(4);
-  const [showBreath, setShowBreath] = useState(false);
   const [particles, setParticles] = useState<Array<{ id: number; x: number; delay: number; duration: number }>>([]);
 
   // אפקט חלקיקים
@@ -43,49 +40,13 @@ export const InvitationScreen: React.FC<InvitationScreenProps> = ({
     return () => clearTimeout(t);
   }, []);
 
-  // נשימה מודרכת
-  useEffect(() => {
-    if (!showBreath) return;
-
-    const cycle: Array<{ phase: 'in' | 'hold' | 'out'; duration: number }> = [
-      { phase: 'in', duration: 4 },
-      { phase: 'hold', duration: 4 },
-      { phase: 'out', duration: 8 },
-    ];
-    let cycleIdx = 0;
-    let remaining = cycle[0].duration;
-    setBreathPhase(cycle[0].phase);
-    setBreathSeconds(cycle[0].duration);
-
-    const t = setInterval(() => {
-      remaining--;
-      setBreathSeconds(remaining);
-      if (remaining <= 0) {
-        cycleIdx = (cycleIdx + 1) % 3;
-        remaining = cycle[cycleIdx].duration;
-        setBreathPhase(cycle[cycleIdx].phase);
-        setBreathSeconds(remaining);
-      }
-    }, 1000);
-    return () => clearInterval(t);
-  }, [showBreath]);
-
   const handleAccept = () => {
     setPhase('accepted');
-    setShowBreath(true);
-    // אחרי 8 שניות — כניסה לאפליקציה
+    // fade קצר של 600ms ואז כניסה
     setTimeout(() => {
       onAccept(channelCode);
-    }, 8000);
+    }, 600);
   };
-
-  const breathLabel = {
-    in: 'שאפי לאט...',
-    hold: 'עצרי...',
-    out: 'שחררי לאט...'
-  }[breathPhase];
-
-  const breathScale = breathPhase === 'in' ? 1.4 : breathPhase === 'hold' ? 1.4 : 1;
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center" dir="rtl">
@@ -192,50 +153,12 @@ export const InvitationScreen: React.FC<InvitationScreenProps> = ({
         </div>
       )}
 
-      {/* ===== BREATH SYNC ===== */}
+      {/* ===== TRANSITION ===== */}
       {phase === 'accepted' && (
         <div className="relative z-10 max-w-sm w-full mx-4 text-center"
-          style={{ animation: 'fadeIn 0.8s ease forwards' }}>
-
-          <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-8">
-            לפני שנתחיל — רגע אחד ביחד
-          </p>
-
-          {/* עיגול נשימה */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="relative w-48 h-48">
-              {/* עיגול חיצוני */}
-              <div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: 'radial-gradient(circle, rgba(180,60,40,0.15) 0%, transparent 70%)',
-                  border: '1px solid rgba(180,60,40,0.2)',
-                  transform: `scale(${breathScale})`,
-                  transition: `transform ${breathPhase === 'in' ? 4 : breathPhase === 'hold' ? 0 : 8}s ease-in-out`,
-                  boxShadow: `0 0 ${breathPhase === 'hold' ? 60 : 20}px rgba(180,60,40,0.3)`
-                }}
-              />
-              {/* עיגול פנימי */}
-              <div
-                className="absolute inset-8 rounded-full flex items-center justify-center flex-col gap-1"
-                style={{
-                  background: 'radial-gradient(circle, rgba(180,60,40,0.25) 0%, transparent 80%)',
-                  transform: `scale(${breathScale})`,
-                  transition: `transform ${breathPhase === 'in' ? 4 : breathPhase === 'hold' ? 0 : 8}s ease-in-out`,
-                }}
-              >
-                <span className="text-white/80 text-sm font-light">{breathLabel}</span>
-                <span className="text-white/40 text-xl font-light font-mono">{breathSeconds}</span>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-white/50 text-sm leading-relaxed mx-auto max-w-[220px] mb-4">
-            קחי נשימה עמוקה יחד איתו...
-          </p>
-          <p className="text-white/25 text-xs">
-            עוד רגע נכנסות למסע 🌹
-          </p>
+          style={{ animation: 'fadeIn 0.5s ease forwards' }}>
+          <div className="text-4xl mb-4">🌹</div>
+          <p className="text-white/50 text-sm">נכנסים למסע...</p>
         </div>
       )}
 

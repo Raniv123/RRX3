@@ -301,6 +301,34 @@ function findScenePhoto(keyword: string): { url: string; name: string } | null {
 }
 
 
+// ===== Hash פשוט לבחירת אווטר עקבית =====
+function simpleHash(str: string): number {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
+
+// ===== רשימות אווטרים מגוונות — לתרחישים שנוצרו ע"י AI =====
+const DEFAULT_MEN = [
+  'photo-1568602471122-7832951cc4c5',
+  'photo-1519085360753-af0119f7cbe7',
+  'photo-1480455624313-e29b44bbfde1',
+  'photo-1539571696357-5a69c17a67c6',
+  'photo-1566492031773-4f4e44671857',
+  'photo-1506794778202-cad84cf45f1d',
+];
+
+const DEFAULT_WOMEN = [
+  'photo-1531746020798-e6953c6e8e04',
+  'photo-1521146764736-56c929d59c83',
+  'photo-1438761681033-6461ffad8d80',
+  'photo-1544725176-7c40e5a71c5e',
+  'photo-1534528741775-53994a69daeb',
+  'photo-1517841905240-472988babdf9',
+];
+
 // ===== אווטר CGI =====
 const CGIAvatar: React.FC<{
   gender: UserGender;
@@ -327,15 +355,15 @@ const CGIAvatar: React.FC<{
   }
 
   // בחירת תמונה לפי תרחיש + תפקיד — תמונה ספציפית לדמות
-  const DEFAULT_MAN = 'photo-1506794778202-cad84cf45f1d';
-  const DEFAULT_WOMAN = 'photo-1531746020798-e6953c6e8e04';
   let photoId: string;
   if (scenarioId && SCENARIO_ROLE_PHOTOS[scenarioId]) {
     photoId = isMan
       ? SCENARIO_ROLE_PHOTOS[scenarioId].MAN
       : SCENARIO_ROLE_PHOTOS[scenarioId].WOMAN;
   } else {
-    photoId = isMan ? DEFAULT_MAN : DEFAULT_WOMAN;
+    // תרחישי AI — בחירה מגוונת לפי hash של שם התרחיש
+    const pool = isMan ? DEFAULT_MEN : DEFAULT_WOMEN;
+    photoId = pool[simpleHash(scenarioId || 'default') % pool.length];
   }
   const photoUrl = `https://images.unsplash.com/${photoId}?w=200&h=200&fit=crop&crop=face&q=85`;
 

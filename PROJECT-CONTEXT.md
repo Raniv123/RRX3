@@ -295,13 +295,14 @@ git log --oneline
 
 ---
 
-📅 **עדכון אחרון:** 2026-02-22 — סנכרון נשימה, אווטרים ייחודיים, תיקוני באגים
-💬 **סטטוס:** ✅ **v3.1 — פרוס ל-GitHub Pages!**
-🔥 **גרסה:** 3.1.0
-🎨 **שינויים אחרונים (v3.1):**
-- `BreathSyncScreen.tsx`: ספירה לאחור אוטומטית + סנכרון BREATH_START ntfy.sh
-- `ProtocolScreen.tsx`: תמונות אווטר ייחודיות + SCENARIO_RING_COLORS (טבעת צבע לכל תרחיש)
-- `App.tsx`: תיקון הפניית הזמנה (LOGIN→CONNECT) + props נכונים ל-BreathSyncScreen
-- `sync-service.ts`: BREATH_START ב-SystemMessage type
+📅 **עדכון אחרון:** 2026-02-22 — WaitingScreen + calendar integration
+💬 **סטטוס:** ✅ **v3.2 — פרוס ל-GitHub Pages!**
+🔥 **גרסה:** 3.2.0
+🎨 **שינויים אחרונים (v3.2):**
+- `WaitingScreen.tsx` (חדש): ספירה לאחור לשעת הפגישה + טיפי הכנה + יומן
+- `App.tsx`: WAITING/PREP screens, parsePrepParams(), meetingTime state
+- INVITE_RECEIVED → WaitingScreen (לא נכנסים למשחק מיד!)
+- URL ?prepare=CODE&time=HH:MM → מסך הכנה (30 דקות לפני)
+- יומן: Google Calendar URL + ICS download (Apple/Outlook)
 🔗 **GitHub:** https://github.com/Raniv123/RRX3
 🌐 **קישור חי:** https://raniv123.github.io/RRX3/ ✅ פעיל!
