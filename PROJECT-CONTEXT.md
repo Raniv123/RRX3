@@ -1,3 +1,9 @@
+# RRX3 — Project Context
+📅 עדכון אחרון: 2026-02-22
+💬 שיחה אחרונה: InvitationScreen + ConnectScreen (קישור מפתה) + BreathSyncScreen — deployed ל-GitHub Pages ✅
+
+---
+
 # 🔥 RRX3 v2.0 - Project Context
 
 ## מה הפרויקט עושה
@@ -289,9 +295,13 @@ git log --oneline
 
 ---
 
-📅 **עדכון אחרון:** 2026-02-16 21:45
-💬 **סטטוס:** ✅ **תוקן! הפריסה ל-GitHub Pages עובדת מושלם!**
-🔥 **גרסה:** 2.1.1
-🎨 **שינוי אחרון:** תיקון פריסה - הוספת gh-pages scripts + deploy מוצלח
+📅 **עדכון אחרון:** 2026-02-22 — סנכרון נשימה, אווטרים ייחודיים, תיקוני באגים
+💬 **סטטוס:** ✅ **v3.1 — פרוס ל-GitHub Pages!**
+🔥 **גרסה:** 3.1.0
+🎨 **שינויים אחרונים (v3.1):**
+- `BreathSyncScreen.tsx`: ספירה לאחור אוטומטית + סנכרון BREATH_START ntfy.sh
+- `ProtocolScreen.tsx`: תמונות אווטר ייחודיות + SCENARIO_RING_COLORS (טבעת צבע לכל תרחיש)
+- `App.tsx`: תיקון הפניית הזמנה (LOGIN→CONNECT) + props נכונים ל-BreathSyncScreen
+- `sync-service.ts`: BREATH_START ב-SystemMessage type
 🔗 **GitHub:** https://github.com/Raniv123/RRX3
 🌐 **קישור חי:** https://raniv123.github.io/RRX3/ ✅ פעיל!
