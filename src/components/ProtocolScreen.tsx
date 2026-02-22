@@ -178,6 +178,106 @@ const THEME_PHOTO_MAP: Array<{ keywords: string[]; url: string; name: string }> 
   },
 ];
 
+// ===== תמונות דמויות לפי תרחיש =====
+// כל תרחיש → תמונת דמות ספציפית לגבר ולאשה
+const SCENARIO_ROLE_PHOTOS: Record<string, { MAN: string; WOMAN: string }> = {
+  'massage-therapist': {
+    MAN: 'photo-1500648767791-00dcc994a43e',    // גבר רגוע, ביטחון — מעסה
+    WOMAN: 'photo-1531746020798-e6953c6e8e04', // אישה, מבט ישיר חושני — מטופלת
+  },
+  'boss-assistant': {
+    MAN: 'photo-1560250097-0b93528c311a',       // גבר לסת חזקה, חליפה — מנכ"ל
+    WOMAN: 'photo-1529626455594-4ff0802cfb7e', // אישה אלגנטית, מקצועית — עוזרת
+  },
+  'doctor-patient': {
+    MAN: 'photo-1519085360753-af0119f7cbe7',   // גבר עסקי מסתורי — רופא
+    WOMAN: 'photo-1546961342-ea5f62d5a27b',    // אישה מסתורית, פגיעה — מטופלת
+  },
+  'yoga-instructor': {
+    MAN: 'photo-1506794778202-cad84cf45f1d',   // גבר אלגנטי, רוגע — מדריך
+    WOMAN: 'photo-1504703395950-b89145a5425b', // אישה עם עיניים יפות — תלמידה
+  },
+  'photographer-model': {
+    MAN: 'photo-1472099645785-5658abf4ff4e',   // גבר ישיר בעיניים — צלם
+    WOMAN: 'photo-1488426862026-3ee34a7d66df', // אישה יפה עם שיער — דוגמנית
+  },
+};
+
+// ===== רקעים ספציפיים לתרחיש — לכל שלב =====
+// כל תרחיש מתחיל במקום המאפיין אותו ומתפתח לאינטימי
+const SCENARIO_SCENES: Record<string, Record<string, Array<{ url: string; name: string; overlay: string }>>> = {
+  'massage-therapist': {
+    ICE: [
+      { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop', name: '🧴 לובי הספא', overlay: 'from-black/55 via-black/20 to-black/60' },
+    ],
+    WARM: [
+      { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&auto=format&fit=crop', name: '💆 חדר הטיפולים', overlay: 'from-black/60 via-black/25 to-black/65' },
+    ],
+    HOT: [
+      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1920&q=85&auto=format&fit=crop', name: '🕯️ ספא אינטימי', overlay: 'from-black/65 via-black/30 to-black/70' },
+    ],
+    FIRE: [
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 ספא פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+    ],
+  },
+  'boss-assistant': {
+    ICE: [
+      { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=85&auto=format&fit=crop', name: '💼 משרד המנכ"ל', overlay: 'from-black/55 via-black/20 to-black/60' },
+    ],
+    WARM: [
+      { url: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1920&q=85&auto=format&fit=crop', name: '🌆 משרד בלילה', overlay: 'from-black/60 via-black/25 to-black/65' },
+    ],
+    HOT: [
+      { url: 'https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=1920&q=85&auto=format&fit=crop', name: '✨ קומה 40 בלילה', overlay: 'from-black/65 via-black/25 to-black/70' },
+    ],
+    FIRE: [
+      { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop', name: '🔐 משרד פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+    ],
+  },
+  'doctor-patient': {
+    ICE: [
+      { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&q=85&auto=format&fit=crop', name: '🏥 חדר המתנה', overlay: 'from-black/50 via-black/20 to-black/55' },
+    ],
+    WARM: [
+      { url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=1920&q=85&auto=format&fit=crop', name: '🩺 חדר הבדיקה', overlay: 'from-black/55 via-black/25 to-black/60' },
+    ],
+    HOT: [
+      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1920&q=85&auto=format&fit=crop', name: '💉 חדר בדיקה פרטי', overlay: 'from-black/60 via-black/25 to-black/65' },
+    ],
+    FIRE: [
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 פגישה פרטית', overlay: 'from-black/70 via-black/30 to-black/75' },
+    ],
+  },
+  'yoga-instructor': {
+    ICE: [
+      { url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1920&q=85&auto=format&fit=crop', name: '🧘 אולפן יוגה', overlay: 'from-black/50 via-black/15 to-black/55' },
+    ],
+    WARM: [
+      { url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=85&auto=format&fit=crop', name: '🌿 יוגה פרטית', overlay: 'from-black/55 via-black/20 to-black/60' },
+    ],
+    HOT: [
+      { url: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=1920&q=85&auto=format&fit=crop', name: '✨ פינה אינטימית', overlay: 'from-black/60 via-black/25 to-black/65' },
+    ],
+    FIRE: [
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🕯️ שיעור פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+    ],
+  },
+  'photographer-model': {
+    ICE: [
+      { url: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=85&auto=format&fit=crop', name: '📸 אולפן צילום', overlay: 'from-black/55 via-black/20 to-black/60' },
+    ],
+    WARM: [
+      { url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1920&q=85&auto=format&fit=crop', name: '💡 סט תאורה', overlay: 'from-black/60 via-black/25 to-black/65' },
+    ],
+    HOT: [
+      { url: 'https://images.unsplash.com/photo-1470137430879-d51bf16bc0a8?w=1920&q=85&auto=format&fit=crop', name: '🎨 סט דרמטי', overlay: 'from-black/65 via-black/25 to-black/70' },
+    ],
+    FIRE: [
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 צילום פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+    ],
+  },
+};
+
 // מצא תמונה לפי מילות מפתח
 function findScenePhoto(keyword: string): { url: string; name: string } | null {
   if (!keyword) return null;
@@ -196,7 +296,8 @@ const CGIAvatar: React.FC<{
   gender: UserGender;
   avatarUrl: string | null;
   size?: 'sm' | 'md';
-}> = ({ gender, avatarUrl, size = 'sm' }) => {
+  scenarioId?: string;  // תרחיש — לבחירת תמונה ספציפית לתפקיד
+}> = ({ gender, avatarUrl, size = 'sm', scenarioId }) => {
   const dim = size === 'sm' ? 'w-9 h-9' : 'w-11 h-11';
   const isMan = gender === 'MAN';
 
@@ -210,27 +311,17 @@ const CGIAvatar: React.FC<{
     );
   }
 
-  // fallback — תמונות portrait ריאליסטיות מ-Unsplash
-  // גברים: לסת חזקה, מבט מסתורי, תאורה דרמטית
-  const MAN_PHOTOS = [
-    'photo-1506794778202-cad84cf45f1d', // גבר אלגנטי, תאורה כחולה
-    'photo-1500648767791-00dcc994a43e', // גבר עם ביטחון
-    'photo-1519085360753-af0119f7cbe7', // גבר עסקי מסתורי
-    'photo-1472099645785-5658abf4ff4e', // גבר ישיר בעיניים
-    'photo-1560250097-0b93528c311a', // גבר לסת חזקה
-  ];
-  // נשים: יפות, חושניות, אלגנטיות
-  const WOMAN_PHOTOS = [
-    'photo-1531746020798-e6953c6e8e04', // אישה עם מבט ישיר חושני
-    'photo-1529626455594-4ff0802cfb7e', // אישה אלגנטית, תאורה רכה
-    'photo-1546961342-ea5f62d5a27b', // אישה מסתורית
-    'photo-1488426862026-3ee34a7d66df', // אישה יפה עם שיער
-    'photo-1504703395950-b89145a5425b', // אישה עם עיניים יפות
-  ];
-
-  const photoList = isMan ? MAN_PHOTOS : WOMAN_PHOTOS;
-  // בחירה לפי gender בלבד (עקבית)
-  const photoId = photoList[isMan ? 0 : 0];
+  // בחירת תמונה לפי תרחיש + תפקיד — תמונה ספציפית לדמות
+  const DEFAULT_MAN = 'photo-1506794778202-cad84cf45f1d';
+  const DEFAULT_WOMAN = 'photo-1531746020798-e6953c6e8e04';
+  let photoId: string;
+  if (scenarioId && SCENARIO_ROLE_PHOTOS[scenarioId]) {
+    photoId = isMan
+      ? SCENARIO_ROLE_PHOTOS[scenarioId].MAN
+      : SCENARIO_ROLE_PHOTOS[scenarioId].WOMAN;
+  } else {
+    photoId = isMan ? DEFAULT_MAN : DEFAULT_WOMAN;
+  }
   const photoUrl = `https://images.unsplash.com/${photoId}?w=200&h=200&fit=crop&crop=face&q=85`;
 
   return (
@@ -262,7 +353,8 @@ const ChatBubble: React.FC<{
   isMine: boolean;
   phase: string;
   avatarUrl: string | null;
-}> = ({ msg, isMine, phase, avatarUrl }) => {
+  scenarioId?: string;  // לאווטר ספציפי לתרחיש
+}> = ({ msg, isMine, phase, avatarUrl, scenarioId }) => {
   const isAction = msg.type === 'ACTION';
 
   const phaseGlow = {
@@ -274,7 +366,7 @@ const ChatBubble: React.FC<{
 
   return (
     <div className={`flex items-end gap-2 ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
-      <CGIAvatar gender={msg.senderGender} avatarUrl={avatarUrl} size="sm" />
+      <CGIAvatar gender={msg.senderGender} avatarUrl={avatarUrl} size="sm" scenarioId={scenarioId} />
 
       <div className={`max-w-[72%] ${isMine ? 'items-end' : 'items-start'} flex flex-col gap-0.5`}>
         {isAction && (
@@ -586,14 +678,21 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     } catch { /* ignore storage errors */ }
   }, [messages, tensionState, sceneIndex, SESSION_KEY]);
 
-  // ===== סצינה נוכחית — לפי שלב + תרחיש =====
+  // ===== סצינה נוכחית — לפי תרחיש ספציפי קודם, אחר כך שלב גנרי =====
   const phaseScenes = SCENES_BY_PHASE[tensionState.phase] || SCENES_BY_PHASE.ICE;
-  const scenarioKeyword = scenario.sceneKeywords?.[tensionState.phase as keyof typeof scenario.sceneKeywords];
-  // מנסה למצוא תמונה מתאימה לפי מילות המפתח של הסיטואציה
+  // עדיפות 1: תמונות ייחודיות לתרחיש × שלב (ספציפיות ביותר)
+  const scenarioSpecificScenes = SCENARIO_SCENES[scenario.id]?.[tensionState.phase];
+  // עדיפות 2: מילות מפתח מה-AI (לתרחישים שנוצרו דינמית)
+  const scenarioKeyword = !scenarioSpecificScenes
+    ? scenario.sceneKeywords?.[tensionState.phase as keyof typeof scenario.sceneKeywords]
+    : null;
   const themePhoto = scenarioKeyword ? findScenePhoto(scenarioKeyword) : null;
-  const currentScene = themePhoto
+
+  const currentScene = scenarioSpecificScenes
+    ? scenarioSpecificScenes[sceneIndex % scenarioSpecificScenes.length]   // תרחיש ספציפי ✓
+    : themePhoto
     ? { url: themePhoto.url, name: `${themePhoto.name} · ${scenario.location}`, overlay: phaseScenes[0].overlay }
-    : phaseScenes[sceneIndex % phaseScenes.length];
+    : phaseScenes[sceneIndex % phaseScenes.length];                         // fallback גנרי
 
   // ===== כשהשלב משתנה — עבור לסצינה מתאימה =====
   useEffect(() => {
@@ -841,6 +940,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             isMine={msg.senderGender === myGender}
             phase={tensionState.phase}
             avatarUrl={avatars[msg.senderGender]}
+            scenarioId={scenario.id}
           />
         ))}
         <div ref={messagesEndRef} />
@@ -866,7 +966,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               const myRole = scenario.roles[myGender];
               return myRole ? (
                 <div className="flex items-center gap-1.5 mb-1.5 px-1">
-                  <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" />
+                  <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" scenarioId={scenario.id} />
                   <div className="flex-1 min-w-0">
                     <span className="text-[10px] text-white/50">{myRole.archetype} · </span>
                     {myRole.forbidden && (
@@ -974,6 +1074,14 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               <div className="flex gap-2">
                 {/* LEFT: Word chips + advice */}
                 <div className="flex-1 min-w-0">
+                  {/* Reading between the lines — subtext analysis (חדש!) */}
+                  {aiResponse.readingBetweenLines && (
+                    <div className="mb-2 px-2.5 py-1.5 rounded-xl text-xs leading-relaxed text-amber-200/70 border border-amber-500/20 bg-amber-500/8 flex items-start gap-1.5">
+                      <span className="flex-shrink-0 mt-0.5">🔍</span>
+                      <span>{aiResponse.readingBetweenLines}</span>
+                    </div>
+                  )}
+
                   {/* Strategic advice — in-character coaching */}
                   <div className="text-[10px] text-white/30 mb-1 uppercase tracking-widest">💬 מה לומר</div>
                   <div className={`mb-2 px-2.5 py-1.5 rounded-xl text-xs leading-relaxed text-white/70 border ${

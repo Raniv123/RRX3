@@ -4,9 +4,10 @@ import { SyncService } from '../services/sync-service';
 interface LoginScreenProps {
   onLogin: (channelId: string, isHost: boolean) => void;
   onResume?: () => void;
+  onInvite?: () => void;  // כפתור הפתעה לפרטנרית
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume }) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onInvite }) => {
   const [mode, setMode] = useState<'select' | 'create' | 'join'>('select');
   const [channelId, setChannelId] = useState('');
   const [error, setError] = useState('');
@@ -88,6 +89,23 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume }) =
               >
                 🔗 הצטרף למסע
               </button>
+
+              {/* כפתור הפתעה — מפריד */}
+              {onInvite && (
+                <>
+                  <div className="flex items-center gap-3 my-1">
+                    <div className="flex-1 h-px bg-white/10" />
+                    <span className="text-white/25 text-xs">או</span>
+                    <div className="flex-1 h-px bg-white/10" />
+                  </div>
+                  <button
+                    onClick={onInvite}
+                    className="w-full py-3.5 px-6 bg-gradient-to-r from-rose-900/60 to-pink-900/60 border border-rose-500/30 rounded-xl text-rose-200/90 font-medium text-base hover:scale-[1.02] transform transition-all hover:border-rose-400/50 hover:from-rose-800/60"
+                  >
+                    💌 הפתע את הפרטנרית שלך
+                  </button>
+                </>
+              )}
 
               <p className="text-center text-white/40 text-sm mt-6">
                 שני המכשירים צריכים להיות מחוברים לאינטרנט

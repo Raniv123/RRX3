@@ -31,6 +31,7 @@ export interface GameCard {
 
 // AI Response — simplified with word chips
 export interface AIResponse {
+  readingBetweenLines?: string; // what the partner REALLY meant — subtext analysis
   strategicAdvice: {
     forMan: string;
     forWoman: string;
