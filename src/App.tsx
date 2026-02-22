@@ -207,7 +207,7 @@ function App() {
             alert(`💌 הקישור הועתק!\n\nשלח לפרטנרית שלך:\n${url}\n\n⏰ שעת הפגישה: ${invitation.time}`);
             setChannelId(code);
             setIsHost(true);
-            setScreen('LOGIN');
+            setScreen('CONNECT'); // ← ממתין לפרטנרית במסך החיבור
           }}
         />
       )}
@@ -271,6 +271,9 @@ function App() {
       {screen === 'BREATH_SYNC' && myGender && scenario && (
         <BreathSyncScreen
           onComplete={() => setScreen('PROTOCOL')}
+          channelId={channelId}
+          myGender={myGender}
+          isHost={isHost}
         />
       )}
 

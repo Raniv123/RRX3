@@ -88,8 +88,8 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
   ]
 };
 
-// Keep a flat array for fallback only
-const MAGICAL_SCENES = Object.values(SCENES_BY_PHASE).flat();
+// Flat array for fallback (when no scenario-specific scenes)
+const MAGICAL_SCENES = [...Object.values(SCENES_BY_PHASE).flat()];
 
 // ===== מיפוי נושאים → תמונות Unsplash ספציפיות (לא source.unsplash.com) =====
 const THEME_PHOTO_MAP: Array<{ keywords: string[]; url: string; name: string }> = [
@@ -180,28 +180,37 @@ const THEME_PHOTO_MAP: Array<{ keywords: string[]; url: string; name: string }> 
 ];
 
 // ===== תמונות דמויות לפי תרחיש =====
-// כל תרחיש → תמונת דמות ספציפית לגבר ולאשה
+// כל תרחיש → תמונת דמות ספציפית לגבר ולאשה (כולן ייחודיות, לא ברירת מחדל!)
 const SCENARIO_ROLE_PHOTOS: Record<string, { MAN: string; WOMAN: string }> = {
   'massage-therapist': {
-    MAN: 'photo-1500648767791-00dcc994a43e',    // גבר רגוע, ביטחון — מעסה
-    WOMAN: 'photo-1531746020798-e6953c6e8e04', // אישה, מבט ישיר חושני — מטופלת
+    MAN: 'photo-1500648767791-00dcc994a43e',    // גבר רגוע, מזמין — מעסה ספא
+    WOMAN: 'photo-1494790108377-be9c29b29330', // אישה שקטה, רגועה — מטופלת ספא ✓
   },
   'boss-assistant': {
     MAN: 'photo-1560250097-0b93528c311a',       // גבר לסת חזקה, חליפה — מנכ"ל
-    WOMAN: 'photo-1529626455594-4ff0802cfb7e', // אישה אלגנטית, מקצועית — עוזרת
+    WOMAN: 'photo-1573496359142-b8d87734a5a2', // אישה מקצועית, משקפיים — עוזרת בכירה ✓
   },
   'doctor-patient': {
-    MAN: 'photo-1519085360753-af0119f7cbe7',   // גבר עסקי מסתורי — רופא
-    WOMAN: 'photo-1546961342-ea5f62d5a27b',    // אישה מסתורית, פגיעה — מטופלת
+    MAN: 'photo-1612349317150-e413f6a5b16d',   // גבר בחלוק לבן — רופא ✓
+    WOMAN: 'photo-1559839734-2b71ea197ec2',    // אישה בחלוק כחול, חיוך — רופאה ✓
   },
   'yoga-instructor': {
-    MAN: 'photo-1506794778202-cad84cf45f1d',   // גבר אלגנטי, רוגע — מדריך
-    WOMAN: 'photo-1504703395950-b89145a5425b', // אישה עם עיניים יפות — תלמידה
+    MAN: 'photo-1507003211169-0a1dd7228f2d',   // גבר אתלטי, נינוח — מדריך יוגה ✓
+    WOMAN: 'photo-1524863479829-916d8e77f114', // אישה אתלטית, שלוה — מדריכת יוגה ✓
   },
   'photographer-model': {
     MAN: 'photo-1472099645785-5658abf4ff4e',   // גבר ישיר בעיניים — צלם
     WOMAN: 'photo-1488426862026-3ee34a7d66df', // אישה יפה עם שיער — דוגמנית
   },
+};
+
+// ===== טבעת צבע לפי תרחיש — זיהוי ויזואלי מיידי =====
+const SCENARIO_RING_COLORS: Record<string, string> = {
+  'massage-therapist': 'border-teal-400/70 shadow-teal-500/40',      // ירוק טיל — ספא
+  'boss-assistant':    'border-slate-300/60 shadow-slate-300/30',     // אפור כסוף — עסקי
+  'doctor-patient':    'border-sky-400/70 shadow-sky-500/40',         // כחול שמים — רפואי
+  'yoga-instructor':   'border-purple-400/70 shadow-purple-500/40',   // סגול — זן
+  'photographer-model':'border-amber-400/70 shadow-amber-500/40',     // זהב — אמנותי
 };
 
 // ===== רקעים ספציפיים לתרחיש — לכל שלב =====
@@ -297,16 +306,21 @@ const CGIAvatar: React.FC<{
   gender: UserGender;
   avatarUrl: string | null;
   size?: 'sm' | 'md';
-  scenarioId?: string;  // תרחיש — לבחירת תמונה ספציפית לתפקיד
+  scenarioId?: string;  // תרחיש — לבחירת תמונה + טבעת צבע ספציפיים לתרחיש
 }> = ({ gender, avatarUrl, size = 'sm', scenarioId }) => {
   const dim = size === 'sm' ? 'w-9 h-9' : 'w-11 h-11';
   const isMan = gender === 'MAN';
 
+  // טבעת: לפי תרחיש אם יש, אחרת לפי מין
+  const ringClass = scenarioId && SCENARIO_RING_COLORS[scenarioId]
+    ? `border-2 shadow-lg ${SCENARIO_RING_COLORS[scenarioId]}`
+    : isMan
+      ? 'border-2 border-blue-400/50 shadow-lg shadow-blue-500/30'
+      : 'border-2 border-fuchsia-400/50 shadow-lg shadow-fuchsia-500/30';
+
   if (avatarUrl) {
     return (
-      <div className={`${dim} rounded-full overflow-hidden flex-shrink-0 border-2 ${
-        isMan ? 'border-blue-400/50 shadow-lg shadow-blue-500/30' : 'border-fuchsia-400/50 shadow-lg shadow-fuchsia-500/30'
-      }`}>
+      <div className={`${dim} rounded-full overflow-hidden flex-shrink-0 ${ringClass}`}>
         <img src={avatarUrl} alt={gender} className="w-full h-full object-cover" />
       </div>
     );
@@ -326,11 +340,7 @@ const CGIAvatar: React.FC<{
   const photoUrl = `https://images.unsplash.com/${photoId}?w=200&h=200&fit=crop&crop=face&q=85`;
 
   return (
-    <div className={`${dim} rounded-full flex-shrink-0 overflow-hidden border-2 ${
-      isMan
-        ? 'border-blue-400/50 shadow-lg shadow-blue-500/30'
-        : 'border-fuchsia-400/50 shadow-lg shadow-fuchsia-500/30'
-    }`}>
+    <div className={`${dim} rounded-full flex-shrink-0 overflow-hidden ${ringClass}`}>
       <img
         src={photoUrl}
         alt={gender}
@@ -442,59 +452,7 @@ const CircularTimer: React.FC<{
   );
 };
 
-// ===== Game Card Overlay =====
-const GameCardOverlay: React.FC<{
-  game: GameCard;
-  totalTime: number;
-  remaining: number;
-  phase: string;
-  onDone: () => void;
-  onSkip: () => void;
-}> = ({ game, totalTime, remaining, phase, onDone, onSkip }) => {
-  const typeIcon = { TRUTH: '💭', DARE: '🔥', SEXY_CARD: '🃏' }[game.type] || '🎲';
-  const typeLabel = { TRUTH: 'אמת', DARE: 'חובה', SEXY_CARD: 'קלף סקסי' }[game.type] || 'משחק';
-
-  return (
-    <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 p-5">
-      <div className="max-w-sm w-full bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-fuchsia-600/30 to-purple-600/30 px-6 pt-6 pb-4 text-center border-b border-white/10">
-          <div className="text-4xl mb-2">{typeIcon}</div>
-          <div className="text-white/50 text-xs uppercase tracking-widest">{typeLabel}</div>
-          <h2 className="text-xl font-bold text-white mt-1">{game.title}</h2>
-        </div>
-
-        {/* Content */}
-        <div className="px-6 py-5 text-center">
-          <p className="text-white/90 text-base leading-relaxed mb-6">{game.content}</p>
-
-          {/* Timer */}
-          {game.duration && remaining > 0 && (
-            <div className="flex justify-center mb-4">
-              <CircularTimer total={totalTime} remaining={remaining} phase={phase} />
-            </div>
-          )}
-
-          {/* Buttons */}
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <button
-              onClick={onSkip}
-              className="py-3 rounded-xl text-white/50 border border-white/10 hover:bg-white/5 transition-all text-sm"
-            >
-              דלג ↩
-            </button>
-            <button
-              onClick={onDone}
-              className="py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-700 text-white font-semibold hover:scale-105 transition-all text-sm shadow-lg shadow-fuchsia-500/20"
-            >
-              סיימנו! ✅
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+// (GameCardOverlay removed — game cards feature not active)
 
 // ===== Mission Card =====
 const MissionCard: React.FC<{
