@@ -134,6 +134,13 @@ function App() {
     setLoadingScenario(true);
     try {
       const newScenario = await aiEngine.current.createScenario();
+
+      // גנר אווטרים ושמור בתוך הScenario — כך שני הצדדים יקבלו אותן תמונות
+      const avatarImages = await aiEngine.current.generateAvatars(newScenario);
+      if (avatarImages.MAN || avatarImages.WOMAN) {
+        newScenario.avatars = avatarImages;
+      }
+
       setScenario(newScenario);
 
       // שלח את התרחיש לשותף

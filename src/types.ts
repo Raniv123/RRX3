@@ -89,6 +89,7 @@ export interface Scenario {
     MAN: string;   // מה הכי מטריף את הגבר (האשה תראה)
     WOMAN: string; // מה הכי מטריפה את האשה (הגבר יראה)
   };
+  avatars?: AvatarImages;
 }
 
 // Avatar Images (CGI generated or fallback)

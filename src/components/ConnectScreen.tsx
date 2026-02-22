@@ -122,6 +122,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
                       value={partnerName}
                       onChange={(e) => setPartnerName(e.target.value)}
                       placeholder="שם הפרטנרית..."
+                      autoComplete="off"
                       className="w-full px-4 py-3 bg-white/8 backdrop-blur-sm rounded-xl text-white placeholder-white/30 border border-white/15 focus:border-sexy-fuchsia focus:outline-none text-right"
                     />
                   </div>

@@ -8,9 +8,9 @@ interface InvitationScreenProps {
 
 // תמונות רקע אפלות ואינטימיות
 const BG_IMAGES = [
-  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=90&auto=format&fit=crop', // נרות
-  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=90&auto=format&fit=crop', // ספא אפל
-  'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1920&q=90&auto=format&fit=crop', // גן לילה
+  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=90&auto=format&fit=crop', // נרות
+  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=90&auto=format&fit=crop', // ספא אפל
+  'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=1200&q=90&auto=format&fit=crop', // גן לילה
 ];
 
 export const InvitationScreen: React.FC<InvitationScreenProps> = ({

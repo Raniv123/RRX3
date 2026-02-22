@@ -17,17 +17,17 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
   // ❄️ ICE — מקומות ציבוריים, אווירת פגישה ראשונה
   ICE: [
     {
-      url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🍷 מסעדה אלגנטית בפריז',
       overlay: 'from-black/65 via-black/35 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🥂 בר מלון יוקרתי',
       overlay: 'from-black/60 via-black/30 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1503174971373-b1f69850bded?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🎨 פתיחת תערוכה',
       overlay: 'from-black/60 via-black/25 to-black/60'
     }
@@ -35,17 +35,17 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
   // 🌡️ WARM — מקומות חצי פרטיים, אווירה מתחממת
   WARM: [
     {
-      url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🌿 גן פרטי בלילה',
       overlay: 'from-black/65 via-black/30 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1574096079513-d8259312b785?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1574096079513-d8259312b785?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🕯️ ארוחה פרטית לאור נרות',
       overlay: 'from-black/60 via-black/20 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1481833761820-0509d3217039?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1481833761820-0509d3217039?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🎷 בר ג\'אז קסום',
       overlay: 'from-black/70 via-black/30 to-black/65'
     }
@@ -53,17 +53,17 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
   // 🌶️ HOT — מקומות אינטימיים, רומנטיים
   HOT: [
     {
-      url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🌊 מרפסת נסתרת מול הים',
       overlay: 'from-black/60 via-black/20 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '✨ סוויטה עם נוף',
       overlay: 'from-black/65 via-black/25 to-black/65'
     },
     {
-      url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🌙 וילה פרטית בלילה',
       overlay: 'from-black/55 via-black/20 to-black/65'
     }
@@ -71,17 +71,17 @@ const SCENES_BY_PHASE: Record<string, Array<{ url: string; name: string; overlay
   // 🔥 FIRE — מקומות אינטימיים לחלוטין
   FIRE: [
     {
-      url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🕯️ חדר נרות אינטימי',
       overlay: 'from-black/70 via-black/30 to-black/75'
     },
     {
-      url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '💆 ספא פרטי',
       overlay: 'from-black/65 via-black/25 to-black/70'
     },
     {
-      url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=1920&q=85&auto=format&fit=crop',
+      url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&h=1200&q=85&auto=format&fit=crop',
       name: '🌹 ליל שישי פרטי',
       overlay: 'from-black/70 via-black/30 to-black/70'
     }
@@ -96,85 +96,85 @@ const THEME_PHOTO_MAP: Array<{ keywords: string[]; url: string; name: string }> 
   // ספרייה / ארכיון / ספרים
   {
     keywords: ['library', 'book', 'archive', 'study', 'ספרייה'],
-    url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '📚 ספרייה'
   },
   // מסעדה / אוכל / ארוחה
   {
     keywords: ['restaurant', 'dining', 'dinner', 'cafe', 'מסעדה'],
-    url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🍷 מסעדה'
   },
   // בר / יין / שתייה
   {
     keywords: ['bar', 'wine', 'cocktail', 'pub', 'בר'],
-    url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🥂 בר'
   },
   // משרד / עבודה / עסקי
   {
     keywords: ['office', 'work', 'business', 'corporate', 'meeting', 'משרד'],
-    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '💼 משרד'
   },
   // לובי מלון / קבלה
   {
     keywords: ['lobby', 'hotel entrance', 'reception', 'לובי'],
-    url: 'https://images.unsplash.com/photo-1549294413-26f195200c16?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1549294413-26f195200c16?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🏨 לובי מלון'
   },
   // גלריה / אמנות / תערוכה
   {
     keywords: ['gallery', 'art', 'museum', 'exhibition', 'גלריה'],
-    url: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🎨 גלריה'
   },
   // גן / טבע לילה / פארק
   {
     keywords: ['garden', 'park', 'nature', 'night garden', 'גן'],
-    url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🌿 גן לילה'
   },
   // מרפסת / גג / נוף
   {
     keywords: ['balcony', 'rooftop', 'terrace', 'view', 'מרפסת'],
-    url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🌙 מרפסת'
   },
   // חדר מלון / סוויטה
   {
     keywords: ['hotel room', 'suite', 'hotel suite', 'luxury room', 'חדר מלון'],
-    url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '✨ סוויטה'
   },
   // וילה / בית פרטי
   {
     keywords: ['villa', 'house', 'private', 'home', 'וילה'],
-    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🌙 וילה'
   },
   // חדר שינה / נרות / אינטימי
   {
     keywords: ['bedroom', 'candle', 'intimate', 'dark', 'sensual', 'חדר שינה'],
-    url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🕯️ חדר נרות'
   },
   // ספא / אמבטיה / מים
   {
     keywords: ['spa', 'bath', 'water', 'pool', 'ספא'],
-    url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '💆 ספא'
   },
   // חוף ים / ים / שמש
   {
     keywords: ['beach', 'sea', 'ocean', 'sunset', 'חוף'],
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🌊 חוף הים'
   },
   // רכבת / נסיעה / תחבורה
   {
     keywords: ['train', 'travel', 'journey', 'airport', 'רכבת'],
-    url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1920&q=85&auto=format&fit=crop',
+    url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=1200&q=85&auto=format&fit=crop',
     name: '🚂 רכבת'
   },
 ];
@@ -218,72 +218,72 @@ const SCENARIO_RING_COLORS: Record<string, string> = {
 const SCENARIO_SCENES: Record<string, Record<string, Array<{ url: string; name: string; overlay: string }>>> = {
   'massage-therapist': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1920&q=85&auto=format&fit=crop', name: '🧴 לובי הספא', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧴 לובי הספא', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&auto=format&fit=crop', name: '💆 חדר הטיפולים', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=1200&q=85&auto=format&fit=crop', name: '💆 חדר הטיפולים', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1920&q=85&auto=format&fit=crop', name: '🕯️ ספא אינטימי', overlay: 'from-black/65 via-black/30 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ ספא אינטימי', overlay: 'from-black/65 via-black/30 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 ספא פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 ספא פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'boss-assistant': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=85&auto=format&fit=crop', name: '💼 משרד המנכ"ל', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=1200&q=85&auto=format&fit=crop', name: '💼 משרד המנכ"ל', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1920&q=85&auto=format&fit=crop', name: '🌆 משרד בלילה', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌆 משרד בלילה', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=1920&q=85&auto=format&fit=crop', name: '✨ קומה 40 בלילה', overlay: 'from-black/65 via-black/25 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ קומה 40 בלילה', overlay: 'from-black/65 via-black/25 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=85&auto=format&fit=crop', name: '🔐 משרד פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=1200&q=85&auto=format&fit=crop', name: '🔐 משרד פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'doctor-patient': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&q=85&auto=format&fit=crop', name: '🏥 חדר המתנה', overlay: 'from-black/50 via-black/20 to-black/55' },
+      { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=1200&q=85&auto=format&fit=crop', name: '🏥 חדר המתנה', overlay: 'from-black/50 via-black/20 to-black/55' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=1920&q=85&auto=format&fit=crop', name: '🩺 חדר הבדיקה', overlay: 'from-black/55 via-black/25 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&h=1200&q=85&auto=format&fit=crop', name: '🩺 חדר הבדיקה', overlay: 'from-black/55 via-black/25 to-black/60' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1920&q=85&auto=format&fit=crop', name: '💉 חדר בדיקה פרטי', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&h=1200&q=85&auto=format&fit=crop', name: '💉 חדר בדיקה פרטי', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 פגישה פרטית', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 פגישה פרטית', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'yoga-instructor': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1920&q=85&auto=format&fit=crop', name: '🧘 אולפן יוגה', overlay: 'from-black/50 via-black/15 to-black/55' },
+      { url: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=1200&q=85&auto=format&fit=crop', name: '🧘 אולפן יוגה', overlay: 'from-black/50 via-black/15 to-black/55' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=85&auto=format&fit=crop', name: '🌿 יוגה פרטית', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌿 יוגה פרטית', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=1920&q=85&auto=format&fit=crop', name: '✨ פינה אינטימית', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=800&h=1200&q=85&auto=format&fit=crop', name: '✨ פינה אינטימית', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🕯️ שיעור פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🕯️ שיעור פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
   'photographer-model': {
     ICE: [
-      { url: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=85&auto=format&fit=crop', name: '📸 אולפן צילום', overlay: 'from-black/55 via-black/20 to-black/60' },
+      { url: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=1200&q=85&auto=format&fit=crop', name: '📸 אולפן צילום', overlay: 'from-black/55 via-black/20 to-black/60' },
     ],
     WARM: [
-      { url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1920&q=85&auto=format&fit=crop', name: '💡 סט תאורה', overlay: 'from-black/60 via-black/25 to-black/65' },
+      { url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&h=1200&q=85&auto=format&fit=crop', name: '💡 סט תאורה', overlay: 'from-black/60 via-black/25 to-black/65' },
     ],
     HOT: [
-      { url: 'https://images.unsplash.com/photo-1470137430879-d51bf16bc0a8?w=1920&q=85&auto=format&fit=crop', name: '🎨 סט דרמטי', overlay: 'from-black/65 via-black/25 to-black/70' },
+      { url: 'https://images.unsplash.com/photo-1470137430879-d51bf16bc0a8?w=800&h=1200&q=85&auto=format&fit=crop', name: '🎨 סט דרמטי', overlay: 'from-black/65 via-black/25 to-black/70' },
     ],
     FIRE: [
-      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1920&q=85&auto=format&fit=crop', name: '🌹 צילום פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
+      { url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&h=1200&q=85&auto=format&fit=crop', name: '🌹 צילום פרטי', overlay: 'from-black/70 via-black/30 to-black/75' },
     ],
   },
 };
@@ -713,8 +713,13 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  // ===== יצירת אווטרי CGI =====
+  // ===== יצירת אווטרי CGI — אם קיימים בScenario, השתמש בהם (זהים לשותף/ה) =====
   useEffect(() => {
+    if (scenario.avatars?.MAN || scenario.avatars?.WOMAN) {
+      setAvatars({ MAN: scenario.avatars.MAN || null, WOMAN: scenario.avatars.WOMAN || null });
+      return;
+    }
+    // fallback: generate locally
     aiEngine.current.generateAvatars(scenario).then(setAvatars);
   }, [scenario]);
 

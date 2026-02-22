@@ -220,3 +220,18 @@ a:hover {
     font-size: 16px;
   }
 }
+
+/* Mobile: use dynamic viewport height */
+@supports (height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+  .h-screen { height: 100dvh; }
+}
+
+/* Mobile safe-area support */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+/* Mobile: hide scrollbar */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar { width: 0; }
+}
