@@ -1152,9 +1152,9 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                       : aiResponse.strategicAdvice.forWoman}
                   </div>
 
-                  {/* Word chips — tap to add to input */}
+                  {/* Word chips — tap to add to input (max 2) */}
                   <div className="flex flex-col gap-1.5">
-                    {aiResponse.wordChips.map((chip, idx) => (
+                    {aiResponse.wordChips.slice(0, 2).map((chip, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleChipTap(chip)}
@@ -1167,24 +1167,21 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                   </div>
                 </div>
 
-                {/* RIGHT: 2 action tips */}
+                {/* RIGHT: single action tip */}
                 <div className="w-[105px] flex-shrink-0 flex flex-col gap-1.5">
                   <div className="text-[10px] text-white/30 uppercase tracking-widest">🤫 מה לעשות</div>
-                  {(aiResponse.actionTips && aiResponse.actionTips.length >= 2
-                    ? aiResponse.actionTips
-                    : [aiResponse.actionTip, null]
-                  ).map((tip, i) => tip ? (
+                  {aiResponse.actionTip && (
                     <div
-                      key={i}
-                      className={`rounded-xl p-2 text-[11px] leading-snug border ${
-                        i === 0
-                          ? 'bg-black/30 border-white/10 text-white/60'
-                          : 'bg-amber-500/8 border-amber-500/20 text-amber-200/60'
+                      className={`rounded-xl p-2.5 text-[11px] leading-snug border ${
+                        tensionState.phase === 'ICE' ? 'bg-blue-500/10 border-blue-400/20 text-blue-100/70' :
+                        tensionState.phase === 'WARM' ? 'bg-pink-500/10 border-pink-400/20 text-pink-100/70' :
+                        tensionState.phase === 'HOT' ? 'bg-red-500/10 border-red-400/25 text-red-100/75' :
+                        'bg-orange-500/12 border-orange-400/30 text-orange-100/80'
                       }`}
                     >
-                      {tip}
+                      {aiResponse.actionTip}
                     </div>
-                  ) : null)}
+                  )}
                 </div>
               </div>
             )}

@@ -300,7 +300,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
             >
               <span className="flex items-center justify-center gap-2">
                 <span>📅</span>
-                <span>שמרי ביומן — {meetingTime} ותזכורת הכנה</span>
+                <span>{isHost ? 'שמור ביומן' : 'שמרי ביומן'} — {meetingTime} ותזכורת הכנה</span>
               </span>
             </button>
 
