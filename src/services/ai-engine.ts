@@ -23,7 +23,7 @@ export class AIEngine {
       const prompt = buildAIPrompt(messages, tension, phase, gender, scenario);
 
       const response = await this.ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-pro',
         contents: prompt,
         config: { responseMimeType: 'application/json' }
       });
@@ -40,11 +40,9 @@ export class AIEngine {
         data.strategicAdvice = this.getDefaultAdvice(phase);
       }
       if (!data.actionTip) {
-        data.actionTip = this.getDefaultActionTip(phase);
+        data.actionTip = this.getDefaultActionTip(phase, tension);
       }
-      if (!data.actionTips || !Array.isArray(data.actionTips) || data.actionTips.length < 2) {
-        data.actionTips = this.getDefaultActionTips(phase);
-      }
+      // actionTips — legacy field, no longer used
 
       return data as AIResponse;
 
@@ -244,7 +242,7 @@ export class AIEngine {
     `;
 
     const response = await this.ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-pro',
       contents: prompt,
       config: { responseMimeType: 'application/json' }
     });
@@ -302,12 +300,18 @@ export class AIEngine {
     };
   }
 
-  private getDefaultActionTip(phase: string): string {
+  getDefaultActionTip(phase: string, tension: number = 0): string {
+    if (phase === 'FIRE') {
+      if (tension >= 93) return '🤫 קוביית תנוחה — לחצו על ה-🎲 למטה לתנוחה הבאה';
+      if (tension >= 87) return '🤫 שאבי את הביצים שלו לאט — ואז קחי את הזין שלו לפה, דקה שלמה, עם לחץ שפתיים';
+      if (tension >= 81) return '🤫 לקקי מסביב לזין שלו, עיגולים רחבים — דקה שלמה, בלי לגעת ישירות. הוא יתגעגע';
+      if (tension >= 76) return '🤫 הורידי פריט לבוש אחד לאט — עם הגב אליו. שהוא יראה אבל לא יגע עדיין';
+      return '🤫 שבו קרוב — כל כך קרוב שאפשר להרגיש את החום. לא לגעת עוד — רק להרגיש';
+    }
     const tips: Record<string, string> = {
-      ICE: '🤫 צור/י קשר עין ישיר ואל תמהר/י להסיט — תן/תני לו/לה להרגיש שאתה/את שם/ה',
-      WARM: '🤫 קרב/י את עצמך כמה ס"מ בלי לומר מילה — גוף שמתקרב אומר יותר ממשפט',
-      HOT: '🤫 שים/שימי יד בשקט ליד ידו/ידה — לא עליה, ליד. תחכה/תחכי לתגובה',
-      FIRE: '🤫 הפסק/י לכתוב לרגע — עצור/י, קח/קחי נשימה, ואז שלח/י את הדבר האחד שהכי מפחיד אותך'
+      ICE: '🤫 צור/י קשר עין ישיר ואל תסיט/י — שנייה של שקט מרגשת יותר מכל מילה',
+      WARM: '🤫 לחש/י לו/לה ישר לאוזן את מה שרצית לומר — כל כך קרוב שתרגיש/י את הנשימה',
+      HOT: '🤫 שים/שימי יד על ירכו/ירכה — לאט, בכוונה. תחכה/תחכי שנייה לפני שזזת/זזת'
     };
     return tips[phase] || tips.ICE;
   }

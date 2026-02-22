@@ -654,6 +654,10 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTypingSentRef = useRef<number>(0);
 
+  // Position dice
+  const [showPositionDice, setShowPositionDice] = useState(false);
+  const [rolledPosition, setRolledPosition] = useState<null | { name: string; instruction: string; emoji: string }>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const syncService = useRef(new SyncService(channelId, myGender));
@@ -851,6 +855,20 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     const timeSinceStart = Date.now() - sessionStartTime.current;
     const boosted = updateTension(tensionState, jump, messages.length, timeSinceStart);
     setTensionState(boosted);
+  };
+
+  // ===== קוביית תנוחה — נתונים ופונקציה =====
+  const POSITIONS = [
+    { name: 'קאוגירל', emoji: '🤠', instruction: 'האשה מלמעלה, פנים אליו — קצב שלה, שליטה מלאה' },
+    { name: 'כלב', emoji: '🐾', instruction: 'הוא מאחורי, ידיו על מותניה — עומק ושליטה מלאה' },
+    { name: 'מיסיונרי קלאסי', emoji: '💫', instruction: 'פנים אל פנים, כרית מתחת לה — קשר עין מלא' },
+    { name: 'ספון צמוד', emoji: '🥄', instruction: 'הוא מאחוריה, איטי ואינטימי — נשיקות על הצוואר תוך כדי' },
+    { name: 'כסא חשוק', emoji: '🪑', instruction: 'הוא יושב, היא עליו פנים אליו — תנועה שלה, עיניים בעיניים' },
+    { name: 'שריון', emoji: '🛡️', instruction: 'היא על ידיה וברכיה — הוא שולט בקצב ובעומק' },
+  ];
+  const rollPosition = () => {
+    const pick = POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+    setRolledPosition(pick);
   };
 
   // ===== tap על chip — מוסיף לinput =====
@@ -1208,6 +1226,17 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               </button>
             )}
 
+            {/* קוביית תנוחה — מופיעה רק במתח גבוה */}
+            {tensionState.level >= 90 && (
+              <button
+                onClick={() => { rollPosition(); setShowPositionDice(true); }}
+                title="קוביית תנוחה"
+                className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-orange-400/60 hover:text-orange-400 hover:bg-orange-500/10 transition-all text-base"
+              >
+                🎲
+              </button>
+            )}
+
             <input
               ref={inputRef}
               type="text"
@@ -1249,6 +1278,45 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ===== POSITION DICE OVERLAY ===== */}
+      {showPositionDice && rolledPosition && (
+        <div
+          className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-5"
+          onClick={() => setShowPositionDice(false)}
+        >
+          <div
+            className="max-w-xs w-full rounded-3xl overflow-hidden"
+            style={{ background: 'rgba(20,5,10,0.97)', border: '1px solid rgba(255,80,80,0.3)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-6 pt-6 pb-4 text-center" style={{ background: 'linear-gradient(135deg, rgba(255,60,60,0.15), rgba(255,120,0,0.10))' }}>
+              <div className="text-5xl mb-2 animate-bounce">🎲</div>
+              <div className="text-red-300/50 text-[10px] uppercase tracking-widest mb-1">קוביית תנוחה</div>
+              <div className="text-4xl mb-1">{rolledPosition.emoji}</div>
+              <h2 className="text-white font-bold text-xl">{rolledPosition.name}</h2>
+            </div>
+            <div className="px-6 py-5 text-center">
+              <p className="text-white/70 text-sm leading-relaxed">{rolledPosition.instruction}</p>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button
+                onClick={rollPosition}
+                className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white/70 border border-white/15 hover:border-white/30 hover:text-white transition-all"
+              >
+                🎲 עוד אחת
+              </button>
+              <button
+                onClick={() => setShowPositionDice(false)}
+                className="flex-1 py-3 rounded-2xl text-sm font-bold text-white transition-all"
+                style={{ background: 'linear-gradient(135deg, #ef444499, #f9730099)' }}
+              >
+                בוא/י נתחיל ✨
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== SECRET CARD OVERLAY ===== */}
       {showSecretCard && scenario.secrets && (
