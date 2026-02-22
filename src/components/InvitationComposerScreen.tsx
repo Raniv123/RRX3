@@ -29,7 +29,7 @@ const DEFAULT_MESSAGE = `הערב אני רוצה שנהיה ביחד.
 
 // ─── Time slots ────────────────────────────────────────────────────────────────
 
-const TIME_SLOTS = ['19:00', '20:00', '21:00', '22:00'];
+const TIME_SLOTS = ['22:00', '21:00', '20:00', '19:00'];
 
 // ─── Background image ──────────────────────────────────────────────────────────
 
@@ -265,7 +265,7 @@ export const InvitationComposerScreen: React.FC<InvitationComposerProps> = ({
                 }
               >
                 {t}
-                {t === '19:00' && selectedTime !== '19:00' && (
+                {t === '20:00' && selectedTime !== '20:00' && (
                   <span className="absolute top-1 right-1.5 text-[8px] text-amber-400/60">⭐</span>
                 )}
               </button>
