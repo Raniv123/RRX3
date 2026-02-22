@@ -295,14 +295,25 @@ git log --oneline
 
 ---
 
-📅 **עדכון אחרון:** 2026-02-22 — WaitingScreen + calendar integration
-💬 **סטטוס:** ✅ **v3.2 — פרוס ל-GitHub Pages!**
-🔥 **גרסה:** 3.2.0
-🎨 **שינויים אחרונים (v3.2):**
-- `WaitingScreen.tsx` (חדש): ספירה לאחור לשעת הפגישה + טיפי הכנה + יומן
-- `App.tsx`: WAITING/PREP screens, parsePrepParams(), meetingTime state
-- INVITE_RECEIVED → WaitingScreen (לא נכנסים למשחק מיד!)
-- URL ?prepare=CODE&time=HH:MM → מסך הכנה (30 דקות לפני)
-- יומן: Google Calendar URL + ICS download (Apple/Outlook)
+📅 **עדכון אחרון:** 2026-02-23
+💬 **סטטוס:** ✅ **v5.0 — פרוס ל-GitHub Pages!**
+🔥 **גרסה:** 5.0.0
+
+🎨 **שינויים אחרונים (v5.0):**
+- Typing indicator — TYPING SystemMessage + 3 נקודות קופצות בצ'אט
+- רקעי POV — תמונות ממבט אישי (שולחן, בר, ספריה) ללא אנשים
+- BreathSyncScreen — שלב "אישור הגעה" הדדי לפני הנשימות:
+  שני הצדדים לוחצים "אני כאן" → READY signal → רק אז מתחיל countdown → נשימות
+- WaitingScreen — isHost prop: גבר גם מקבל מסך המתנה עם ספירה לאחור
+  טיפי הכנה שונים לגבר ולאשה
+- App.tsx — אחרי INVITE_COMPOSE גבר הולך ל-WAITING (לא CONNECT מיידי)
+  בשעת הפגישה: גבר → CONNECT, אשה → handleLogin → JOIN
+
+**זרימה מלאה (v5.0):**
+- גבר: LOGIN → CONNECT → [partner joins] → BREATH_SYNC (אישור הגעה) → PROTOCOL
+- גבר (special): LOGIN → INVITE_COMPOSE → WAITING [כל היום] → CONNECT → BREATH_SYNC → PROTOCOL
+- אשה (invite): INVITATION → [wait scenario] → BREATH_SYNC (אישור הגעה) → PROTOCOL
+- אשה (special): INVITE_RECEIVED → WAITING [ספירה לאחור] → handleLogin → BREATH_SYNC → PROTOCOL
+
 🔗 **GitHub:** https://github.com/Raniv123/RRX3
 🌐 **קישור חי:** https://raniv123.github.io/RRX3/ ✅ פעיל!

@@ -1,77 +1,62 @@
-# Progress Log - RRX3
+# Progress Log — RRX3 v4.0 Upgrade
+📅 2026-02-23
 
-## Session: 2026-02-16
+---
 
-### Phase 1: Architecture & Planning
-- **Status:** in_progress
-- **Started:** 2026-02-16 11:30
+## Session: 2026-02-23 (Architect Planning)
 
-- Actions taken:
-  - ✅ RRXXX חקר האפליקציה המקורית
-  - ✅ intimacy apps חקר אפליקציות
-  - ✅ AI conversation & roleplay למידת טכניקות
-  - ✅ psychology חקר פסיכולוגיה של משיכה ומתח
-  - ✅ gamification חקר
-  - ✅ UI/UX טרנדים 2026 חקר
-  - ✅ שפות רומנטיות (צרפתית, ספרדית, איטלקית) חקר
-  - ✅ planning-with-files התקנת
-  - ✅ task_plan.md יצירת
-  - ✅ findings.md יצירת
-  - ✅ progress.md יצירת
+### Task: v4.0 Upgrade — Flow + Avatars + AI + Design
+- **Status:** planned — waiting for user approval
+- **Started:** 2026-02-23
 
-- Files created/modified:
-  - `D:/CLAUDE-CODE/PROJECTS/אישי/RRX3/` (created)
-  - `.git/` (initialized)
-  - `task_plan.md` (created)
-  - `findings.md` (created)
-  - `progress.md` (created - this file)
+### Files Analyzed
+| File | Lines | Purpose |
+|------|-------|---------|
+| `src/App.tsx` | 321 | Flow logic — 5 entry points, 10 screens |
+| `src/services/ai-engine.ts` | 342 | AI engine — Gemini text + image gen |
+| `src/data/prompts.ts` | 224 | System prompt + buildAIPrompt |
+| `src/types.ts` | 126 | TypeScript interfaces |
+| `src/components/LoginScreen.tsx` | 186 | Login — create/join/invite |
+| `src/components/ConnectScreen.tsx` | 254 | Connect — code/link tabs |
+| `src/components/InvitationScreen.tsx` | 178 | Simple invite landing |
+| `src/components/InvitationComposerScreen.tsx` | 644 | Letter composer + receiver |
+| `src/components/WaitingScreen.tsx` | 390 | Countdown + prep tips + calendar |
+| `src/components/BreathSyncScreen.tsx` | 414 | 48s synced breathing |
+| `src/components/GenderSelection.tsx` | 112 | Gender picker (to be removed) |
+| `src/components/ProtocolScreen.tsx` | 300+ | Main protocol screen |
 
-### Phase 2: Core AI Engine
-- **Status:** pending
-- Actions taken:
-  - עדיין לא התחלנו
-- Files created/modified:
-  -
+### Findings
+1. **5 distinct entry flows** — all mapped in findings.md
+2. **Gemini image gen unreliable** — FAL.ai (Flux) recommended
+3. **Prompts missing: secrets, accent, context summary, FIRE details**
+4. **No ScenarioIntro screen** — users jump into chat without knowing characters
+5. **GENDER_SELECTION unnecessary** — can auto-detect from host/joiner role
 
-### Phase 3: Role & Scenario System
-- **Status:** pending
+### Plan Created
+- `findings.md` — full analysis with risk matrix
+- `task_plan.md` — 5 phases, prioritized:
+  1. Flow (auto-gender + ScenarioIntro)
+  2. Avatars (FAL.ai Flux)
+  3. AI Prompts (secrets + accent + FIRE)
+  4. Design (ScenarioIntro UI + progress ring + avatar glow)
+  5. Build & Deploy
 
-### Phase 4: Tension & Progression System
-- **Status:** pending
+### Key Decisions
+- Host = MAN (auto), Joiner = WOMAN (auto)
+- FAL.ai Flux-schnell for avatars (2-4s, ~$0.05)
+- Secrets visible to partner (not to self)
+- ScenarioIntro screen between BreathSync and Protocol
 
-### Phase 5: Surprises & Gamification
-- **Status:** pending
-
-### Phase 6: Real-Time Sync System
-- **Status:** pending
-
-### Phase 7: UI/UX - Futuristic Design
-- **Status:** pending
-
-### Phase 8: Testing & Quality
-- **Status:** pending
-
-### Phase 9: Polish & Launch
-- **Status:** pending
-
-## Test Results
-| Test | Input | Expected | Actual | Status |
-|------|-------|----------|--------|--------|
-| עדיין לא הגענו לבדיקות | - | - | - | - |
-
-## Error Log
-| Timestamp | Error | Attempt | Resolution |
-|-----------|-------|---------|------------|
-| אין שגיאות | - | - | - |
+---
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| ?Where am I | Phase 1 - Architecture & Planning (in_progress) |
-| ?Where am I going | Phase 2-9: Building, Testing, Launch |
-| ?What's the goal | 2.0 חדשה לגמרי RRX3 ליצור - AI intimacy app |
-| ?What have I learned | findings.md ראה - intimacy, AI, gamification, design, languages חקר מעמיק של |
-| ?What have I done | task_plan.md, findings.md, progress.md חקירה מקיפה, יצירת |
+| Where am I? | Planning complete, waiting for approval |
+| Where am I going? | Phase 1 (Flow) → Phase 2 (Avatars) → Phase 3 (Prompts) → Phase 4 (UI) → Phase 5 (Deploy) |
+| What's the goal? | v4.0 upgrade: better flow, AI avatars, richer AI chat, improved design |
+| What have I learned? | 5 entry flows exist, Gemini image gen unreliable, FAL.ai available, prompts missing secrets/accent |
+| What have I done? | Read all 12 source files, created findings + task_plan + progress |
 
 ---
 *Update after completing each phase or encountering errors*

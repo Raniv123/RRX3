@@ -1,216 +1,207 @@
-# Findings & Decisions - RRX3
-
-## Requirements
-2.0 חדשה לגמרי RRX3 המשתמש ביקש ליצור גרסה
-- Protocol/Director Mode חכם ומפתיע AI מערכת
-- סנכרון בזמן אמת בין שני משתמשים
-- roleplay עם תרחישי AI
-- עיצוב פוטוריסטי מטורף
-- מבטאים סקסיים (צרפתית, ספרדית, איטלקית)
-- הפתעות ומשחקים מיוחדים
-- gamification מערכת
-- (0-100%) מד מתח חכם
-- FIRE → HOT → WARM → ICE מערכת שלבים
-- חוויה שמדליקה את שני הצדדים
-
-## Research Findings
-
-### intimacy apps 1. אפליקציות
-
-:**מובילות**
-- **Relish** - ממחיש AI coaching מתאים לכל זוג
-  - תרגילים מותאמים אישית
-  - שאלות עמוקות
-  - [Source](https://www.unite.ai/best-ai-apps-for-couples/)
-
-- **Maia** - שיחות עמוקות עם שאלות מונחות AI
-  - משיכות לשיחות משמעותיות AI שאלות
-  - אינטימיות רגשית
-
-- **Flamme** - אלגוריתמים מתקדמים לעצות מותאמות אישית
-  - מנתח נתוני זוג
-  - המלצות מדויקות
-
-- **Pikant** - מייצר אתגרים מותאמים אישית AI
-  - לוקח בחשבון: positions, environment, comfort level
-
-- **Spicer** - יוצר פעילות חדשה כל לילה AI
-  - על סמך Matches מבוסס
-
-:**תובנות מרכזיות**
-עם המלצות מותאמות אישית AI ✅ כולן עובדות
-✅ מערכת הסתגלות לכל זוג
-✅ נקודת חוזק: שיחות עמוקות
-
-### conversational AI 2. טכניקות
-
-:**ליצירת שיחות טבעיות**
-- **Natural dialogue flow** - מחקה דפוסי שיחה אותנטיים
-- **Context-aware responses** - מסתגל לטון והקשר בזמן אמת
-- **Persistent memory** - שומר היסטוריה ועקביות
-- **Emotional intelligence** - מזהה רגש ומתאים תשובות
-- **Surprise elements** - סטייה מציפיות מחדשת עניין AI
-- **Personality traits** - אופי עקבי, אופן דיבור ייחודי
-
-:**בעיות נפוצות לנהוג**
-❌ תשובות מוכנות (canned responses)
-❌ חוסר זיכרון שיחתי
-❌ קצב לא טבעי
-
-:**פתרון**
-advanced NLP capabilities ✅
-✅ מסד נתונים של השיחה
-✅ התאמת קצב דינמית
-
-### psychology 3. פסיכולוגיה של משיכה
-
-:**עקרונות מדעיים**
-- **Sexual tension** - ציפייה לא מדוברת אבל בלתי ניתנת להכחשה
-  - זה לא רק משיכה מינית - זה משיכה רגשית ואנרגטית
-
-- **Dopamine & anticipation** - דחיית סיפוקים מגבירה ציפייה
-  - המוח משחרר דופמין
-  - הציפייה עצמה יותר עוצמתית מהסיפוק
-
-- **Eye contact** - ממושך ומשמעותי מגביר משיכה
-  - מוכח במחקרים
-
-- **Communication quality** - השפעה ישירה על רמת האינטימיות
-
-- **Mystery & uncertainty** - שמירה על תעלומה בונה מתח
-  - לא לספר הכל מיד
-  - להשאיר מקום לדמיון
-
-:[Sources](https://www.navipsy.com/blogs/relationships-and-love/how-to-build-sexual-tension-a-psychological-guide-to-spark-connection)
-
-### gamification 4. טכניקות
-
-:**מה עובד ב-2026**
-- **Streaks & daily engagement** - אפקטיבי יותר מתגמולים בודדים
-  - יוצר הרגל
-  - מניע יומיומי
-
-- **Personalized journeys** - מסלולים ייחודיים לכל משתמש
-  - לא generic progress bars
-  - מבוסס התנהגות והעדפות
-
-- **Social leaderboards** - תחרות חברתית
-  - אבל לא רלוונטי לאפליקציית זוגות - דילוג
-
-- **Instant feedback** - תגובה מיידית לפעולות
-  - חיזוק חיובי מיידי
-
-:**נתונים**
-✅ 47% מגבירה עיסוק ב- gamification
-✅ 22% משפרת שימור משתמשים ב-
-✅ 150% מגבירה עיסוק ב- social competition
-
-:[Sources](https://www.storyly.io/post/gamification-strategies-to-increase-app-engagement)
-
-### UI/UX 5. עיצוב
-
-:**טרנדים 2026**
-- **Dark mode** - 81.9% מהמשתמשים
-  - מפחית עייפות עיניים
-  - נראה sleek
-  - **חובה**
-
-- **Glassmorphism** - מראה זכוכית חלבית עם צבעים חיים
-  - frosted glass look
-  - translucent, blurred elements
-  - כחול חשמלי, ירוק וויברנטי
-
-- **3D elements** - עומק ו-immersion
-  - יוצר תחושת depth
-
-- **AI personalization** - תוכן מותאם אישית
-  - adaptive layouts
-  - predictive analytics
-
-- **Voice interfaces** - שימוש יותר משולב
-  - hands-free interaction
-
-:**צבעים מומלצים**
-- Electric blue (#3B82F6)
-- Vibrant green (#10B981)
-- Purple (#8B5CF6)
-- Cyan (#22D3EE)
-- Red (#EF4444)
-- Fuchsia (#E879F9)
-- Bordeaux (deep red)
-
-:[Sources](https://uxpilot.ai/blogs/mobile-app-design-trends)
-
-### languages 6. שפות ומבטאים
-
-:**למה צרפתית וספרדית סקסיות**
-- **French** - 34% מהאנשים רואים אותה כסקסית ביותר
-  - צלילים רכים
-  - קצב זורם
-  - תרבות רומנטית
-
-- **Spanish** - עיצורים רכים, תנועות ארוכות
-  - ביטוי רגשי וסוער
-  - זרימה טבעית
-
-- **Italian** - קצב טבעי וחושניות
-  - מוזיקליות
-
-:**ביטויים לדוגמה**
-
-**צרפתית:**
-- **J'ai Envie De Toi** - I want you
-- **passer a la casserole** - time to make love
-- **Faire un partie des jambes en l'air** - play a session of legs in the air
-
-**ספרדית:**
-- **estoy jugando conmigo mismo** - I am playing with myself
-- **caliente** - hot
-- **papi/mami** - daddy/mommy
-
-**איטלקית:**
-- **Vieni qui e baciami, bello/a!** - Come here and kiss me, beautiful!
-- **Mi fai impazzire, amore mio!** - You drive me crazy, my love!
-- **Spogliati** - Take your clothes off
-
-:[Sources](https://www.pangea.global/blog/is-french-really-the-language-of-love/)
-
-## Technical Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| Gemini 3 Pro | עיצוב מתקדם, תמונה + טקסט generation, מהיר ואמין |
-| React 19 + TypeScript | אותה טכנולוגיה כמו המקור, מהיר ויציב |
-| Vite | build מהיר ו-dev server |
-| Tailwind CSS | עיצוב מהיר ומקצועי |
-| Dark mode first | הטרנד של 2026, 81.9% מהמשתמשים |
-| Mobile-first | רוב השימוש במובייל |
-| ntfy.sh | פשוט, מהיר, בחינם, עובד מעולה |
-| Glassmorphism UI | טרנד 2026 - נראה מדהים |
-| 3D elements | עומק ו-immersion |
-
-## Issues Encountered
-| Issue | Resolution |
-|-------|------------|
-| אין   | עדיין לא התחלנו לבנות |
-
-## Resources
-- [Unite.AI - Best AI Apps for Couples](https://www.unite.ai/best-ai-apps-for-couples/)
-- [Pikant - Sex Apps 2026](https://www.pikant.app/en-us/blog/5-sex-apps-for-couples-to-watch-in-2026)
-- [AI Conversational Roleplay](https://www.jenova.ai/en/resources/ai-conversational-roleplay)
-- [Sexual Tension Psychology](https://www.navipsy.com/blogs/relationships-and-love/how-to-build-sexual-tension-a-psychological-guide-to-spark-connection)
-- [Gamification 2026](https://www.storyly.io/post/gamification-strategies-to-increase-app-engagement)
-- [Mobile App Design Trends 2026](https://uxpilot.ai/blogs/mobile-app-design-trends)
-- [French Language of Love](https://www.pangea.global/blog/is-french-really-the-language-of-love/)
-
-## Visual/Browser Findings
-- האפליקציה המקורית (RRXXX) משתמשת בעיצוב פוטוריסטי עם שחור, בורדו, סגול
-- Protocol/Director Mode עם הנחיות פרטיות AI המרכזי הוא
-- בוחר תרחישים (מטפל-מטופלת, בוס-עובדת) AI
-- (0-100%) tension meter יש
-- FIRE → HOT → WARM → ICE יש שלבים
-- ntfy.sh סנכרון בזמן אמת עם
-- (Gemini) יוצר אווטרים AI
+# RRX3 v4.0 Upgrade — Findings & Research
+📅 2026-02-23
 
 ---
-*Update this file after every 2 view/browser/search operations*
+
+## 1. מיפוי זרימת משתמשים — מצב נוכחי
+
+### א. גבר (Host) — זרימה נוכחית
+```
+LOGIN → "התחל מסע חדש" → CONNECT (מציג קוד/קישור)
+  → [מחכה שהאשה תתחבר via JOIN signal]
+  → GENDER_SELECTION → [בוחר MAN]
+  → AI יוצר Scenario (gemini-2.0-flash)
+  → BREATH_SYNC (48s, 3 סבבים)
+  → PROTOCOL (המסך הראשי)
+```
+
+### ב. גבר (Host) עם הזמנה מיוחדת
+```
+LOGIN → "הפתע את הפרטנרית" → INVITE_COMPOSE (מכתב + שעה)
+  → [מעתיק URL עם ?msg+time+invite] → CONNECT (מחכה לאשה)
+  → GENDER_SELECTION → BREATH_SYNC → PROTOCOL
+```
+
+### ג. אשה — דרך קישור פשוט (?invite=CODE)
+```
+URL עם ?invite=CODE → INVITATION (דף נחיתה מפתה "הכנתי לך משהו")
+  → "אני מוכנה לגלות" → handleLogin(code, false)
+  → GENDER_SELECTION → [מחכה לScenario מHost]
+  → BREATH_SYNC → PROTOCOL
+```
+
+### ד. אשה — דרך הזמנה מיוחדת (?msg=...&time=...&invite=...)
+```
+URL עם ?msg+time → INVITE_RECEIVED (מעטפה → מכתב → החלטה)
+  → "אני בא/ה!" → WAITING (ספירה לאחור + טיפי הכנה + יומן)
+  → [הגיע הזמן] → handleLogin(code, false)
+  → GENDER_SELECTION → BREATH_SYNC → PROTOCOL
+```
+
+### ה. אשה — דרך מסך הכנה (?prepare=CODE&time=HH:MM)
+```
+URL עם ?prepare → PREP/WAITING (טיפי הכנה + ספירה)
+  → [הגיע הזמן] → handleLogin(code, false)
+  → GENDER_SELECTION → BREATH_SYNC → PROTOCOL
+```
+
+### בעיות מזוהות בזרימה
+
+| # | בעיה | חומרה | פתרון |
+|---|-------|--------|--------|
+| 1 | GENDER_SELECTION מיותר — ברוב המקרים ברור מי גבר ומי אשה | בינונית | זיהוי אוטומטי מ-URL/host + אפשרות override |
+| 2 | אין מסך הצגת תרחיש — הזוג לא רואה מה נבחר לפניהם | גבוהה | מסך ScenarioIntro חדש עם שמות + אווטרים |
+| 3 | CONNECT מציג 2 טאבים — מורכב מדי | נמוכה | ברירת מחדל: קישור בלבד, קוד בנפרד |
+| 4 | אין מסך סיום — כשמגיעים ל-FIRE 100% אין סגירה | בינונית | מסך EndScreen עם סיכום |
+| 5 | שתי זרימות הזמנה — invite פשוט + invite מיוחדת | נמוכה | שתיהן לגיטימיות, אין צורך לאחד |
+| 6 | Resume מוגבל — לא שומר הודעות | נמוכה | לא קריטי כרגע |
+
+---
+
+## 2. מצב אווטרים — ניתוח מעמיק
+
+### מצב נוכחי
+- **קובץ:** `src/services/ai-engine.ts` שורות 57-104
+- **מודל:** `gemini-2.0-flash-exp` + `responseModalities: ['IMAGE', 'TEXT']`
+- **Prompt:** "Cinematic CGI portrait, photorealistic, dark luxury..." + visualPrompt
+- **בעיה ראשית:** המודל לא אמין ליצירת תמונות. הרבה failures
+- **Fallback נוכחי:** `ProtocolScreen.tsx` שורות 182-214 — תמונות Unsplash סטטיות
+
+### תמונות Unsplash הנוכחיות (fallback)
+- `SCENARIO_ROLE_PHOTOS` — 5 IDs סטטיים (massage, boss, doctor, yoga, photographer)
+- `DEFAULT_MEN` / `DEFAULT_WOMEN` — 6 תמונות כל אחד, נבחר בhash
+- **בעיה:** AI-generated scenarios לא מקבלים תמונות מותאמות
+
+### אפשרויות שדרוג
+
+| אפשרות | זמן | עלות | איכות | UX |
+|---------|------|------|--------|-----|
+| **FAL.ai (Flux)** | 3-8 שניות | ~$0.05/תמונה | מעולה | גבוה |
+| **Gemini Imagen 3** | 2-5 שניות | כלול בAPI | טובה | בינוני (לא אמין) |
+| **Pre-gen 20 avatars** | 0ms | חד-פעמי | בינונית | נמוך (לא ייחודי) |
+| **Hybrid: FAL + Unsplash fallback** | 0-8 שניות | ~$0.05 | מעולה | הכי גבוה |
+
+### המלצה ברורה: **FAL.ai (Flux) + Unsplash fallback**
+
+#### למה FAL.ai
+- **FAL_KEY קיים** ב-`.env.master` — מוכן לשימוש
+- **Flux models** (flux-pro, flux-schnell) — תמונות פוטוריאליסטיות מעולות
+- **API פשוט** — HTTP POST עם prompt, מחזיר URL
+- **מהיר** — flux-schnell ~2-4 שניות, flux-pro ~5-10 שניות
+- **אפשר parallel** — שני אווטרים במקביל
+
+#### איך זה עובד
+```
+Scenario נוצר → generateAvatars() נקרא
+  → 2 קריאות FAL.ai במקביל (MAN + WOMAN)
+  → כל אחת עם visualPrompt + "portrait, dark luxury, cinematic"
+  → מחזיר URL של תמונה
+  → אם נכשל → fallback ל-Unsplash
+```
+
+#### מה צריך
+- `npm install @fal-ai/client`
+- `VITE_FAL_KEY` ב-`.env`
+- פונקציית `generateAvatarWithFAL()` חדשה
+- fallback chain: FAL → Unsplash → SVG
+
+---
+
+## 3. מצב System Prompts — ניתוח מעמיק
+
+### מה טוב (prompts.ts)
+- SYSTEM_PROMPT מפורט עם שלב ניתוח לפני תשובה
+- wordChips מגוונים (4 סוגים: רך, חושף, מסתורי, נועז)
+- strategicAdvice כמו מנחה תיאטרון
+- actionTips — 2 המלצות ספציפיות
+- readingBetweenLines — ניתוח סאבטקסט
+- כלל רגש — chips עוסקים ברגש, לא ברקע
+
+### מה חסר
+
+| # | חסר | השפעה | קובץ:שורה |
+|---|------|--------|-----------|
+| 1 | **secrets** לא מועברים ל-AI | האשה לא רואה "מה מטריף את הגבר" | `prompts.ts:176-222` |
+| 2 | **accent** לא מנוצל | אין ביטויים בשפה זרה ב-chips | `prompts.ts:3-101` |
+| 3 | **אין context summary** | AI לא יודע "עברנו 12 הודעות, הגענו ל-WARM" | `prompts.ts:110` |
+| 4 | **FIRE stage** חלש | אין הנחיה מפורשת על dirty talk ועוצמה | `prompts.ts:162-169` |
+| 5 | **אין dynamic temperature** | AI תמיד באותה "טמפרטורה" | `ai-engine.ts:26-29` |
+| 6 | **אין twist/surprise** מ-AI | twists מהscenario לא מנוצלים | `prompts.ts:176-222` |
+
+### שיפורים מתוכננים
+
+1. **secrets integration** — הוספת secrets הדמות לprompt
+   - "הסוד של הדמות שמולך: [secret]"
+   - מועבר רק לצד הנכון (MAN רואה את secret של WOMAN ולהפך)
+
+2. **accent/language integration** — ביקוש מAI לשלב ביטוי אחד בשפה זרה
+   - "שלב ביטוי אחד ב-[accent] באחד מה-chips"
+
+3. **context summary** — הוספת: "עד כה: X הודעות, Y דקות, שלב Z"
+
+4. **FIRE enhancement** — הנחיות ספציפיות ומפורטות יותר
+
+5. **twist integration** — בשלב WARM-HOT, AI יכול להכניס twist מהscenario
+
+---
+
+## 4. ניתוח עיצוב — 3 שינויים הכי משפיעים
+
+### שינוי 1: מסך הצגת תרחיש (ScenarioIntroScreen)
+- **מתי:** בין BREATH_SYNC ל-PROTOCOL
+- **מה מוצג:** כותרת תרחיש, מיקום, אווירה, שמות הדמויות + אווטרים
+- **למה:** הזוג צריך לדעת במי הם משחקים לפני שמתחילים
+- **עיצוב:** dark cinematic, fade-in של כל אלמנט, אנימציה 8 שניות
+
+### שינוי 2: Progress Ring/Bar ב-Protocol
+- **מצב נוכחי:** רק טקסט "ICE" / "WARM" / "HOT" / "FIRE"
+- **שדרוג:** arc/ring מעל המסך עם 4 segments צבעוניים
+  - ICE = כחול קפוא, WARM = כתום, HOT = אדום, FIRE = אדום-זהב
+  - אנימציה חלקה בין שלבים
+  - טמפרטורה מספרית (0-100)
+
+### שינוי 3: Avatar display משודרג בצ'אט
+- **מצב נוכחי:** תמונות קטנות בעיגולים
+- **שדרוג:** אווטרים גדולים יותר (64x64 → 80x80)
+  - טבעת צבעונית לפי שלב (ICE=blue, WARM=orange, HOT=red, FIRE=gold)
+  - glow effect שמתעצם עם tension
+  - badge עם שם הדמות
+
+---
+
+## 5. API Keys זמינים
+
+| שירות | Key Variable | מצב | מסונכרן ל-.env? |
+|--------|-------------|------|------------------|
+| Gemini | VITE_GEMINI_API_KEY | ✅ עובד | ✅ כן |
+| FAL.ai | VITE_FAL_KEY | ✅ זמין ב-master | ❌ לא — צריך sync |
+| Google | GOOGLE_API_KEY | ✅ זמין | לא נדרש |
+
+---
+
+## 6. תלויות חסרות
+
+| חסר | צורך | פתרון |
+|------|-------|--------|
+| `@fal-ai/client` npm package | FAL.ai avatar gen | `npm install @fal-ai/client` |
+| VITE_FAL_KEY ב-.env | FAL API access | sync מ-env.master |
+| ScenarioIntroScreen component | הצגת תרחיש לפני protocol | ליצור קובץ חדש |
+
+---
+
+## 7. Risk Matrix
+
+| Risk | P(1-5) | I(1-5) | Score | Mitigation |
+|------|--------|--------|-------|------------|
+| FAL.ai API failure | 2 | 3 | 6 | Fallback ל-Unsplash (כבר קיים) |
+| Prompt too long (token limit) | 2 | 4 | 8 | Monitor token count, trim if needed |
+| Avatar gen slow (>8s) | 3 | 2 | 6 | Show skeleton/placeholder, load async |
+| Breaking existing flows | 2 | 5 | 10 | Test all 5 entry flows after changes |
+| AI responses less diverse | 3 | 3 | 9 | A/B test old vs new prompts |
+| Build/deploy failure | 1 | 3 | 3 | Test build locally first |
+
+**Priority:** Breaking flows (10) > AI diversity (9) > Token limit (8) > rest
+
+---
+
+*Updated: 2026-02-23*

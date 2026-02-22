@@ -486,21 +486,40 @@ const CircularTimer: React.FC<{
 const MissionCard: React.FC<{
   mission: IntimacyMission;
   phase: string;
+  myGender: 'MAN' | 'WOMAN';
   onChoice?: (choice: IntimacyChoice) => void;
   onDone: () => void;
   onSkip: () => void;
-}> = ({ mission, phase, onChoice, onDone, onSkip }) => {
+}> = ({ mission, phase, myGender, onChoice, onDone, onSkip }) => {
   const [selected, setSelected] = useState<IntimacyChoice | null>(null);
-  const [timerStarted, setTimerStarted] = useState(false); // טיימר מתחיל רק אחרי לחיצה
+  const [timerStarted, setTimerStarted] = useState(false);
   const [seconds, setSeconds] = useState(mission.duration || 0);
 
+  // האם אני צד "הפעיל" במשימה (מקבל הוראות)
+  const isActive = mission.forWho === 'BOTH' || mission.forWho === myGender;
+  // טיימר ארוך יותר לאשה
+  const timerDuration = mission.duration
+    ? (mission.forWho === 'WOMAN' ? Math.round(mission.duration * 1.3) : mission.duration)
+    : 0;
+
   useEffect(() => {
-    if (!mission.duration) return;
+    setSeconds(timerDuration);
+  }, [timerDuration]);
+
+  useEffect(() => {
+    if (!timerDuration) return;
     if (timerStarted && seconds > 0) {
       const t = setInterval(() => setSeconds(p => p > 0 ? p - 1 : 0), 1000);
       return () => clearInterval(t);
     }
-  }, [timerStarted, mission.duration, seconds]);
+  }, [timerStarted, timerDuration, seconds]);
+
+  // צד המחכה — מסך המתנה עם ספירה
+  useEffect(() => {
+    if (!isActive && timerDuration > 0) {
+      setTimerStarted(true);
+    }
+  }, [isActive, timerDuration]);
 
   const phaseGradient = {
     ICE: 'from-blue-600/30 to-cyan-700/30',
@@ -513,6 +532,41 @@ const MissionCard: React.FC<{
     ICE: '#60a5fa', WARM: '#f472b6', HOT: '#f97316', FIRE: '#ef4444'
   }[phase] || '#f472b6';
 
+  // ===== צד מחכה (לא הוא/היא מבצע) =====
+  if (!isActive) {
+    return (
+      <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="w-full max-w-xs text-center">
+          <div className="text-5xl mb-4 animate-pulse">
+            {myGender === 'MAN' ? '😍' : '🫦'}
+          </div>
+          <div className="text-white/40 text-[10px] uppercase tracking-widest mb-2">
+            {myGender === 'MAN' ? 'היא מבצעת בשבילך...' : 'הוא מכין לך הפתעה...'}
+          </div>
+          <h2 className="text-white font-bold text-xl mb-6">{mission.title}</h2>
+          {timerDuration > 0 && (
+            <div
+              className="text-6xl font-bold font-mono mb-6"
+              style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
+            >
+              {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
+            </div>
+          )}
+          {seconds === 0 && (
+            <button
+              onClick={onDone}
+              className="px-8 py-3 rounded-2xl font-bold text-white text-sm"
+              style={{ background: `linear-gradient(135deg, ${phaseColor}cc, ${phaseColor}88)` }}
+            >
+              נהנינו! ✅
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ===== צד פעיל (הוא/היא מבצע) =====
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-end justify-center z-50 p-4 pb-6">
       <div className="w-full max-w-sm bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 overflow-hidden">
@@ -520,7 +574,9 @@ const MissionCard: React.FC<{
         {/* Header */}
         <div className={`bg-gradient-to-r ${phaseGradient} px-5 pt-5 pb-3 border-b border-white/10`}>
           <div className="flex items-center justify-between">
-            <span className="text-white/40 text-[10px] uppercase tracking-widest">משימה אינטימית</span>
+            <span className="text-white/40 text-[10px] uppercase tracking-widest">
+              {mission.forWho === 'BOTH' ? '💑 שניכם' : myGender === 'MAN' ? '🕺 בשבילך' : '💃 בשבילך'}
+            </span>
             <button onClick={onSkip} className="text-white/25 hover:text-white/50 text-xs">דלג ↩</button>
           </div>
           <h2 className="text-white font-semibold text-lg mt-1">{mission.title}</h2>
@@ -536,8 +592,8 @@ const MissionCard: React.FC<{
                 onClick={() => {
                   setSelected(choice);
                   onChoice?.(choice);
-                  setSeconds(mission.duration || 60);
-                  setTimerStarted(false); // אפשר להתחיל טיימר אחרי בחירה
+                  setSeconds(timerDuration || 60);
+                  setTimerStarted(false);
                 }}
                 className={`p-3 rounded-2xl text-right border transition-all ${
                   selected?.id === choice.id
@@ -555,8 +611,7 @@ const MissionCard: React.FC<{
 
         {/* Timer + Done */}
         <div className="px-4 pb-4 flex items-center gap-3">
-          {/* טיימר — מציג רק אחרי הפעלה */}
-          {selected && mission.duration ? (
+          {selected && timerDuration ? (
             <div className="flex-1 text-center">
               {!timerStarted ? (
                 <button
@@ -567,19 +622,38 @@ const MissionCard: React.FC<{
                 </button>
               ) : (
                 <>
-                  <div className="text-white/30 text-[10px] mb-0.5">שניות</div>
+                  <div className="text-white/30 text-[10px] mb-0.5">נשאר</div>
                   <div
                     className="text-3xl font-bold font-mono"
                     style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
                   >
-                    {seconds}
+                    {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
                   </div>
                 </>
               )}
             </div>
-          ) : !mission.choices ? (
-            <div className="flex-1" />
-          ) : null}
+          ) : !mission.choices && timerDuration ? (
+            <div className="flex-1 text-center">
+              {!timerStarted ? (
+                <button
+                  onClick={() => setTimerStarted(true)}
+                  className="w-full py-2 rounded-xl text-sm font-medium text-white border border-white/25 bg-white/10 hover:bg-white/20 transition-all"
+                >
+                  ▶ התחל
+                </button>
+              ) : (
+                <>
+                  <div className="text-white/30 text-[10px] mb-0.5">נשאר</div>
+                  <div
+                    className="text-3xl font-bold font-mono"
+                    style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
+                  >
+                    {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : <div className="flex-1" />}
 
           <button
             onClick={onDone}
@@ -763,6 +837,10 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = setTimeout(() => setPartnerTyping(false), 2500);
       }
+      // מיסיה שהגבר שלח — האשה מקבלת ומציגה
+      if (sysMsg.type === 'MISSION' && sysMsg.data && myGender === 'WOMAN') {
+        setTimeout(() => setActiveMission(sysMsg.data), 500);
+      }
     });
     return () => { syncService.current.disconnect(); };
   }, [myGender]);
@@ -821,13 +899,14 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     setInputText('');
     inputRef.current?.focus();
 
-    // בדיקת מיסיה אינטימית
-    if (!activeMission) {
+    // בדיקת מיסיה אינטימית — הגבר שולח לשניהם
+    if (!activeMission && myGender === 'MAN') {
       const mission = getNextMission(newTension.level, completedMissions);
       if (mission) {
-        setTimeout(() => {
+        setTimeout(async () => {
           setActiveMission(mission);
-          // מוזיקה מיוחדת למשימה
+          // שלח מיסיה לאשה
+          await syncService.current.sendSystemMessage('MISSION', mission);
           if (audioEnabled) {
             audioService.setMissionMood(newTension.level >= 75 ? 'intense' : 'soft');
           }
@@ -1355,6 +1434,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         <MissionCard
           mission={activeMission}
           phase={tensionState.phase}
+          myGender={myGender}
           onChoice={(choice) => {
             // שלח הודעה מיוחדת לצד השני
             const msg: Message = {
