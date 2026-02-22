@@ -728,6 +728,9 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTypingSentRef = useRef<number>(0);
 
+  // Identity card
+  const [showIdentityCard, setShowIdentityCard] = useState(false);
+
   // Position dice
   const [showPositionDice, setShowPositionDice] = useState(false);
   const [rolledPosition, setRolledPosition] = useState<null | { name: string; instruction: string; emoji: string }>(null);
@@ -1030,6 +1033,19 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* כפתור זהות — מי אני */}
+            <button
+              onClick={() => setShowIdentityCard(true)}
+              title="הזהות שלי"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/15 bg-white/8 hover:bg-white/15 transition-all"
+              style={{ backdropFilter: 'blur(8px)' }}
+            >
+              <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" scenarioId={scenario.id} />
+              <span className="text-white/70 text-xs font-medium truncate max-w-[60px]">
+                {scenario.roles[myGender]?.name}
+              </span>
+            </button>
+
             {/* כפתור מוזיקה דיסקרטי */}
             <button
               onClick={() => {
@@ -1357,6 +1373,96 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ===== IDENTITY CARD OVERLAY ===== */}
+      {showIdentityCard && (() => {
+        const role = scenario.roles[myGender];
+        if (!role) return null;
+        const phaseGrad = {
+          ICE: 'from-blue-900/60 to-indigo-900/80',
+          WARM: 'from-rose-900/60 to-fuchsia-900/80',
+          HOT: 'from-orange-900/60 to-red-900/80',
+          FIRE: 'from-red-950/70 to-pink-950/80'
+        }[tensionState.phase] || 'from-fuchsia-900/60 to-purple-900/80';
+
+        return (
+          <div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-end justify-center z-50"
+            onClick={() => setShowIdentityCard(false)}
+          >
+            <div
+              className={`w-full max-w-md bg-gradient-to-b ${phaseGrad} rounded-t-3xl overflow-hidden`}
+              style={{ border: '1px solid rgba(255,255,255,0.12)', borderBottom: 'none' }}
+              onClick={e => e.stopPropagation()}
+            >
+              {/* drag handle */}
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="w-10 h-1 rounded-full bg-white/20" />
+              </div>
+
+              {/* avatar + name */}
+              <div className="flex items-center gap-4 px-6 py-4 border-b border-white/10">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 bg-white/10">
+                  {avatars[myGender]
+                    ? <img src={avatars[myGender]!} alt={role.name} className="w-full h-full object-cover" />
+                    : <div className="w-full h-full flex items-center justify-center text-3xl">
+                        {myGender === 'MAN' ? '🕺' : '💃'}
+                      </div>
+                  }
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-white/40 text-[10px] uppercase tracking-widest mb-0.5">הזהות שלך</div>
+                  <h2 className="text-white font-bold text-xl leading-tight">{role.name}</h2>
+                  <div className="text-white/50 text-xs mt-0.5">{role.archetype}</div>
+                </div>
+              </div>
+
+              {/* backstory */}
+              {role.backstory && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1.5">מי אני</div>
+                  <p className="text-white/75 text-sm leading-relaxed">{role.backstory}</p>
+                </div>
+              )}
+
+              {/* meetContext */}
+              {role.meetContext && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1.5">
+                    {myGender === 'MAN' ? 'איך אני מכיר אותה' : 'איך אני מכירה אותו'}
+                  </div>
+                  <p className="text-white/75 text-sm leading-relaxed italic">"{role.meetContext}"</p>
+                </div>
+              )}
+
+              {/* personality + forbidden */}
+              <div className="px-6 py-4 grid grid-cols-2 gap-3">
+                <div>
+                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1">אישיות</div>
+                  <p className="text-white/65 text-xs leading-relaxed">{role.personality}</p>
+                </div>
+                {role.forbidden && (
+                  <div>
+                    <div className="text-red-400/50 text-[10px] uppercase tracking-widest mb-1">הסכנה</div>
+                    <p className="text-red-300/60 text-xs leading-relaxed">{role.forbidden}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* scenario title */}
+              <div className="px-6 pb-5 pt-1">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/5 border border-white/8">
+                  <span className="text-lg">{phaseIcon}</span>
+                  <div>
+                    <div className="text-white/50 text-xs">{scenario.title}</div>
+                    <div className="text-white/25 text-[10px]">{scenario.location}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ===== POSITION DICE OVERLAY ===== */}
       {showPositionDice && rolledPosition && (
