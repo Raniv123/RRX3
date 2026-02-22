@@ -1,5 +1,5 @@
 // Core Types
-export type Screen = 'LOGIN' | 'CONNECT' | 'GENDER_SELECTION' | 'PROTOCOL';
+export type Screen = 'LOGIN' | 'CONNECT' | 'PROTOCOL';
 export type UserGender = 'MAN' | 'WOMAN';
 export type Phase = 'ICE' | 'WARM' | 'HOT' | 'FIRE';
 export type ActionType = 'SAY' | 'DO' | 'ORDER' | 'SURPRISE';

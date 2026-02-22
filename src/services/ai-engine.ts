@@ -60,8 +60,8 @@ export class AIEngine {
 
     try {
       const [manAvatar, womanAvatar] = await Promise.allSettled([
-        this.generateSingleAvatar(scenario.roles.MAN.visualPrompt, 'male'),
-        this.generateSingleAvatar(scenario.roles.WOMAN.visualPrompt, 'female')
+        this.generateAvatar(scenario.roles.MAN.visualPrompt, true),
+        this.generateAvatar(scenario.roles.WOMAN.visualPrompt, false)
       ]);
 
       if (manAvatar.status === 'fulfilled' && manAvatar.value) {
@@ -77,7 +77,51 @@ export class AIEngine {
     return results;
   }
 
-  private async generateSingleAvatar(visualPrompt: string, gender: 'male' | 'female'): Promise<string | null> {
+  // נסה FAL.ai קודם, fallback ל-Gemini
+  async generateAvatar(visualPrompt: string, isMan: boolean): Promise<string | null> {
+    // Try FAL.ai first
+    const falUrl = await this.generateAvatarFAL(visualPrompt, isMan);
+    if (falUrl) return falUrl;
+
+    // Fallback to Gemini
+    return this.generateSingleAvatarGemini(visualPrompt, isMan ? 'male' : 'female');
+  }
+
+  // FAL.ai Flux-schnell avatar generation
+  async generateAvatarFAL(visualPrompt: string, isMan: boolean): Promise<string | null> {
+    try {
+      const falKey = import.meta.env.VITE_FAL_KEY;
+      if (!falKey) return null;
+
+      const genderDesc = isMan
+        ? 'handsome man, masculine, confident'
+        : 'beautiful woman, elegant, feminine';
+
+      const prompt = `${visualPrompt}, ${genderDesc}, portrait photo, professional headshot, soft lighting, shallow depth of field, photorealistic, cinematic, 8k`;
+
+      const response = await fetch('https://fal.run/fal-ai/flux/schnell', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Key ${falKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          image_size: 'square_hd',
+          num_inference_steps: 4,
+          num_images: 1,
+        }),
+      });
+
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data?.images?.[0]?.url ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async generateSingleAvatarGemini(visualPrompt: string, gender: 'male' | 'female'): Promise<string | null> {
     try {
       const prompt = `Cinematic CGI portrait, photorealistic, dark luxury atmosphere, ${visualPrompt}. ${
         gender === 'male'

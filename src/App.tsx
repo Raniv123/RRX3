@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Screen, UserGender, Scenario } from './types';
 import { LoginScreen } from './components/LoginScreen';
 import { ConnectScreen } from './components/ConnectScreen';
-import { GenderSelection } from './components/GenderSelection';
 import { BreathSyncScreen } from './components/BreathSyncScreen';
 import { ProtocolScreen } from './components/ProtocolScreen';
 import { InvitationScreen } from './components/InvitationScreen';
@@ -91,6 +90,8 @@ function App() {
   const handleLogin = (id: string, host: boolean) => {
     setChannelId(id);
     setIsHost(host);
+    // זיהוי מגדר אוטומטי: host = MAN, joiner = WOMAN
+    setMyGender(host ? 'MAN' : 'WOMAN');
 
     if (host) {
       // אם יוצר חדש - הצג את קוד החיבור
@@ -112,61 +113,45 @@ function App() {
       // שלח JOIN אחרי שמאזינים
       tempSync.sendJoinSignal();
       syncRef.current = tempSync;
-      setScreen('GENDER_SELECTION');
-    }
-  };
 
-  // חיבור שותף - host עובר לבחירת מין
-  const handlePartnerConnected = () => {
-    setScreen('GENDER_SELECTION');
-  };
-
-  // בחירת מין
-  const handleGenderSelect = async (gender: UserGender) => {
-    setMyGender(gender);
-
-    if (isHost) {
-      // Host - צור תרחיש דינמי ושלח לשותף
+      // אם תרחיש כבר הגיע, עבור ישר לנשימה
+      // אחרת חכה (useEffect יזהה כשיגיע)
       setLoadingScenario(true);
-      try {
-        const newScenario = await aiEngine.current.createScenario();
-        setScenario(newScenario);
 
-        // שלח את התרחיש לשותף
-        const sync = new SyncService(channelId, gender);
-        await sync.sendScenario(newScenario);
-        sync.disconnect();
-      } catch (error) {
-        console.error('Scenario creation error:', error);
-        // fallback
-        const fallback = aiEngine.current.getDefaultScenarioPublic();
-        setScenario(fallback);
-
-        const sync = new SyncService(channelId, gender);
-        await sync.sendScenario(fallback);
-        sync.disconnect();
-      }
-      setLoadingScenario(false);
-      setScreen('BREATH_SYNC');
-    } else {
-      // Joiner - אם כבר יש תרחיש מה-host, עבור ישר לנשימה
-      if (scenario) {
-        setScreen('BREATH_SYNC');
-      } else {
-        // חכה לתרחיש מה-host
-        // useEffect יזהה כשיגיע התרחיש ויעבור ל-BREATH_SYNC
-        setLoadingScenario(true);
-
-        // fallback אחרי 30 שניות אם ה-host לא שלח תרחיש
-        setTimeout(() => {
-          setScenario(prev => {
-            if (!prev) return aiEngine.current.getDefaultScenarioPublic();
-            return prev;
-          });
-          setLoadingScenario(false);
-        }, 30000);
-      }
+      // fallback אחרי 30 שניות אם ה-host לא שלח תרחיש
+      setTimeout(() => {
+        setScenario(prev => {
+          if (!prev) return aiEngine.current.getDefaultScenarioPublic();
+          return prev;
+        });
+        setLoadingScenario(false);
+      }, 30000);
     }
+  };
+
+  // חיבור שותף - host יוצר תרחיש ושולח
+  const handlePartnerConnected = async () => {
+    setLoadingScenario(true);
+    try {
+      const newScenario = await aiEngine.current.createScenario();
+      setScenario(newScenario);
+
+      // שלח את התרחיש לשותף
+      const sync = new SyncService(channelId, 'MAN');
+      await sync.sendScenario(newScenario);
+      sync.disconnect();
+    } catch (error) {
+      console.error('Scenario creation error:', error);
+      // fallback
+      const fallback = aiEngine.current.getDefaultScenarioPublic();
+      setScenario(fallback);
+
+      const sync = new SyncService(channelId, 'MAN');
+      await sync.sendScenario(fallback);
+      sync.disconnect();
+    }
+    setLoadingScenario(false);
+    setScreen('BREATH_SYNC');
   };
 
   // כשהתרחיש מגיע לjoiner - עבור למסך הנשימה
@@ -268,10 +253,6 @@ function App() {
           channelId={channelId}
           onPartnerConnected={handlePartnerConnected}
         />
-      )}
-
-      {screen === 'GENDER_SELECTION' && !loadingScenario && (
-        <GenderSelection onSelect={handleGenderSelect} />
       )}
 
       {loadingScenario && (
