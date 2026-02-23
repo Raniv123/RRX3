@@ -64,8 +64,9 @@ export interface Scenario {
       name: string;
       archetype: string;
       personality: string;
-      backstory?: string;      // מי אני — 2-3 משפטים על הדמות
+      backstory?: string;      // מי אני — 3-4 משפטים על הדמות
       meetContext?: string;    // איך אני מכיר/ה אותה/אותו — מנקודת מבט שלי
+      desire?: string;         // מה אני מחפש/ת בלילה הזה
       accent?: Language;
       visualPrompt: string;
       forbidden?: string;
@@ -76,6 +77,7 @@ export interface Scenario {
       personality: string;
       backstory?: string;
       meetContext?: string;
+      desire?: string;
       accent?: Language;
       visualPrompt: string;
       forbidden?: string;

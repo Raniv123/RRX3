@@ -9,7 +9,7 @@ import {
   selectSurprise,
   updateSurpriseTracking
 } from '../services/surprise-engine';
-import { IntimacyMission, IntimacyChoice, getNextMission } from '../data/intimacy-missions';
+import { IntimacyMission, IntimacyChoice, getNextMission, getMissionInstruction } from '../data/intimacy-missions';
 import audioService from '../services/audio-service';
 
 // ===== סצינות לפי שלב — מציבורי לאינטימי =====
@@ -498,7 +498,7 @@ const CircularTimer: React.FC<{
 
 // (GameCardOverlay removed — game cards feature not active)
 
-// ===== Mission Card =====
+// ===== Mission Card — Luxury Fullscreen =====
 const MissionCard: React.FC<{
   mission: IntimacyMission;
   phase: string;
@@ -510,17 +510,14 @@ const MissionCard: React.FC<{
   const [selected, setSelected] = useState<IntimacyChoice | null>(null);
   const [timerStarted, setTimerStarted] = useState(false);
   const [seconds, setSeconds] = useState(mission.duration || 0);
+  const [imgFailed, setImgFailed] = useState(false);
 
-  // האם אני צד "הפעיל" במשימה (מקבל הוראות)
   const isActive = mission.forWho === 'BOTH' || mission.forWho === myGender;
-  // טיימר ארוך יותר לאשה
   const timerDuration = mission.duration
-    ? (mission.forWho === 'WOMAN' ? Math.round(mission.duration * 1.3) : mission.duration)
+    ? (myGender === 'WOMAN' ? Math.round(mission.duration * 1.3) : mission.duration)
     : 0;
 
-  useEffect(() => {
-    setSeconds(timerDuration);
-  }, [timerDuration]);
+  useEffect(() => { setSeconds(timerDuration); }, [timerDuration]);
 
   useEffect(() => {
     if (!timerDuration) return;
@@ -530,161 +527,250 @@ const MissionCard: React.FC<{
     }
   }, [timerStarted, timerDuration, seconds]);
 
-  // צד המחכה — מסך המתנה עם ספירה
   useEffect(() => {
-    if (!isActive && timerDuration > 0) {
-      setTimerStarted(true);
-    }
+    if (!isActive && timerDuration > 0) setTimerStarted(true);
   }, [isActive, timerDuration]);
 
-  const phaseGradient = {
-    ICE: 'from-blue-600/30 to-cyan-700/30',
-    WARM: 'from-pink-600/30 to-rose-700/30',
-    HOT: 'from-orange-600/30 to-red-700/30',
-    FIRE: 'from-red-600/30 to-pink-900/30'
-  }[phase] || 'from-fuchsia-600/30 to-purple-700/30';
+  const pc = {
+    ICE:  { color: '#60a5fa', name: 'ICE',  glow: 'rgba(96,165,250,0.15)',  bg: 'linear-gradient(135deg, #0c1a2e 0%, #0a1520 100%)' },
+    WARM: { color: '#f472b6', name: 'WARM', glow: 'rgba(244,114,182,0.15)', bg: 'linear-gradient(135deg, #1a0a14 0%, #120810 100%)' },
+    HOT:  { color: '#f97316', name: 'HOT',  glow: 'rgba(249,115,22,0.15)',  bg: 'linear-gradient(135deg, #1a0d04 0%, #120a04 100%)' },
+    FIRE: { color: '#ef4444', name: 'FIRE', glow: 'rgba(239,68,68,0.15)',   bg: 'linear-gradient(135deg, #1a0404 0%, #100404 100%)' },
+  }[phase] ?? { color: '#f472b6', name: 'WARM', glow: 'rgba(244,114,182,0.15)', bg: 'linear-gradient(135deg, #1a0a14 0%, #120810 100%)' };
 
-  const phaseColor = {
-    ICE: '#60a5fa', WARM: '#f472b6', HOT: '#f97316', FIRE: '#ef4444'
-  }[phase] || '#f472b6';
+  const instruction = getMissionInstruction(mission, myGender);
+  const photoUrl = mission.photoUrl && !imgFailed
+    ? `${mission.photoUrl}?auto=format&fit=crop&w=700&q=85`
+    : null;
 
-  // ===== צד מחכה (לא הוא/היא מבצע) =====
+  // ===== INACTIVE SIDE — slim floating bar =====
   if (!isActive) {
     return (
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-50 p-4">
-        <div className="w-full max-w-xs text-center">
-          <div className="text-5xl mb-4 animate-pulse">
-            {myGender === 'MAN' ? '😍' : '🫦'}
-          </div>
-          <div className="text-white/40 text-[10px] uppercase tracking-widest mb-2">
-            {myGender === 'MAN' ? 'היא מבצעת בשבילך...' : 'הוא מכין לך הפתעה...'}
-          </div>
-          <h2 className="text-white font-bold text-xl mb-6">{mission.title}</h2>
-          {timerDuration > 0 && (
-            <div
-              className="text-6xl font-bold font-mono mb-6"
-              style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
-            >
-              {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
+      <div className="fixed bottom-24 left-3 right-3 z-40">
+        <div className="rounded-2xl overflow-hidden"
+          style={{ background: 'rgba(6,6,6,0.92)', backdropFilter: 'blur(24px)', border: `1px solid ${pc.color}25` }}>
+          <div className="h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${pc.color}60, transparent)` }} />
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ background: `${pc.color}15`, border: `1px solid ${pc.color}35` }}>
+              <span className="text-base">{myGender === 'MAN' ? '🌹' : '🎭'}</span>
             </div>
-          )}
-          {seconds === 0 && (
-            <button
-              onClick={onDone}
-              className="px-8 py-3 rounded-2xl font-bold text-white text-sm"
-              style={{ background: `linear-gradient(135deg, ${phaseColor}cc, ${phaseColor}88)` }}
-            >
-              נהנינו! ✅
-            </button>
-          )}
+            <div className="flex-1 min-w-0">
+              <div className="text-[9px] uppercase tracking-[2px] mb-0.5" style={{ color: `${pc.color}70` }}>
+                {myGender === 'MAN' ? 'היא מכינה לך הפתעה...' : 'הוא מכין לך הפתעה...'}
+              </div>
+              <div className="text-white/80 text-sm font-medium truncate">{mission.title}</div>
+            </div>
+            {timerDuration > 0 && (
+              <div className="text-xl font-bold font-mono flex-shrink-0 tabular-nums"
+                style={{ color: seconds > 15 ? pc.color : '#ef4444' }}>
+                {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
+              </div>
+            )}
+            {(seconds === 0 || timerDuration === 0) && (
+              <button onClick={onDone}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold text-white ml-1"
+                style={{ background: `${pc.color}cc` }}>
+                ✅
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
-  // ===== צד פעיל (הוא/היא מבצע) =====
+  // ===== ACTIVE SIDE — fullscreen luxury card =====
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-end justify-center z-50 p-4 pb-6">
-      <div className="w-full max-w-sm bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end justify-center"
+      style={{ backdropFilter: 'blur(28px)', background: 'rgba(0,0,0,0.90)', paddingBottom: '16px', paddingLeft: '12px', paddingRight: '12px' }}>
 
-        {/* Header */}
-        <div className={`bg-gradient-to-r ${phaseGradient} px-5 pt-5 pb-3 border-b border-white/10`}>
-          <div className="flex items-center justify-between">
-            <span className="text-white/40 text-[10px] uppercase tracking-widest">
-              {mission.forWho === 'BOTH' ? '💑 שניכם' : myGender === 'MAN' ? '🕺 בשבילך' : '💃 בשבילך'}
+      <div className="w-full max-w-sm rounded-3xl overflow-hidden flex flex-col"
+        style={{
+          maxHeight: '92vh',
+          background: pc.bg,
+          border: `1px solid ${pc.color}20`,
+          boxShadow: `0 0 80px ${pc.glow}, 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06)`
+        }}>
+
+        {/* ── PHOTO SECTION ── */}
+        <div className="relative flex-shrink-0" style={{ height: '210px' }}>
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt=""
+              className="w-full h-full object-cover"
+              onError={() => setImgFailed(true)}
+            />
+          ) : (
+            /* Artistic gradient fallback */
+            <div className="w-full h-full" style={{
+              background: `radial-gradient(ellipse 80% 80% at 25% 35%, ${pc.color}22 0%, transparent 65%),
+                           radial-gradient(ellipse 60% 70% at 75% 65%, ${pc.color}15 0%, transparent 70%),
+                           linear-gradient(160deg, #0d0d0d 0%, #070707 100%)`
+            }}>
+              <div className="w-full h-full flex items-center justify-center opacity-10">
+                <div style={{ fontSize: '100px', filter: 'blur(2px)' }}>
+                  {phase === 'FIRE' ? '🔥' : phase === 'HOT' ? '🌶️' : '🌹'}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom photo fade */}
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 50%, rgba(7,7,7,1) 100%)'
+          }} />
+
+          {/* Top bar: phase badge + skip */}
+          <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-4">
+            <span className="text-[9px] font-bold uppercase tracking-[3px] px-2.5 py-1 rounded-full"
+              style={{ color: pc.color, background: `${pc.color}18`, border: `1px solid ${pc.color}35` }}>
+              {pc.name}
             </span>
-            <button onClick={onSkip} className="text-white/25 hover:text-white/50 text-xs">דלג ↩</button>
+            <button onClick={onSkip}
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-all"
+              style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.45)' }}>
+              <span style={{ fontSize: '11px' }}>✕</span>
+            </button>
           </div>
-          <h2 className="text-white font-semibold text-lg mt-1">{mission.title}</h2>
-          <p className="text-white/70 text-sm mt-1 leading-relaxed">{mission.instruction}</p>
+
+          {/* Title over photo bottom */}
+          <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 pt-8">
+            <div className="text-[9px] uppercase tracking-[2px] mb-1.5" style={{ color: `${pc.color}75` }}>
+              {mission.forWho === 'BOTH' ? 'שניכם יחד' : myGender === 'MAN' ? 'הוראה לגבר' : 'הוראה לאשה'}
+            </div>
+            <h2 className="text-white font-bold leading-tight" style={{ fontSize: '22px', letterSpacing: '-0.3px' }}>
+              {mission.title}
+            </h2>
+          </div>
         </div>
 
-        {/* Choices */}
-        {mission.choices && (
-          <div className="px-4 py-3 grid grid-cols-2 gap-2">
-            {mission.choices.map(choice => (
-              <button
-                key={choice.id}
-                onClick={() => {
-                  setSelected(choice);
-                  onChoice?.(choice);
-                  setSeconds(timerDuration || 60);
-                  setTimerStarted(false);
-                }}
-                className={`p-3 rounded-2xl text-right border transition-all ${
-                  selected?.id === choice.id
-                    ? 'border-white/40 bg-white/15 scale-[0.98]'
-                    : 'border-white/10 bg-white/5 hover:bg-white/10'
-                }`}
-              >
-                <div className="text-xl mb-1">{choice.emoji}</div>
-                <div className="text-white text-xs font-medium">{choice.label}</div>
-                <div className="text-white/45 text-[10px] mt-0.5 leading-tight">{choice.description}</div>
-              </button>
-            ))}
+        {/* ── CONTENT (scrollable) ── */}
+        <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+
+          {/* Main instruction */}
+          <div className="px-5 pt-5 pb-4">
+            <p className="text-white/88 leading-[1.85]" style={{ fontSize: '15px', fontWeight: 300, letterSpacing: '0.1px' }}>
+              {instruction}
+            </p>
           </div>
-        )}
 
-        {/* Timer + Done */}
-        <div className="px-4 pb-4 flex items-center gap-3">
-          {selected && timerDuration ? (
-            <div className="flex-1 text-center">
+          {/* Tips */}
+          {mission.tips && mission.tips.length > 0 && (
+            <div className="px-5 pb-5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
+                <span className="text-[9px] uppercase tracking-[2.5px]" style={{ color: `${pc.color}55` }}>
+                  איך לעשות נכון
+                </span>
+                <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
+              </div>
+              <div className="space-y-3">
+                {mission.tips.map((tip, i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5"
+                      style={{ background: `${pc.color}18`, color: pc.color, border: `1px solid ${pc.color}30` }}>
+                      {i + 1}
+                    </span>
+                    <span className="text-white/60 text-[13px] leading-[1.7]">{tip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Choices */}
+          {mission.choices && (
+            <div className="px-4 pb-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
+                <span className="text-[9px] uppercase tracking-[2.5px]" style={{ color: `${pc.color}55` }}>
+                  בחרו סגנון
+                </span>
+                <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {mission.choices.map(choice => {
+                  const isSel = selected?.id === choice.id;
+                  return (
+                    <button
+                      key={choice.id}
+                      onClick={() => {
+                        setSelected(choice);
+                        onChoice?.(choice);
+                        setSeconds(timerDuration || 60);
+                        setTimerStarted(false);
+                      }}
+                      className="p-3 rounded-2xl text-right transition-all duration-200"
+                      style={{
+                        background: isSel ? `${pc.color}20` : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${isSel ? `${pc.color}55` : 'rgba(255,255,255,0.07)'}`,
+                        transform: isSel ? 'scale(0.97)' : 'scale(1)',
+                        boxShadow: isSel ? `0 0 16px ${pc.color}18` : 'none'
+                      }}
+                    >
+                      <div className="text-xl mb-1.5">{choice.emoji}</div>
+                      <div className="text-white text-xs font-semibold mb-0.5 leading-snug">{choice.label}</div>
+                      <div className="text-[10px] leading-snug" style={{ color: 'rgba(255,255,255,0.38)' }}>{choice.description}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── FOOTER: timer + done ── */}
+        <div className="flex-shrink-0 px-5 pt-3 pb-5"
+          style={{ borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+
+          {/* Timer */}
+          {(selected || !mission.choices) && timerDuration > 0 && (
+            <div className="flex justify-center mb-3">
               {!timerStarted ? (
-                <button
-                  onClick={() => setTimerStarted(true)}
-                  className="w-full py-2 rounded-xl text-sm font-medium text-white border border-white/25 bg-white/10 hover:bg-white/20 transition-all"
-                >
-                  ▶ התחל טיימר
+                <button onClick={() => setTimerStarted(true)}
+                  className="flex items-center gap-2 px-6 py-2 rounded-xl text-sm font-medium transition-all"
+                  style={{ color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <span style={{ fontSize: '11px' }}>▶</span> התחל ספירה
                 </button>
               ) : (
-                <>
-                  <div className="text-white/30 text-[10px] mb-0.5">נשאר</div>
-                  <div
-                    className="text-3xl font-bold font-mono"
-                    style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
-                  >
+                <div className="text-center">
+                  <div className="font-bold font-mono tabular-nums" style={{
+                    fontSize: '38px',
+                    letterSpacing: '-1px',
+                    color: seconds > 20 ? pc.color : '#ef4444',
+                    textShadow: `0 0 20px ${seconds > 20 ? pc.color : '#ef4444'}40`
+                  }}>
                     {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
                   </div>
-                </>
+                  {seconds === 0 && (
+                    <div className="text-[11px] mt-1 animate-pulse" style={{ color: `${pc.color}70` }}>
+                      הזמן הסתיים ✨
+                    </div>
+                  )}
+                </div>
               )}
             </div>
-          ) : !mission.choices && timerDuration ? (
-            <div className="flex-1 text-center">
-              {!timerStarted ? (
-                <button
-                  onClick={() => setTimerStarted(true)}
-                  className="w-full py-2 rounded-xl text-sm font-medium text-white border border-white/25 bg-white/10 hover:bg-white/20 transition-all"
-                >
-                  ▶ התחל
-                </button>
-              ) : (
-                <>
-                  <div className="text-white/30 text-[10px] mb-0.5">נשאר</div>
-                  <div
-                    className="text-3xl font-bold font-mono"
-                    style={{ color: seconds > 15 ? phaseColor : '#ef4444' }}
-                  >
-                    {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
-                  </div>
-                </>
-              )}
-            </div>
-          ) : <div className="flex-1" />}
+          )}
 
+          {/* Done button */}
           <button
             onClick={onDone}
             disabled={!!mission.choices && !selected}
-            className={`flex-1 py-3 rounded-2xl font-semibold text-sm transition-all ${
-              !mission.choices || selected
-                ? 'text-white hover:scale-[1.02] active:scale-[0.98]'
-                : 'text-white/30 cursor-not-allowed'
-            }`}
+            className="w-full py-3.5 rounded-2xl font-semibold tracking-wide transition-all duration-200"
             style={!mission.choices || selected ? {
-              background: `linear-gradient(135deg, ${phaseColor}cc, ${phaseColor}88)`,
-              boxShadow: `0 0 20px ${phaseColor}40`
-            } : { background: 'rgba(255,255,255,0.05)' }}
-          >
-            {selected ? 'נהנינו! ✅' : !mission.choices ? 'סיימנו ✅' : 'בחר/י קודם'}
+              background: `linear-gradient(135deg, ${pc.color}e0 0%, ${pc.color}90 100%)`,
+              boxShadow: `0 8px 28px ${pc.color}30`,
+              color: 'white',
+              fontSize: '14px'
+            } : {
+              background: 'rgba(255,255,255,0.04)',
+              color: 'rgba(255,255,255,0.22)',
+              cursor: 'not-allowed',
+              fontSize: '14px'
+            }}>
+            {selected ? '✅ נהנינו!' : !mission.choices ? '✅ סיימנו' : 'בחרו קודם'}
           </button>
         </div>
       </div>
@@ -860,6 +946,15 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
       if (sysMsg.type === 'MISSION' && sysMsg.data && myGender === 'WOMAN') {
         setTimeout(() => setActiveMission(sysMsg.data), 500);
       }
+      // סנכרון שלב — הגבר לחץ התקדם, האשה מקבלת עדכון מתח
+      if (sysMsg.type === 'BREATH_START' && sysMsg.data?.tensionLevel && myGender === 'WOMAN') {
+        const { tensionLevel, phase } = sysMsg.data;
+        setTensionState(prev => ({
+          ...prev,
+          level: Math.max(prev.level, tensionLevel),
+          phase: phase || prev.phase
+        }));
+      }
     });
     return () => { syncService.current.disconnect(); };
   }, [myGender]);
@@ -943,8 +1038,8 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     }
   };
 
-  // ===== לחצן התקדמות שקט — לגבר בלבד =====
-  const handleAdvancePhase = () => {
+  // ===== לחצן התקדמות שקט — לגבר בלבד, מסונכרן לשני הצדדים =====
+  const handleAdvancePhase = async () => {
     const jump = tensionState.phase === 'ICE' ? 26
       : tensionState.phase === 'WARM' ? 20
       : tensionState.phase === 'HOT' ? 15
@@ -953,6 +1048,13 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
     const timeSinceStart = Date.now() - sessionStartTime.current;
     const boosted = updateTension(tensionState, jump, messages.length, timeSinceStart);
     setTensionState(boosted);
+    // שלח לצד השני שהשלב עלה
+    try {
+      await syncService.current?.sendSystemMessage('BREATH_START', {
+        tensionLevel: boosted.level,
+        phase: boosted.phase
+      });
+    } catch { /* silent */ }
   };
 
   // ===== קוביית תנוחה — נתונים ופונקציה =====
@@ -1407,78 +1509,95 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           FIRE: 'from-red-950/70 to-pink-950/80'
         }[tensionState.phase] || 'from-fuchsia-900/60 to-purple-900/80';
 
+        const mySecret = scenario.secrets?.[myGender];
         return (
           <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-end justify-center z-50"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-end justify-center z-50"
             onClick={() => setShowIdentityCard(false)}
           >
             <div
-              className={`w-full max-w-md bg-gradient-to-b ${phaseGrad} rounded-t-3xl overflow-hidden`}
-              style={{ border: '1px solid rgba(255,255,255,0.12)', borderBottom: 'none' }}
+              className={`w-full max-w-md bg-gradient-to-b ${phaseGrad} rounded-t-3xl overflow-y-auto`}
+              style={{ border: '1px solid rgba(255,255,255,0.15)', borderBottom: 'none', maxHeight: '88vh' }}
               onClick={e => e.stopPropagation()}
             >
               {/* drag handle */}
-              <div className="flex justify-center pt-3 pb-1">
-                <div className="w-10 h-1 rounded-full bg-white/20" />
+              <div className="flex justify-center pt-3 pb-2 sticky top-0 bg-gradient-to-b from-black/30 to-transparent">
+                <div className="w-10 h-1 rounded-full bg-white/25" />
               </div>
 
-              {/* avatar + name */}
-              <div className="flex items-center gap-4 px-6 py-4 border-b border-white/10">
-                <div className="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 bg-white/10">
+              {/* hero — avatar large + name */}
+              <div className="px-6 pb-4 flex flex-col items-center text-center border-b border-white/10">
+                <div className="w-24 h-24 rounded-3xl overflow-hidden mb-3 ring-2 ring-white/20 shadow-2xl">
                   {avatars[myGender]
                     ? <img src={avatars[myGender]!} alt={role.name} className="w-full h-full object-cover" />
-                    : <div className="w-full h-full flex items-center justify-center text-3xl">
+                    : <div className="w-full h-full flex items-center justify-center text-4xl bg-white/10">
                         {myGender === 'MAN' ? '🕺' : '💃'}
                       </div>
                   }
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest mb-0.5">הזהות שלך</div>
-                  <h2 className="text-white font-bold text-xl leading-tight">{role.name}</h2>
-                  <div className="text-white/50 text-xs mt-0.5">{role.archetype}</div>
-                </div>
-              </div>
-
-              {/* backstory */}
-              {role.backstory && (
-                <div className="px-6 py-4 border-b border-white/8">
-                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1.5">מי אני</div>
-                  <p className="text-white/75 text-sm leading-relaxed">{role.backstory}</p>
-                </div>
-              )}
-
-              {/* meetContext */}
-              {role.meetContext && (
-                <div className="px-6 py-4 border-b border-white/8">
-                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1.5">
-                    {myGender === 'MAN' ? 'איך אני מכיר אותה' : 'איך אני מכירה אותו'}
-                  </div>
-                  <p className="text-white/75 text-sm leading-relaxed italic">"{role.meetContext}"</p>
-                </div>
-              )}
-
-              {/* personality + forbidden */}
-              <div className="px-6 py-4 grid grid-cols-2 gap-3">
-                <div>
-                  <div className="text-white/35 text-[10px] uppercase tracking-widest mb-1">אישיות</div>
-                  <p className="text-white/65 text-xs leading-relaxed">{role.personality}</p>
-                </div>
+                <div className="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-1">הזהות הסודית שלך</div>
+                <h2 className="text-white text-2xl font-bold tracking-wide mb-0.5">{role.name}</h2>
+                <div className="text-white/50 text-sm">{role.archetype}</div>
                 {role.forbidden && (
-                  <div>
-                    <div className="text-red-400/50 text-[10px] uppercase tracking-widest mb-1">הסכנה</div>
-                    <p className="text-red-300/60 text-xs leading-relaxed">{role.forbidden}</p>
+                  <div className="mt-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-400/20">
+                    <span className="text-red-300/70 text-[10px]">⚠ {role.forbidden}</span>
                   </div>
                 )}
               </div>
 
-              {/* scenario title */}
-              <div className="px-6 pb-5 pt-1">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/5 border border-white/8">
-                  <span className="text-lg">{phaseIcon}</span>
-                  <div>
-                    <div className="text-white/50 text-xs">{scenario.title}</div>
-                    <div className="text-white/25 text-[10px]">{scenario.location}</div>
+              {/* backstory — מי אני */}
+              {role.backstory && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">👤</span>
+                    <div className="text-white/40 text-[10px] tracking-widest uppercase">מי אני</div>
                   </div>
+                  <p className="text-white/80 text-sm leading-relaxed">{role.backstory}</p>
+                </div>
+              )}
+
+              {/* meetContext — הפגישה */}
+              {role.meetContext && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">✨</span>
+                    <div className="text-white/40 text-[10px] tracking-widest uppercase">
+                      {myGender === 'MAN' ? 'הרגע שראיתי אותה' : 'הרגע שראיתי אותו'}
+                    </div>
+                  </div>
+                  <p className="text-white/80 text-sm leading-relaxed italic">"{role.meetContext}"</p>
+                </div>
+              )}
+
+              {/* desire — מה אני מחפש */}
+              {(role as any).desire && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">🔥</span>
+                    <div className="text-white/40 text-[10px] tracking-widest uppercase">מה אני מחפש הלילה</div>
+                  </div>
+                  <p className="text-white/90 text-sm leading-relaxed font-medium">{(role as any).desire}</p>
+                </div>
+              )}
+
+              {/* secret — הסוד שלי */}
+              {mySecret && (
+                <div className="px-6 py-4 border-b border-white/8">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-base">🤫</span>
+                    <div className="text-white/40 text-[10px] tracking-widest uppercase">הסוד שלי — רק אתה יודע</div>
+                  </div>
+                  <p className="text-pink-200/80 text-sm leading-relaxed italic">{mySecret}</p>
+                </div>
+              )}
+
+              {/* personality chip */}
+              <div className="px-6 py-4 pb-8">
+                <div className="text-white/30 text-[10px] tracking-widest uppercase mb-2">אופי</div>
+                <p className="text-white/55 text-xs leading-relaxed">{role.personality}</p>
+                <div className="mt-4 flex items-center gap-2 opacity-40">
+                  <span className="text-sm">{phaseIcon}</span>
+                  <span className="text-white/50 text-xs">{scenario.title} · {scenario.location}</span>
                 </div>
               </div>
             </div>

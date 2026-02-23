@@ -295,25 +295,72 @@ git log --oneline
 
 ---
 
-📅 **עדכון אחרון:** 2026-02-23
-💬 **סטטוס:** ✅ **v5.0 — פרוס ל-GitHub Pages!**
-🔥 **גרסה:** 5.0.0
+📅 **עדכון אחרון:** 2026-02-23 03:00
+💬 **סטטוס:** ✅ **v5.2 — MissionCard Luxury Redesign + Gender-Specific AI**
+🔥 **גרסה:** 5.2.0
 
-🎨 **שינויים אחרונים (v5.0):**
-- Typing indicator — TYPING SystemMessage + 3 נקודות קופצות בצ'אט
-- רקעי POV — תמונות ממבט אישי (שולחן, בר, ספריה) ללא אנשים
-- BreathSyncScreen — שלב "אישור הגעה" הדדי לפני הנשימות:
-  שני הצדדים לוחצים "אני כאן" → READY signal → רק אז מתחיל countdown → נשימות
-- WaitingScreen — isHost prop: גבר גם מקבל מסך המתנה עם ספירה לאחור
-  טיפי הכנה שונים לגבר ולאשה
-- App.tsx — אחרי INVITE_COMPOSE גבר הולך ל-WAITING (לא CONNECT מיידי)
-  בשעת הפגישה: גבר → CONNECT, אשה → handleLogin → JOIN
+---
 
-**זרימה מלאה (v5.0):**
-- גבר: LOGIN → CONNECT → [partner joins] → BREATH_SYNC (אישור הגעה) → PROTOCOL
-- גבר (special): LOGIN → INVITE_COMPOSE → WAITING [כל היום] → CONNECT → BREATH_SYNC → PROTOCOL
-- אשה (invite): INVITATION → [wait scenario] → BREATH_SYNC (אישור הגעה) → PROTOCOL
-- אשה (special): INVITE_RECEIVED → WAITING [ספירה לאחור] → handleLogin → BREATH_SYNC → PROTOCOL
+## שינויים Session הזה (v5.2):
+
+### 1. MissionCard — עיצוב מחדש מלא (luxury fullscreen card)
+- **לפני:** inline card קטן בתוך הצ'אט
+- **אחרי:** fullscreen overlay (`fixed inset-0 z-50`) עם:
+  - רקע blur כבד (`backdrop-filter: blur(28px)`) + שחור 90%
+  - תמונה ממחישה (Unsplash) בגובה 210px עם gradient overlay
+  - Phase badge + כפתור ✕ על התמונה
+  - כותרת missions overlaid על תחתית התמונה
+  - הוראה ראשית בטיפוגרפיה עדינה (font-weight 300, line-height 1.85)
+  - Tips מספריים עם עיגולים צבעוניים
+  - Choices grid עם premium hover effects
+  - טיימר גדול (38px monospace) עם glow effect
+  - כפתור Done עם gradient + box-shadow
+  - **צד מחכה (inactive):** slim floating bar (`fixed bottom-24`)
+
+### 2. Photo URLs לכל משימה
+- הוספת `photoUrl?: string` ל-`IntimacyMission` interface
+- כל 9 משימות קיבלו URL של תמונה מ-Unsplash
+- `onError` handler — fallback לגרדיאנט CSS אומנותי כשהתמונה לא נטענת
+- הגרדיאנט: `radial-gradient` דינמי לפי phase color
+
+### 3. Word chips — לשון ספציפית לפי מין
+- גבר: "אני לא אמור להסתכל עלייך ככה אבל..."
+- אשה: "יש משהו בך שמשאיר אותי לא שקטה..."
+- אין יותר צורות כפולות כמו "שאתה/את"
+
+### 4. ActionTip — מאמן AI חד וספציפי
+- הוראות גוף-ספציפיות, לא גנריות
+- שינוי לפי phase: FIRE = פעולות פיזיות מתקדמות
+
+### 5. Phase advance sync
+- לחיצת גבר על "קדם שלב" → BREATH_START message לשניהם
+- האשה מקבלת עדכון tension אוטומטי
+
+### 6. זהות מועשרת
+- `desire` field חדש ("מה אני מחפש/ת הלילה הזה")
+- backstory ארוך יותר (3-4 משפטים)
+- meetContext (2-3 משפטים + תגובה רגשית)
+- כרטיס זהות: hero avatar + backstory + desire + secrets + personality
+
+---
+
+## קבצים שהשתנו ב-session הזה:
+- `src/data/intimacy-missions.ts` — photoUrl + interface field
+- `src/components/ProtocolScreen.tsx` — MissionCard redesign מלא
+- `src/data/prompts.ts` — gender-specific chips + actionTip coach
+- `src/services/ai-engine.ts` — gender-aware fallbacks
+- `src/types.ts` — desire field
+
+---
+
+## מה נשאר לעשות (פעם הבאה):
+- [ ] לבדוק שהתמונות של Unsplash נטענות (ייתכן שה-IDs לא נכונים)
+  - אם לא → לבחור IDs חדשים או לעבור ל-Pexels CDN
+- [ ] לבדוק שה-MissionCard נראה נכון גם על מובייל אמיתי
+- [ ] לוודא שאין dual-gender forms שנשארו (ייתכן שנשארו כמה)
+- [ ] לבדוק שה-advice panel מ-Gemini מייצר הוראות ספציפיות לגוף
+
+---
 
 🔗 **GitHub:** https://github.com/Raniv123/RRX3
 🌐 **קישור חי:** https://raniv123.github.io/RRX3/ ✅ פעיל!
