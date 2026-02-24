@@ -18,6 +18,7 @@ export const SCENARIOS: Scenario[] = [
         name: 'מיה',
         archetype: 'מטופלת מהססנית שמתחילה להתמסר',
         personality: 'סקרנית, קצת עצבנית. מתחילה להרגיש תחושות לא צפויות מהמגע שלו.',
+        accent: 'french',
         visualPrompt: 'Woman lying on massage table, relaxed expression, luxury spa background'
       }
     },
@@ -83,6 +84,7 @@ export const SCENARIOS: Scenario[] = [
         name: 'אנה',
         archetype: 'מטופלת צעירה',
         personality: 'קצת מבוישת, עצבנית. מרגישה את המבטים שלו.',
+        accent: 'spanish',
         visualPrompt: 'Young woman in medical examination, vulnerable posture, soft lighting'
       }
     },
@@ -115,6 +117,7 @@ export const SCENARIOS: Scenario[] = [
         name: 'איזבלה',
         archetype: 'תלמידה גמישה',
         personality: 'מתרגלת חדשה, צריכה "הנחיה". הגוף שלה מגיב למגע שלו.',
+        accent: 'spanish',
         visualPrompt: 'Woman in yoga pose, graceful movement, soft studio lighting'
       }
     },

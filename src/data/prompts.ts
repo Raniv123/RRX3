@@ -201,6 +201,42 @@ ${tension < 76 ? '🌶️ קרבה פיזית — מגע ישיר, נשיקה, �
   const otherGender = gender === 'MAN' ? 'WOMAN' : 'MAN';
   const otherRole = scenario.roles[otherGender];
 
+  // Accent hint — מבטא הדמות שלי
+  const myAccent = (myRole as any)?.accent as string | undefined;
+  const accentPhrases: Record<string, { name: string; low: string[]; mid: string[]; high: string[] }> = {
+    french: {
+      name: 'צרפתי',
+      low:  ['Mon Dieu...', 'Ma belle...', 'C\'est magnifique...', 'Oh là là...'],
+      mid:  ['J\'ai envie de toi (אני רוצה אותך)...', 'Tu me rends folle (אתה משגע אותי)...', 'Touche-moi (גע בי)...', 'Embrasse-moi (נשק אותי)...'],
+      high: ['Prends-moi (קח אותי)...', 'Ne t\'arrête pas (אל תעצור)...', 'Plus fort (יותר חזק)...']
+    },
+    spanish: {
+      name: 'ספרדי',
+      low:  ['Dios mío...', 'Mi amor...', 'Eres increíble...', 'Ay...'],
+      mid:  ['Me vuelves loca (אתה משגע אותי)...', 'Bésame (נשק אותי)...', 'Tócame (גע בי)...', 'Te necesito (אני צריכה אותך)...'],
+      high: ['Hazme tuya (תקח אותי)...', 'No pares (אל תעצור)...', 'Más, por favor (עוד, בבקשה)...']
+    },
+    italian: {
+      name: 'איטלקי',
+      low:  ['Mio Dio...', 'Sei bellissimo...', 'Magnifico...', 'Oddio...'],
+      mid:  ['Mi fai impazzire (אתה משגע אותי)...', 'Baciami (נשק אותי)...', 'Toccami (גע בי)...', 'Ti voglio (אני רוצה אותך)...'],
+      high: ['Prendimi (קח אותי)...', 'Non fermarti (אל תעצור)...', 'Ancora (עוד)...']
+    }
+  };
+
+  const accentBlock = myAccent && accentPhrases[myAccent] ? (() => {
+    const ap = accentPhrases[myAccent];
+    const level = tension >= 75 ? 'high' : tension >= 40 ? 'mid' : 'low';
+    const examples = ap[level].join(' / ');
+    return `
+## 🗣️ מבטא הדמות — ${ap.name}:
+הדמות שלי מדברת עם מבטא ${ap.name} ולפעמים מחליקה ביטוי בשפה.
+**חוק:** לפחות אחד מ-wordChips חייב לכלול ביטוי ${ap.name} (משולב בתוך משפט עברי).
+**לא:** "Bésame" לבד — **כן:** "Bésame... נשק אותי כמו שרק אתה יודע"
+ביטויים מתאימים לרמת מתח ${tension}%: ${examples}
+הביטוי יוצא טבעי — כמו שיוצא כשמתרגשים ושוכחים לרגע לדבר עברית.`;
+  })() : '';
+
   return `
 ${SYSTEM_PROMPT}
 
@@ -215,6 +251,7 @@ ${SYSTEM_PROMPT}
 - ארכיטיפ: ${myRole?.archetype}
 - אישיות: ${myRole?.personality}
 - למה זה אסור/מסוכן בשבילי: ${myRole?.forbidden || 'לא הוגדר'}
+${accentBlock}
 
 ## הדמות שמולי:
 - שם: ${otherRole?.name}
