@@ -43,13 +43,13 @@ export const FRENCH_PHRASES: LanguagePhrase[] = [
   // Level 4-6: מתחמם
   {
     original: "Tu me rends fou/folle",
-    translation: "את/ה משגע/ת אותי",
+    translation: "משגע אותי",
     intensity: 6,
     context: "עוצמת משיכה"
   },
   {
     original: "Embrasse-moi",
-    translation: "נשק/י אותי",
+    translation: "נשק אותי",
     intensity: 5,
     context: "בקשה לנשיקה"
   },
@@ -87,7 +87,7 @@ export const FRENCH_PHRASES: LanguagePhrase[] = [
   },
   {
     original: "Ne t'arrête pas",
-    translation: "אל תעצור/י",
+    translation: "אל תעצור",
     intensity: 9,
     context: "המשך"
   }
@@ -97,7 +97,7 @@ export const SPANISH_PHRASES: LanguagePhrase[] = [
   // Level 1-3
   {
     original: "Mi amor",
-    translation: "אהובי/אהובתי",
+    translation: "אהובי",
     intensity: 2,
     context: "חיבה"
   },
@@ -109,13 +109,13 @@ export const SPANISH_PHRASES: LanguagePhrase[] = [
   },
   {
     original: "Me gustas mucho",
-    translation: "את/ה מאוד מוצא/ת חן בעיני",
+    translation: "מוצא חן בעיני מאוד",
     intensity: 4,
     context: "משיכה"
   },
   {
     original: "Papi/Mami",
-    translation: "אבא/אמא (חיבה)",
+    translation: "כינוי חיבה",
     intensity: 5,
     context: "כינוי חיבה סקסי"
   },
@@ -123,19 +123,19 @@ export const SPANISH_PHRASES: LanguagePhrase[] = [
   // Level 4-6
   {
     original: "Me vuelves loco/loca",
-    translation: "את/ה משגע/ת אותי",
+    translation: "משגע אותי",
     intensity: 6,
     context: "תשוקה"
   },
   {
     original: "Tócame",
-    translation: "גע/י בי",
+    translation: "גע בי",
     intensity: 6,
     context: "בקשה למגע"
   },
   {
     original: "Bésame",
-    translation: "נשק/י אותי",
+    translation: "נשק אותי",
     intensity: 5,
     context: "בקשה לנשיקה"
   },
@@ -149,7 +149,7 @@ export const SPANISH_PHRASES: LanguagePhrase[] = [
   // Level 7-10
   {
     original: "Te deseo",
-    translation: "אני חושק/ת בך",
+    translation: "אני חושק בך",
     intensity: 8,
     context: "תשוקה חזקה"
   },

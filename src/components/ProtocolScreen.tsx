@@ -1272,7 +1272,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                     <button
                       onClick={() => setShowSecretCard(true)}
                       className="px-2 py-0.5 rounded-full text-[10px] border border-amber-500/30 bg-amber-500/10 text-amber-300/70 hover:bg-amber-500/20 hover:text-amber-300 transition-all flex-shrink-0"
-                      title="הסוד שלו/שלה"
+                      title={myGender === 'MAN' ? 'הסוד שלה' : 'הסוד שלו'}
                     >
                       🔐 סוד
                     </button>
@@ -1585,7 +1585,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                 <div className="px-6 py-4 border-b border-white/8">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-base">🤫</span>
-                    <div className="text-white/40 text-[10px] tracking-widest uppercase">הסוד שלי — רק אתה יודע</div>
+                    <div className="text-white/40 text-[10px] tracking-widest uppercase">הסוד שלי — רק {myGender === 'MAN' ? 'אתה יודע' : 'את יודעת'}</div>
                   </div>
                   <p className="text-pink-200/80 text-sm leading-relaxed italic">{mySecret}</p>
                 </div>
@@ -1637,7 +1637,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                 className="flex-1 py-3 rounded-2xl text-sm font-bold text-white transition-all"
                 style={{ background: 'linear-gradient(135deg, #ef444499, #f9730099)' }}
               >
-                בוא/י נתחיל ✨
+                {myGender === 'MAN' ? 'בוא נתחיל' : 'בואי נתחיל'} ✨
               </button>
             </div>
           </div>
@@ -1650,7 +1650,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
           <div className="max-w-sm w-full bg-white/5 backdrop-blur-xl rounded-3xl border border-amber-500/25 overflow-hidden">
             <div className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 px-6 pt-5 pb-3 border-b border-amber-500/15 text-center">
               <div className="text-3xl mb-1">🔐</div>
-              <div className="text-amber-300/60 text-[10px] uppercase tracking-widest">הסוד שלו/שלה</div>
+              <div className="text-amber-300/60 text-[10px] uppercase tracking-widest">{myGender === 'MAN' ? 'הסוד שלה' : 'הסוד שלו'}</div>
               <h2 className="text-white font-semibold text-base mt-1">
                 מה הכי מטריף את {myGender === 'MAN'
                   ? scenario.roles.WOMAN.name
@@ -1661,7 +1661,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               <p className="text-white/85 text-base leading-relaxed italic">
                 "{ myGender === 'MAN' ? scenario.secrets.WOMAN : scenario.secrets.MAN }"
               </p>
-              <p className="text-white/30 text-xs mt-3">רק אתה/את רואה את זה</p>
+              <p className="text-white/30 text-xs mt-3">{myGender === 'MAN' ? 'רק אתה רואה את זה' : 'רק את רואה את זה'}</p>
             </div>
             <div className="px-5 pb-5">
               <button
