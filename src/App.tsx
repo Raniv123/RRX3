@@ -269,23 +269,48 @@ function App() {
       )}
 
       {loadingScenario && (
-        <div className="min-h-screen bg-gradient-to-br from-bordeaux via-dark to-electric-blue flex items-center justify-center p-4">
+        <div className="min-h-screen flex items-center justify-center" style={{
+          background: 'radial-gradient(ellipse at 30% 40%, #1a0520 0%, #050508 50%, #0a0a12 100%)'
+        }}>
+          {/* Ambient particles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sexy-fuchsia/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-blue/20 rounded-full blur-3xl animate-pulse delay-1000" />
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="absolute rounded-full"
+                style={{
+                  width: `${80 + i * 40}px`, height: `${80 + i * 40}px`,
+                  left: `${10 + i * 15}%`, top: `${20 + (i % 3) * 25}%`,
+                  background: i % 2 === 0 ? 'rgba(180,40,80,0.04)' : 'rgba(100,40,180,0.04)',
+                  filter: 'blur(40px)',
+                  animation: `pulse ${3 + i * 0.5}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.4}s`
+                }} />
+            ))}
           </div>
-          <div className="relative z-10 text-center">
-            <div className="text-6xl mb-6 animate-bounce">🎭</div>
-            <h2 className="text-2xl font-bold text-white mb-4">
-              {isHost ? 'יוצר תרחיש מפתיע...' : 'מקבל תרחיש מהשותף/ה...'}
+          <div className="relative z-10 text-center px-8">
+            {/* Elegant pulsing orb */}
+            <div className="relative mx-auto mb-10 w-20 h-20">
+              <div className="absolute inset-0 rounded-full animate-ping opacity-20"
+                style={{ background: 'radial-gradient(circle, rgba(180,40,80,0.6), transparent)' }} />
+              <div className="absolute inset-2 rounded-full"
+                style={{ background: 'radial-gradient(circle, rgba(180,40,80,0.25), transparent)',
+                         border: '1px solid rgba(180,40,80,0.3)',
+                         boxShadow: '0 0 40px rgba(180,40,80,0.2)' }} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div style={{ fontSize: '28px', filter: 'drop-shadow(0 0 8px rgba(255,100,100,0.4))' }}>🔥</div>
+              </div>
+            </div>
+            <p className="text-white/25 text-[10px] uppercase tracking-[5px] mb-4">המסע שלכם</p>
+            <h2 className="text-white/90 text-2xl font-light mb-3" style={{ letterSpacing: '-0.3px' }}>
+              {isHost ? 'בונה את העולם שלכם...' : 'מחכה לך...'}
             </h2>
-            <p className="text-white/60 mb-8">
-              {isHost ? 'ה-AI בוחר משהו מיוחד עבורכם' : 'רגע, התרחיש בדרך...'}
+            <p className="text-white/30 text-sm leading-relaxed mb-8">
+              {isHost ? 'כל מסע הוא שונה' : 'הוא בוחר משהו מיוחד עבורך'}
             </p>
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce" />
-              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce delay-100" />
-              <div className="w-4 h-4 bg-sexy-fuchsia rounded-full animate-bounce delay-200" />
+            <div className="flex justify-center gap-2">
+              {[0, 300, 600].map(d => (
+                <div key={d} className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: 'rgba(180,40,80,0.6)', animation: 'bounce 1.2s ease-in-out infinite', animationDelay: `${d}ms` }} />
+              ))}
             </div>
           </div>
         </div>

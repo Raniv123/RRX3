@@ -527,9 +527,18 @@ const MissionCard: React.FC<{
     }
   }, [timerStarted, timerDuration, seconds]);
 
+  // Auto-start timer for inactive side immediately
   useEffect(() => {
     if (!isActive && timerDuration > 0) setTimerStarted(true);
   }, [isActive, timerDuration]);
+
+  // Auto-start timer for active side after 1.5s delay
+  useEffect(() => {
+    if (isActive && timerDuration > 0 && !mission.choices) {
+      const t = setTimeout(() => setTimerStarted(true), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [isActive, timerDuration, mission.choices]);
 
   const pc = {
     ICE:  { color: '#60a5fa', name: 'ICE',  glow: 'rgba(96,165,250,0.15)',  bg: 'linear-gradient(135deg, #0c1a2e 0%, #0a1520 100%)' },
@@ -725,30 +734,34 @@ const MissionCard: React.FC<{
         <div className="flex-shrink-0 px-5 pt-3 pb-5"
           style={{ borderTop: `1px solid rgba(255,255,255,0.05)` }}>
 
-          {/* Timer */}
+          {/* Timer — circular progress ring */}
           {(selected || !mission.choices) && timerDuration > 0 && (
             <div className="flex justify-center mb-3">
               {!timerStarted ? (
-                <button onClick={() => setTimerStarted(true)}
-                  className="flex items-center gap-2 px-6 py-2 rounded-xl text-sm font-medium transition-all"
-                  style={{ color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span style={{ fontSize: '11px' }}>▶</span> התחל ספירה
-                </button>
+                <div className="text-white/30 text-sm animate-pulse">מתחיל...</div>
               ) : (
-                <div className="text-center">
-                  <div className="font-bold font-mono tabular-nums" style={{
-                    fontSize: '38px',
-                    letterSpacing: '-1px',
-                    color: seconds > 20 ? pc.color : '#ef4444',
-                    textShadow: `0 0 20px ${seconds > 20 ? pc.color : '#ef4444'}40`
-                  }}>
-                    {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
-                  </div>
-                  {seconds === 0 && (
-                    <div className="text-[11px] mt-1 animate-pulse" style={{ color: `${pc.color}70` }}>
-                      הזמן הסתיים ✨
+                <div className="relative w-20 h-20">
+                  <svg className="w-20 h-20" style={{ transform: 'rotate(-90deg)' }} viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4"/>
+                    <circle cx="40" cy="40" r="34" fill="none"
+                      stroke={pc.color} strokeWidth="4" strokeLinecap="round"
+                      strokeDasharray={`${2 * Math.PI * 34}`}
+                      strokeDashoffset={`${2 * Math.PI * 34 * (1 - seconds / timerDuration)}`}
+                      style={{ transition: 'stroke-dashoffset 1s linear', opacity: 0.8 }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="font-bold font-mono tabular-nums text-lg leading-none"
+                      style={{
+                        color: seconds > timerDuration * 0.25 ? pc.color : '#ef4444',
+                        textShadow: `0 0 12px ${seconds > timerDuration * 0.25 ? pc.color : '#ef4444'}50`
+                      }}>
+                      {String(Math.floor(seconds / 60)).padStart(2,'0')}:{String(seconds % 60).padStart(2,'0')}
                     </div>
-                  )}
+                    {seconds === 0 && (
+                      <div className="text-[9px] animate-pulse mt-1" style={{ color: `${pc.color}90` }}>הזמן!</div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

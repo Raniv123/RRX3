@@ -19,9 +19,9 @@ interface BreathCycle {
 }
 
 const BREATH_CYCLES: BreathCycle[] = [
-  { phase: 'in',   duration: 4, label: 'שאפו יחד...',    sublabel: '4 שניות' },
-  { phase: 'hold', duration: 4, label: 'עצרו...',         sublabel: 'החזיקו' },
-  { phase: 'out',  duration: 8, label: 'שחררו לאט...',   sublabel: '8 שניות' },
+  { phase: 'in',   duration: 4, label: 'שאפו... יחד',    sublabel: '4 שניות' },
+  { phase: 'hold', duration: 4, label: 'תחזיקו.',         sublabel: 'החזיקו' },
+  { phase: 'out',  duration: 8, label: 'שחררו הכל.',     sublabel: '8 שניות' },
 ];
 
 const TOTAL_ROUNDS = 3;
@@ -236,9 +236,9 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
                   className="text-3xl font-light text-white mb-3"
                   style={{ textShadow: '0 0 30px rgba(180,60,40,0.5)' }}
                 >
-                  מוכנים להתחיל
+                  מוכנים לצלול
                 </h2>
-                <p className="text-white/40 text-sm">עוברים לנשימה...</p>
+                <p className="text-white/40 text-sm">נשימה אחת ביחד לפני שמתחילים...</p>
                 <div className="flex justify-center gap-1.5 mt-6">
                   {[0, 150, 300].map(d => (
                     <div
@@ -282,14 +282,14 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
                   style={{ textShadow: '0 0 30px rgba(180,60,40,0.4)' }}
                 >
                   {partnerReady
-                    ? (isHost ? 'היא כאן! ✨' : 'הוא כאן! ✨')
-                    : 'הגעתם?'
+                    ? (isHost ? 'היא כאן. ✨' : 'הוא כאן. ✨')
+                    : 'כאן, סוף סוף.'
                   }
                 </h2>
                 <p className="text-white/50 text-sm leading-relaxed mx-auto max-w-[240px] mb-10">
                   {partnerReady
-                    ? `${isHost ? 'היא' : 'הוא'} אישר הגעה. לחצ${isHost ? '' : 'י'} גם את${isHost ? 'ה' : ''}!`
-                    : `לחצ${isHost ? '' : 'י'} כשהגעת — ${isHost ? 'היא' : 'הוא'} יראה שאת${isHost ? 'ה' : ''} כאן`
+                    ? `${isHost ? 'היא' : 'הוא'} כבר כאן. לחצ${isHost ? '' : 'י'} גם את${isHost ? 'ה' : ''}.`
+                    : `לחצ${isHost ? '' : 'י'} כשאת${isHost ? 'ה' : ''} מוכנ${isHost ? '' : 'ה'} — ${isHost ? 'היא' : 'הוא'} יראה שהגעת`
                   }
                 </p>
 
@@ -302,7 +302,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
                     border: '1px solid rgba(180,60,40,0.4)',
                   }}
                 >
-                  אני כאן ✨
+                  כן. אני כאן.
                 </button>
 
                 <button
@@ -481,17 +481,8 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
               </div>
             </div>
             <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-4">מסונכרנים</p>
-            <h2 className="text-3xl font-light text-white mb-3">מוכנים למסע</h2>
-            <p className="text-white/40 text-sm">נכנסים...</p>
-            <div className="flex justify-center gap-1.5 mt-6">
-              {[0, 150, 300].map(d => (
-                <div
-                  key={d}
-                  className="w-2 h-2 rounded-full animate-bounce"
-                  style={{ background: 'rgba(180,60,40,0.7)', animationDelay: `${d}ms` }}
-                />
-              ))}
-            </div>
+            <h2 className="text-3xl font-light text-white mb-3">המסע מתחיל.</h2>
+            <p className="text-white/40 text-sm" style={{ animation: 'fadeSlideIn 1s ease forwards' }}>עכשיו.</p>
           </div>
         )}
       </div>
