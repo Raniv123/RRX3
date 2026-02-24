@@ -98,7 +98,7 @@ function App() {
       setScreen('CONNECT');
     } else {
       // אם מצטרף - קודם להאזין, ואז לשלוח JOIN (מניעת race condition)
-      const tempSync = new SyncService(id, 'MAN');
+      const tempSync = new SyncService(id, 'WOMAN');
 
       // חיבור מיידי לפני JOIN כדי לא לפספס הודעות
       tempSync.connect(

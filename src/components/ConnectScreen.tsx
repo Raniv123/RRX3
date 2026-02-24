@@ -73,7 +73,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
         {/* כותרת */}
         <div className="text-center mb-8">
           <div className="text-5xl mb-4">{status === 'connected' ? '✅' : '🔗'}</div>
-          <h1 className="text-3xl font-bold text-white mb-2">
+          <h1 className="text-3xl font-light text-white mb-2">
             {status === 'connected' ? 'מחוברים!' : 'שלח הזמנה'}
           </h1>
           <p className="text-white/50">

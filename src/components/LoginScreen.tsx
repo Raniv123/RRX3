@@ -116,7 +116,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onI
           {mode === 'create' && (
             <div className="space-y-6 animate-slide-up">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-white mb-2">יצירת מסע חדש</h2>
+                <h2 className="text-2xl font-light text-white mb-2">יצירת מסע חדש</h2>
                 <p className="text-white/60">לחץ ליצירת קוד חיבור ייחודי</p>
               </div>
 
@@ -139,7 +139,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onI
           {mode === 'join' && (
             <div className="space-y-6 animate-slide-up">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-white mb-2">הצטרפות למסע</h2>
+                <h2 className="text-2xl font-light text-white mb-2">הצטרפות למסע</h2>
                 <p className="text-white/60">הכנס את הקוד מהמכשיר השני</p>
               </div>
 

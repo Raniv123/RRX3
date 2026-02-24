@@ -448,54 +448,7 @@ const ChatBubble: React.FC<{
   );
 };
 
-// ===== טיימר עגול =====
-const CircularTimer: React.FC<{
-  total: number;
-  remaining: number;
-  phase: string;
-}> = ({ total, remaining, phase }) => {
-  const radius = 54;
-  const circumference = 2 * Math.PI * radius;
-  const progress = remaining / total;
-  const dashOffset = circumference * (1 - progress);
-
-  const color = {
-    ICE: '#60a5fa',
-    WARM: '#f472b6',
-    HOT: '#f97316',
-    FIRE: '#ef4444'
-  }[phase] || '#f472b6';
-
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
-
-  return (
-    <div className="relative w-36 h-36 flex items-center justify-center">
-      <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 128 128">
-        {/* Track */}
-        <circle cx="64" cy="64" r={radius}
-          fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
-        {/* Progress */}
-        <circle cx="64" cy="64" r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={dashOffset}
-          style={{ transition: 'stroke-dashoffset 1s linear', filter: `drop-shadow(0 0 8px ${color})` }}
-        />
-      </svg>
-      <div className="text-center z-10">
-        <div className="text-3xl font-bold text-white font-mono">
-          {mins > 0 ? `${mins}:${secs.toString().padStart(2, '0')}` : `${secs}`}
-        </div>
-        <div className="text-white/40 text-[10px]">שניות</div>
-      </div>
-    </div>
-  );
-};
-
+// (CircularTimer removed — inline SVG timer used in MissionCard instead)
 // (GameCardOverlay removed — game cards feature not active)
 
 // ===== Mission Card — Luxury Fullscreen =====
@@ -1633,7 +1586,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               <div className="text-5xl mb-2 animate-bounce">🎲</div>
               <div className="text-red-300/50 text-[10px] uppercase tracking-widest mb-1">קוביית תנוחה</div>
               <div className="text-4xl mb-1">{rolledPosition.emoji}</div>
-              <h2 className="text-white font-bold text-xl">{rolledPosition.name}</h2>
+              <h2 className="text-white font-light text-xl">{rolledPosition.name}</h2>
             </div>
             <div className="px-6 py-5 text-center">
               <p className="text-white/70 text-sm leading-relaxed">{rolledPosition.instruction}</p>
@@ -1647,7 +1600,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               </button>
               <button
                 onClick={() => setShowPositionDice(false)}
-                className="flex-1 py-3 rounded-2xl text-sm font-bold text-white transition-all"
+                className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white transition-all"
                 style={{ background: 'linear-gradient(135deg, #ef444499, #f9730099)' }}
               >
                 {myGender === 'MAN' ? 'בוא נתחיל' : 'בואי נתחיל'} ✨
@@ -1722,7 +1675,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 max-w-sm w-full border border-white/15 text-center">
             <div className="text-5xl mb-4">🎁</div>
-            <h2 className="text-xl font-bold text-white mb-2">{currentSurprise.title}</h2>
+            <h2 className="text-xl font-light text-white mb-2">{currentSurprise.title}</h2>
             <p className="text-white/75 text-sm mb-6">{currentSurprise.description}</p>
             <button
               onClick={() => setCurrentSurprise(null)}
