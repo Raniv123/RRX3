@@ -1074,63 +1074,106 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
 
   // currentScene already computed from phaseScenes above
 
+  // Phase atmospheric backgrounds — rich layered gradients per phase
+  const phaseAtmosphere = {
+    ICE: {
+      primary: 'radial-gradient(ellipse 90% 60% at 30% 20%, rgba(40,70,120,0.35) 0%, transparent 60%),' +
+               'radial-gradient(ellipse 70% 50% at 75% 80%, rgba(20,30,60,0.4) 0%, transparent 65%),' +
+               'linear-gradient(180deg, #060810 0%, #0a0d18 50%, #04060c 100%)',
+      glow: 'rgba(96,165,250,0.08)',
+    },
+    WARM: {
+      primary: 'radial-gradient(ellipse 85% 55% at 25% 25%, rgba(190,60,100,0.32) 0%, transparent 60%),' +
+               'radial-gradient(ellipse 70% 60% at 80% 75%, rgba(120,30,80,0.4) 0%, transparent 65%),' +
+               'linear-gradient(180deg, #100610 0%, #1a0a14 50%, #0a040a 100%)',
+      glow: 'rgba(244,114,182,0.1)',
+    },
+    HOT: {
+      primary: 'radial-gradient(ellipse 90% 55% at 35% 25%, rgba(220,90,40,0.32) 0%, transparent 60%),' +
+               'radial-gradient(ellipse 60% 50% at 80% 80%, rgba(140,40,30,0.42) 0%, transparent 65%),' +
+               'linear-gradient(180deg, #160805 0%, #1a0908 50%, #0c0504 100%)',
+      glow: 'rgba(249,115,22,0.1)',
+    },
+    FIRE: {
+      primary: 'radial-gradient(ellipse 90% 55% at 30% 20%, rgba(220,40,40,0.38) 0%, transparent 60%),' +
+               'radial-gradient(ellipse 70% 55% at 75% 80%, rgba(150,30,30,0.45) 0%, transparent 65%),' +
+               'linear-gradient(180deg, #1a0606 0%, #200808 50%, #0a0404 100%)',
+      glow: 'rgba(239,68,68,0.12)',
+    },
+  }[tensionState.phase] || {
+    primary: 'linear-gradient(180deg, #060810 0%, #04060c 100%)',
+    glow: 'rgba(244,114,182,0.08)',
+  };
+
   return (
     <div className="h-screen flex flex-col relative overflow-hidden">
 
-      {/* ===== MAGICAL BACKGROUND ===== */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${currentScene.url})`,
-          opacity: sceneOpacity,
-          transition: 'opacity 1.5s ease-in-out'
-        }}
-      />
-      {/* Overlay gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-b ${currentScene.overlay}`} />
-
-      {/* Phase tint overlay */}
+      {/* ===== ATMOSPHERIC BACKGROUND — layered gradients ===== */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 50% 100%, ${phaseColor}15 0%, transparent 70%)`,
-          transition: 'background 3s ease'
+          background: phaseAtmosphere.primary,
+          transition: 'background 2.5s ease-in-out',
         }}
       />
 
-      {/* Scene name badge */}
+      {/* Subtle photo texture — barely visible, just for depth */}
       <div
-        className="absolute top-16 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-[10px] text-white/30 border border-white/10 backdrop-blur-sm pointer-events-none"
-        style={{ opacity: sceneOpacity, transition: 'opacity 1.5s ease-in-out' }}
-      >
-        📍 {currentScene.name}
-      </div>
+        className="absolute inset-0 bg-cover bg-center pointer-events-none mix-blend-overlay"
+        style={{
+          backgroundImage: `url(${currentScene.url})`,
+          opacity: 0.18,
+          filter: 'blur(2px) saturate(0.6)',
+          transition: 'opacity 2s ease-in-out',
+        }}
+      />
 
-      {/* ===== HEADER ===== */}
-      <div className="relative z-10 px-4 pt-3 pb-2 bg-black/30 backdrop-blur-xl border-b border-white/10">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">{phaseIcon}</span>
-            <div>
-              <h3 className="text-white font-semibold text-sm leading-tight">{scenario.title}</h3>
-              <p className="text-white/55 text-xs">{scenario.location}</p>
-            </div>
+      {/* Vignette + warm glow from bottom (like candlelight) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 100% 60% at 50% 110%, ' + phaseAtmosphere.glow + ' 0%, transparent 70%),' +
+            'radial-gradient(ellipse 130% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.5) 100%)',
+        }}
+      />
+
+      {/* Top fade for header readability */}
+      <div
+        className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.55), transparent)',
+        }}
+      />
+
+      {/* ===== HEADER — minimal, elegant ===== */}
+      <div className="relative z-10 px-4 pt-3 pb-3">
+        <div className="flex items-center justify-between gap-3">
+          {/* Right side: Identity (my role) */}
+          <button
+            onClick={() => setShowIdentityCard(true)}
+            title="הזהות שלי"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:bg-white/8"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" scenarioId={scenario.id} />
+            <span className="text-white/80 text-sm font-light truncate max-w-[80px]">
+              {scenario.roles[myGender]?.name}
+            </span>
+          </button>
+
+          {/* Center: scenario title — small, elegant */}
+          <div className="flex-1 text-center min-w-0">
+            <p className="text-white/85 text-sm font-light truncate">{scenario.title}</p>
+            <p className="text-white/45 text-xs truncate">{scenario.location}</p>
           </div>
-          <div className="flex items-center gap-2">
-            {/* כפתור זהות — מי אני */}
-            <button
-              onClick={() => setShowIdentityCard(true)}
-              title="הזהות שלי"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/15 bg-white/8 hover:bg-white/15 transition-all"
-              style={{ backdropFilter: 'blur(8px)' }}
-            >
-              <CGIAvatar gender={myGender} avatarUrl={avatars[myGender]} size="sm" scenarioId={scenario.id} />
-              <span className="text-white/70 text-xs font-medium truncate max-w-[60px]">
-                {scenario.roles[myGender]?.name}
-              </span>
-            </button>
 
-            {/* כפתור מוזיקה דיסקרטי */}
+          {/* Left side: Tension ring (compact, elegant) */}
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
                 audioService.init();
@@ -1141,40 +1184,110 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                 }
               }}
               title={audioEnabled ? 'כבה מוזיקה' : 'הפעל מוזיקת רקע'}
-              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 audioEnabled
-                  ? 'text-fuchsia-300/70 bg-fuchsia-500/15'
-                  : 'text-white/20 hover:text-white/40'
+                  ? 'text-fuchsia-300/85 bg-fuchsia-500/15'
+                  : 'text-white/45 hover:text-white/75'
               }`}
             >
               {audioEnabled ? '🎵' : '🔇'}
             </button>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-white">{tensionState.level}%</div>
-              <div className="text-white/55 text-xs">מתח</div>
+
+            {/* Circular tension indicator */}
+            <div className="relative w-12 h-12 flex items-center justify-center" title={`מתח ${tensionState.level}%`}>
+              <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="20"
+                  fill="none"
+                  stroke={phaseColor}
+                  strokeWidth="3"
+                  strokeDasharray={`${(tensionState.level / 100) * 125.6} 125.6`}
+                  strokeLinecap="round"
+                  style={{
+                    transition: 'stroke-dasharray 1s ease',
+                    filter: `drop-shadow(0 0 6px ${phaseColor}80)`,
+                  }}
+                />
+              </svg>
+              <span className="text-white font-medium" style={{ fontSize: '13px' }}>
+                {tensionState.level}
+              </span>
             </div>
           </div>
-        </div>
-        {/* Tension bar */}
-        <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full bg-gradient-to-r ${tensionBarColor} transition-all duration-1000`}
-            style={{ width: `${tensionState.level}%`, boxShadow: `0 0 8px ${phaseColor}60` }}
-          />
         </div>
       </div>
 
       {/* ===== MESSAGES ===== */}
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 relative z-10">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center gap-3 pt-8">
-            <div className="text-5xl">{phaseIcon}</div>
-            <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/10">
-              <p className="text-white/70 text-sm font-medium">{scenario.atmosphere}</p>
-              <p className="text-white/30 text-xs mt-1">כתוב להם הודעה ראשונה...</p>
+        {messages.length === 0 && (() => {
+          const otherGender = myGender === 'MAN' ? 'WOMAN' : 'MAN';
+          const otherRole = scenario.roles[otherGender];
+          const myRole = scenario.roles[myGender];
+          return (
+            <div className="flex flex-col items-center justify-center h-full text-center px-6 pb-12">
+              {/* Avatar of the partner — central focus */}
+              <div className="relative mb-6">
+                <div
+                  className="absolute -inset-3 rounded-full"
+                  style={{
+                    background: `radial-gradient(circle, ${phaseColor}22 0%, transparent 70%)`,
+                    filter: 'blur(20px)',
+                  }}
+                />
+                <div className="relative">
+                  <CGIAvatar gender={otherGender} avatarUrl={avatars[otherGender]} size="lg" scenarioId={scenario.id} />
+                </div>
+              </div>
+
+              {/* Character name + archetype */}
+              <p className="text-white/45 text-xs tracking-[0.3em] uppercase mb-2">
+                {scenario.location}
+              </p>
+              <h2
+                className="text-white font-light mb-1.5"
+                style={{
+                  fontSize: '28px',
+                  letterSpacing: '-0.5px',
+                  textShadow: `0 0 30px ${phaseColor}40`,
+                }}
+              >
+                {otherRole?.name}
+              </h2>
+              <p className="text-white/65 text-sm mb-6 max-w-[280px] leading-relaxed">
+                {otherRole?.archetype}
+              </p>
+
+              {/* Atmospheric line */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${phaseColor}80)` }} />
+                <span className="text-xl">{phaseIcon}</span>
+                <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${phaseColor}80)` }} />
+              </div>
+
+              {/* Atmosphere quote */}
+              <p
+                className="text-white/85 leading-[1.7] max-w-[300px] italic"
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 300,
+                  textShadow: '0 1px 12px rgba(0,0,0,0.6)',
+                }}
+              >
+                {scenario.atmosphere}
+              </p>
+
+              {/* Gentle prompt */}
+              <p className="text-white/45 text-xs mt-6 tracking-wider">
+                {myGender === 'MAN'
+                  ? `שלח לה את ההודעה הראשונה כ${myRole?.name}...`
+                  : `שלחי לו את ההודעה הראשונה כ${myRole?.name}...`}
+              </p>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {messages.map((msg) => {
           const isMine = msg.senderGender === myGender;
