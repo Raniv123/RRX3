@@ -1,6 +1,42 @@
 # RRX3 — Project Context
-📅 עדכון אחרון: 2026-02-22
-💬 שיחה אחרונה: InvitationScreen + ConnectScreen (קישור מפתה) + BreathSyncScreen — deployed ל-GitHub Pages ✅
+📅 עדכון אחרון: 2026-05-13
+💬 שיחה אחרונה: סקירה משולשת (Claude + Codex) + שיפורי אבטחה/יציבות/עיצוב — deployed ✅
+
+---
+
+## ⚡ עדכון מרכזי 2026-05-13 — Hardening Pass (v5.4)
+
+### תיקונים שנעשו ✅
+1. **SyncService memory leak** — `closed` flag + `reconnectTimer` cleanup ב-disconnect
+2. **App.tsx race condition** — `scenarioCreationRef` guard ל-idempotent handshake
+3. **Joiner fallback** — 30s setTimeout עם useRef + cleanup על SCENARIO
+4. **localStorage hardening** — try/catch בכל הקריאות + schema validation בסיסי ב-handleResume
+5. **alert() → Toast** — תחתית עליונה צף, animate-slide-up, role=status
+6. **Gemini upgrade** — `gemini-2.5-pro` → `gemini-3-pro-preview` (IRON RULE)
+7. **Avatar model** — `gemini-2.0-flash-exp` → `gemini-2.5-flash-image`
+8. **logger אחיד** ב-`src/utils/logger.ts` — שותק בפרוד (כיסה את כל console.error)
+9. **Gender duplications fixed**:
+   - `ProtocolScreen.tsx:1203` "מקליד/ה" → לפי `myGender`
+   - `ProtocolScreen.tsx:1439` placeholder לפי `myGender`
+   - `InvitationComposer:601` "בא/ה" → "אני באה!" (תמיד אשה)
+   - `surprises.ts` — 5 תיאורים לצורת רבים (כולל)
+10. **LoginScreen redesign** — פלטה שקטה, פחות אימוג'ים, ספייסינג נדיב, צבעי rose/purple לרקע, focus states, aria-labels, maxLength=4 + numeric inputMode
+
+### מה Codex (GPT-5.5) זיהה ולא טופל (דורש backend / שינוי ארכיטקטוני)
+- ⛔ **API keys בצד-לקוח** — דורש backend proxy (Vercel Functions / Cloudflare Worker)
+- ⛔ **ntfy.sh ציבורי + 4-digit code** — דורש שינוי URL format (המשתמש ביקש לא לשנות)
+- ⛔ **תוכן אינטימי ב-localStorage ללא הצפנה** — דורש Web Crypto API
+
+### מה נשאר (לפעם הבאה)
+- [ ] פיצול ProtocolScreen.tsx 1692 שורות ל-6 קבצים
+- [ ] החלפת `any` ב-types נכונים (ai-engine.ts:5,134; types.ts:19; prompts.ts:104,108)
+- [ ] Zod schema validation ל-Gemini responses (currently raw JSON.parse)
+- [ ] Design system מלא ב-tailwind.config (tokens, scale)
+- [ ] Cleanup של 17 שורות עם / ב-languages.ts (לא קריטי, לא ב-UI)
+- [ ] גופן שני (Frank Ruhl Libre) לכותרות
+- [ ] AbortController ל-Gemini timeout
+
+---
 
 ---
 
