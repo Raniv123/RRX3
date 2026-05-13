@@ -44,141 +44,228 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onI
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-bordeaux via-dark to-electric-blue flex items-center justify-center p-4">
-      {/* אפקט זוהר ברקע */}
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{
+        background:
+          'radial-gradient(ellipse 70% 60% at 25% 30%, #2a0a18 0%, transparent 65%),' +
+          'radial-gradient(ellipse 60% 50% at 75% 70%, #1a0a24 0%, transparent 70%),' +
+          'linear-gradient(180deg, #050306 0%, #08050a 100%)',
+      }}
+    >
+      {/* רקע — שני orb עדינים, לא pulse אגרסיבי */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sexy-fuchsia/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric-blue/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div
+          className="absolute -top-32 -left-32 w-[28rem] h-[28rem] rounded-full opacity-50"
+          style={{
+            background: 'radial-gradient(circle, rgba(190,40,90,0.18) 0%, transparent 65%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        <div
+          className="absolute -bottom-32 -right-32 w-[28rem] h-[28rem] rounded-full opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(80,40,150,0.15) 0%, transparent 65%)',
+            filter: 'blur(80px)',
+          }}
+        />
       </div>
 
-      {/* Container ראשי */}
-      <div className="relative z-10 max-w-md w-full">
-        {/* Logo + כותרת */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="text-6xl mb-4">🔥</div>
-          <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">
-            RRX<span className="text-sexy-fuchsia">3</span>
+      <div className="relative z-10 max-w-sm w-full">
+        {/* Logo עדין — בלי emoji ענק */}
+        <div className="text-center mb-10 animate-fade-in">
+          <div
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-5"
+            style={{
+              background: 'radial-gradient(circle, rgba(190,40,90,0.25) 0%, transparent 70%)',
+              border: '1px solid rgba(190,40,90,0.35)',
+              boxShadow: '0 0 32px rgba(190,40,90,0.25)',
+            }}
+          >
+            <span className="text-2xl" style={{ filter: 'drop-shadow(0 0 6px rgba(255,100,100,0.4))' }}>
+              🔥
+            </span>
+          </div>
+          <h1
+            className="text-white font-light mb-2 tracking-tight"
+            style={{ fontSize: '40px', letterSpacing: '-1px' }}
+          >
+            RRX<span style={{ color: '#e879f9' }}>3</span>
           </h1>
-          <p className="text-white/60 text-lg">המסע המשותף שלכם מתחיל כאן</p>
+          <p className="text-white/50 text-sm font-light">המסע המשותף שלכם מתחיל כאן</p>
         </div>
 
-        {/* כרטיס ראשי */}
-        <div className="bg-dark/40 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
+        {/* כרטיס ראשי — שקט יותר */}
+        <div
+          className="rounded-3xl p-7 backdrop-blur-2xl"
+          style={{
+            background: 'rgba(12,8,14,0.55)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+          }}
+        >
           {mode === 'select' && (
-            <div className="space-y-4 animate-slide-up">
-              {/* כפתור חזרה למסע — מופיע רק אם יש סשן שמור */}
+            <div className="space-y-3 animate-slide-up">
+              {/* Resume — ירוק עדין, רק אם יש סשן */}
               {hasLastSession && onResume && (
                 <button
                   onClick={onResume}
-                  className="w-full py-4 px-6 bg-gradient-to-r from-emerald-700/60 to-emerald-600/60 border border-emerald-400/40 rounded-xl text-emerald-200 font-semibold text-lg hover:scale-105 transform transition-all shadow-lg hover:shadow-emerald-500/30 backdrop-blur-sm"
+                  aria-label="חזור למסע שהתחלתם"
+                  className="w-full py-3.5 px-5 rounded-2xl text-emerald-200/90 font-medium text-sm tracking-wide transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(16,118,80,0.35), rgba(8,80,55,0.45))',
+                    border: '1px solid rgba(52,211,153,0.25)',
+                  }}
                 >
-                  🔄 חזור למסע שהתחלתם
+                  חזור למסע שהתחלתם
                 </button>
               )}
 
+              {/* Primary CTA */}
               <button
                 onClick={() => setMode('create')}
-                className="w-full py-4 px-6 bg-gradient-to-r from-sexy-fuchsia to-bordeaux rounded-xl text-white font-semibold text-lg hover:scale-105 transform transition-all shadow-lg hover:shadow-sexy-fuchsia/50"
+                className="w-full py-4 px-5 rounded-2xl text-white font-medium text-base transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(225,29,72,0.85) 0%, rgba(150,30,90,0.95) 100%)',
+                  boxShadow: '0 0 30px rgba(225,29,72,0.3), 0 4px 16px rgba(0,0,0,0.4)',
+                  border: '1px solid rgba(225,29,72,0.4)',
+                }}
               >
-                ✨ התחל מסע חדש
+                התחל מסע חדש
               </button>
 
+              {/* Secondary */}
               <button
                 onClick={() => setMode('join')}
-                className="w-full py-4 px-6 bg-white/10 backdrop-blur-sm rounded-xl text-white font-semibold text-lg hover:bg-white/20 transform transition-all border border-white/20"
+                className="w-full py-3.5 px-5 rounded-2xl text-white/85 font-medium text-sm transition-all hover:bg-white/10"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                }}
               >
-                🔗 הצטרף למסע
+                הצטרף למסע קיים
               </button>
 
-              {/* כפתור הפתעה — מפריד */}
+              {/* כפתור הפתעה — קו מפריד עדין */}
               {onInvite && (
                 <>
-                  <div className="flex items-center gap-3 my-1">
-                    <div className="flex-1 h-px bg-white/10" />
-                    <span className="text-white/25 text-xs">או</span>
-                    <div className="flex-1 h-px bg-white/10" />
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="flex-1 h-px bg-white/8" />
+                    <span className="text-white/25 text-[10px] uppercase tracking-widest">או</span>
+                    <div className="flex-1 h-px bg-white/8" />
                   </div>
                   <button
                     onClick={onInvite}
-                    className="w-full py-3.5 px-6 bg-gradient-to-r from-rose-900/60 to-pink-900/60 border border-rose-500/30 rounded-xl text-rose-200/90 font-medium text-base hover:scale-[1.02] transform transition-all hover:border-rose-400/50 hover:from-rose-800/60"
+                    className="w-full py-3.5 px-5 rounded-2xl text-rose-200/90 font-medium text-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(190,30,60,0.18), rgba(140,20,80,0.22))',
+                      border: '1px solid rgba(225,29,72,0.25)',
+                    }}
                   >
                     💌 הפתע את הפרטנרית שלך
                   </button>
                 </>
               )}
 
-              <p className="text-center text-white/40 text-sm mt-6">
+              <p className="text-center text-white/35 text-xs pt-3 leading-relaxed">
                 שני המכשירים צריכים להיות מחוברים לאינטרנט
               </p>
             </div>
           )}
 
           {mode === 'create' && (
-            <div className="space-y-6 animate-slide-up">
+            <div className="space-y-5 animate-slide-up">
               <div className="text-center">
-                <h2 className="text-2xl font-light text-white mb-2">יצירת מסע חדש</h2>
-                <p className="text-white/60">לחץ ליצירת קוד חיבור ייחודי</p>
+                <h2 className="text-xl font-light text-white mb-1.5">יצירת מסע חדש</h2>
+                <p className="text-white/45 text-sm">קוד חיבור ייחודי לשניכם</p>
               </div>
 
               <button
                 onClick={handleCreate}
-                className="w-full py-4 px-6 bg-gradient-to-r from-electric-blue to-sexy-fuchsia rounded-xl text-white font-semibold text-lg hover:scale-105 transform transition-all shadow-lg"
+                className="w-full py-4 px-5 rounded-2xl text-white font-medium text-base transition-all hover:scale-[1.01] active:scale-[0.99]"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(60,80,200,0.85) 0%, rgba(180,40,160,0.95) 100%)',
+                  boxShadow: '0 0 30px rgba(120,60,200,0.3)',
+                  border: '1px solid rgba(180,80,220,0.4)',
+                }}
               >
-                🎯 צור קוד חיבור
+                צור קוד חיבור
               </button>
 
               <button
                 onClick={() => setMode('select')}
-                className="w-full py-3 text-white/60 hover:text-white transition-colors"
+                className="w-full py-2 text-white/45 hover:text-white/75 text-sm transition-colors"
               >
-                ← חזרה
+                → חזרה
               </button>
             </div>
           )}
 
           {mode === 'join' && (
-            <div className="space-y-6 animate-slide-up">
+            <div className="space-y-5 animate-slide-up">
               <div className="text-center">
-                <h2 className="text-2xl font-light text-white mb-2">הצטרפות למסע</h2>
-                <p className="text-white/60">הכנס את הקוד מהמכשיר השני</p>
+                <h2 className="text-xl font-light text-white mb-1.5">הצטרפות למסע</h2>
+                <p className="text-white/45 text-sm">הכניסו את הקוד מהמכשיר השני</p>
               </div>
 
               <div>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  maxLength={4}
                   value={channelId}
                   onChange={(e) => {
-                    setChannelId(e.target.value);
+                    setChannelId(e.target.value.replace(/\D/g, ''));
                     setError('');
                   }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
                   placeholder="1900"
-                  className="w-full px-4 py-4 bg-white/10 backdrop-blur-sm rounded-xl text-white placeholder-white/40 border border-white/20 focus:border-sexy-fuchsia focus:outline-none text-center text-lg font-mono"
+                  aria-label="קוד החיבור — 4 ספרות"
+                  className="w-full px-4 py-4 rounded-2xl text-white placeholder-white/25 text-center text-2xl font-mono tracking-[0.4em] outline-none transition-all"
+                  style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: error
+                      ? '1px solid rgba(248,113,113,0.5)'
+                      : '1px solid rgba(255,255,255,0.12)',
+                  }}
                 />
                 {error && (
-                  <p className="text-red-400 text-sm mt-2 text-center">{error}</p>
+                  <p className="text-red-400/80 text-xs mt-2 text-center" role="alert">
+                    {error}
+                  </p>
                 )}
               </div>
 
               <button
                 onClick={handleJoin}
-                className="w-full py-4 px-6 bg-gradient-to-r from-electric-blue to-sexy-fuchsia rounded-xl text-white font-semibold text-lg hover:scale-105 transform transition-all shadow-lg"
+                disabled={!channelId.trim()}
+                className="w-full py-4 px-5 rounded-2xl text-white font-medium text-base transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(60,80,200,0.85) 0%, rgba(180,40,160,0.95) 100%)',
+                  boxShadow: '0 0 30px rgba(120,60,200,0.25)',
+                  border: '1px solid rgba(180,80,220,0.4)',
+                }}
               >
-                🚀 התחבר עכשיו
+                התחבר עכשיו
               </button>
 
               <button
                 onClick={() => setMode('select')}
-                className="w-full py-3 text-white/60 hover:text-white transition-colors"
+                className="w-full py-2 text-white/45 hover:text-white/75 text-sm transition-colors"
               >
-                ← חזרה
+                → חזרה
               </button>
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-white/30 text-xs mt-6">
-          RRX3 v2.0 · אפליקציית קרבה אינטימית לזוגות
+        <p className="text-center text-white/25 text-[10px] mt-6 tracking-wider uppercase">
+          RRX3 · אפליקציית קרבה אינטימית
         </p>
       </div>
     </div>

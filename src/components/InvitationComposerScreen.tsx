@@ -598,7 +598,7 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
             >
               <span className="flex items-center justify-center gap-2">
                 <span>✨</span>
-                <span>אני בא/ה!</span>
+                <span>אני באה!</span>
               </span>
             </button>
 

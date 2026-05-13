@@ -1,6 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { Message, AIResponse, Scenario, UserGender, AvatarImages } from '../types';
 import { buildAIPrompt } from '../data/prompts';
+import { log } from '../utils/logger';
 
 const API_KEY = (import.meta.env.VITE_GEMINI_API_KEY || (window as any).ENV?.VITE_GEMINI_API_KEY) as string;
 
@@ -23,7 +24,7 @@ export class AIEngine {
       const prompt = buildAIPrompt(messages, tension, phase, gender, scenario);
 
       const response = await this.ai.models.generateContent({
-        model: 'gemini-2.5-pro',
+        model: 'gemini-3-pro-preview',
         contents: prompt,
         config: { responseMimeType: 'application/json' }
       });
@@ -46,7 +47,7 @@ export class AIEngine {
       return data as AIResponse;
 
     } catch (error) {
-      console.error('AI Engine Error:', error);
+      log.error('AI Engine Error', error);
       return this.getFallbackResponse(tension, phase, gender);
     }
   }
@@ -68,7 +69,7 @@ export class AIEngine {
         results.WOMAN = womanAvatar.value;
       }
     } catch (error) {
-      console.error('Avatar generation failed:', error);
+      log.error('Avatar generation failed', error);
     }
 
     return results;
@@ -127,7 +128,7 @@ export class AIEngine {
       }. Ultra detailed, 8K, film photography style, shallow depth of field. NO text, NO watermark.`;
 
       const response = await this.ai.models.generateContent({
-        model: 'gemini-2.0-flash-exp',
+        model: 'gemini-2.5-flash-image',
         contents: prompt,
         config: {
           responseModalities: ['IMAGE', 'TEXT'],
@@ -152,7 +153,7 @@ export class AIEngine {
       );
       return await Promise.race([this.generateScenarioWithAI(), timeoutPromise]);
     } catch (error) {
-      console.error('Scenario Creation Error:', error);
+      log.error('Scenario Creation Error', error);
       return this.getDefaultScenario();
     }
   }
@@ -259,7 +260,7 @@ WOMAN.desire: משפט אחד — מה היא מחפשת ממנו בלילה ה�
     `;
 
     const response = await this.ai.models.generateContent({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-3-pro-preview',
       contents: prompt,
       config: { responseMimeType: 'application/json' }
     });

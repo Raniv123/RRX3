@@ -943,7 +943,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
       );
       setAiResponse(response);
     } catch (error) {
-      console.error('AI Error:', error);
+      // שגיאת AI — שותקים בפרוד, fallback מטופל ב-AIEngine
     } finally {
       setLoading(false);
     }
@@ -1200,7 +1200,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
               <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '150ms' }} />
               <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
-            <span className="text-white/30 text-xs">מקליד/ה...</span>
+            <span className="text-white/30 text-xs">{myGender === 'MAN' ? 'מקלידה...' : 'מקליד...'}</span>
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -1436,7 +1436,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
                 }
               }}
               onKeyDown={handleKeyDown}
-              placeholder="כתוב/י בעצמך... הלחישות למעלה הן השראה"
+              placeholder={myGender === 'MAN' ? 'כתוב בעצמך... הלחישות למעלה הן השראה' : 'כתבי בעצמך... הלחישות למעלה הן השראה'}
               className="flex-1 bg-transparent text-white text-sm placeholder-white/25 outline-none py-1"
               dir="rtl"
             />

@@ -1,6 +1,7 @@
 // סנכרון בזמן אמת בין שני משתמשים (ntfy.sh)
 
 import { Message, UserGender, Scenario } from '../types';
+import { log } from '../utils/logger';
 
 const NTFY_SERVER = 'https://ntfy.sh';
 
@@ -20,6 +21,8 @@ export class SyncService {
   private onSystemCallback?: (msg: SystemMessage) => void;
   private eventSource?: EventSource;
   private deviceId: string;
+  private closed = false;
+  private reconnectTimer?: ReturnType<typeof setTimeout>;
 
   constructor(channelId: string, myGender: UserGender) {
     this.channelId = channelId;
@@ -29,10 +32,15 @@ export class SyncService {
 
   // התחבר לערוץ ותתחיל להאזין - הודעות צ'אט + הודעות מערכת
   connect(onMessage: (message: Message) => void, onSystem?: (msg: SystemMessage) => void) {
+    if (this.closed) return;
     this.onMessageCallback = onMessage;
     this.onSystemCallback = onSystem;
 
-    // חיבור ל-ntfy.sh בSSE (Server-Sent Events)
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
+
     const url = `${NTFY_SERVER}/rrx3-${this.channelId}/sse`;
     this.eventSource = new EventSource(url);
 
@@ -40,36 +48,39 @@ export class SyncService {
       try {
         const data = JSON.parse(event.data);
 
-        // אם זאת הודעה ממשית (לא heartbeat)
         if (data.message) {
           const parsed = JSON.parse(data.message);
 
-          // בדוק אם זו הודעת מערכת
           if (parsed._system) {
             const sysMsg: SystemMessage = parsed._system;
-            // אל תקבל הודעות מערכת ממני עצמי
             if (sysMsg.sender !== this.deviceId) {
               this.onSystemCallback?.(sysMsg);
             }
             return;
           }
 
-          // הודעת צ'אט רגילה
           const message: Message = parsed;
-          // אל תקבל הודעות ממני עצמי
           if (message.deviceId !== this.deviceId) {
             this.onMessageCallback?.(message);
           }
         }
-      } catch (error) {
-        // התעלם משגיאות parse (יכול להיות heartbeat וכו')
+      } catch {
+        // התעלם משגיאות parse (heartbeat וכו')
       }
     };
 
     this.eventSource.onerror = () => {
-      // ננסה להתחבר מחדש אוטומטית
-      setTimeout(() => this.reconnect(), 3000);
+      this.scheduleReconnect();
     };
+  }
+
+  private scheduleReconnect() {
+    if (this.closed) return;
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = undefined;
+      if (!this.closed) this.reconnect();
+    }, 3000);
   }
 
   // שלח הודעת מערכת (JOIN, SCENARIO, וכו')
@@ -87,7 +98,7 @@ export class SyncService {
         body: JSON.stringify({ _system: sysMsg })
       });
     } catch (error) {
-      console.error('Send system message error:', error);
+      log.error('Send system message error', error);
     }
   }
 
@@ -102,7 +113,7 @@ export class SyncService {
         body: JSON.stringify(msgWithDevice)
       });
     } catch (error) {
-      console.error('Send message error:', error);
+      log.error('Send message error', error);
       throw error;
     }
   }
@@ -119,6 +130,11 @@ export class SyncService {
 
   // נתק מהערוץ
   disconnect() {
+    this.closed = true;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = undefined;
+    }
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = undefined;
@@ -127,7 +143,11 @@ export class SyncService {
 
   // התחבר מחדש (אם נפלה חיבור)
   private reconnect() {
-    this.disconnect();
+    if (this.closed) return;
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
     if (this.onMessageCallback) {
       this.connect(this.onMessageCallback, this.onSystemCallback);
     }

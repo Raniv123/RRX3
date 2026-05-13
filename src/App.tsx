@@ -64,11 +64,24 @@ function App() {
 
   const aiEngine = useRef(new AIEngine());
   const syncRef = useRef<SyncService | null>(null);
+  const scenarioCreationRef = useRef(false); // guard ל-handlePartnerConnected
+  const joinerFallbackRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
-  // שמירת סשן אחרון בכל כניסה למסך PROTOCOL
+  // הצגת Toast קצר
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  // שמירת סשן אחרון בכל כניסה למסך PROTOCOL (מוגן מ-quota/private mode)
   useEffect(() => {
     if (screen === 'PROTOCOL' && myGender && scenario && channelId) {
-      localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({ channelId, myGender, scenario }));
+      try {
+        localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({ channelId, myGender, scenario }));
+      } catch {
+        // Safari private mode / quota exceeded — מתעלמים בשקט
+      }
     }
   }, [screen, myGender, scenario, channelId]);
 
@@ -76,31 +89,33 @@ function App() {
   const handleResume = () => {
     try {
       const saved = JSON.parse(localStorage.getItem(LAST_SESSION_KEY) || 'null');
-      if (saved?.channelId && saved?.myGender && saved?.scenario) {
+      if (saved?.channelId && saved?.myGender && saved?.scenario?.roles?.MAN && saved?.scenario?.roles?.WOMAN) {
         setChannelId(saved.channelId);
         setMyGender(saved.myGender);
         setScenario(saved.scenario);
-        setIsHost(false); // לא רלוונטי בחזרה
+        setIsHost(false);
         setScreen('PROTOCOL');
       }
-    } catch { /* ignore parse errors */ }
+    } catch {
+      // parse error — לא להמשיך
+    }
   };
 
   // התחברות
   const handleLogin = (id: string, host: boolean) => {
     setChannelId(id);
     setIsHost(host);
-    // זיהוי מגדר אוטומטי: host = MAN, joiner = WOMAN
     setMyGender(host ? 'MAN' : 'WOMAN');
 
     if (host) {
-      // אם יוצר חדש - הצג את קוד החיבור
       setScreen('CONNECT');
     } else {
-      // אם מצטרף - קודם להאזין, ואז לשלוח JOIN (מניעת race condition)
+      // מצטרפת — מאזינה קודם, אז שולחת JOIN (מניעת race)
+      if (syncRef.current) {
+        syncRef.current.disconnect();
+        syncRef.current = null;
+      }
       const tempSync = new SyncService(id, 'WOMAN');
-
-      // חיבור מיידי לפני JOIN כדי לא לפספס הודעות
       tempSync.connect(
         () => {},
         (sysMsg: SystemMessage) => {
@@ -109,72 +124,78 @@ function App() {
           }
         }
       );
-
-      // שלח JOIN אחרי שמאזינים
       tempSync.sendJoinSignal();
       syncRef.current = tempSync;
 
-      // אם תרחיש כבר הגיע, עבור ישר לנשימה
-      // אחרת חכה (useEffect יזהה כשיגיע)
       setLoadingScenario(true);
 
-      // fallback אחרי 30 שניות אם ה-host לא שלח תרחיש
-      setTimeout(() => {
-        setScenario(prev => {
-          if (!prev) return aiEngine.current.getDefaultScenarioPublic();
-          return prev;
-        });
+      // fallback של 30 שניות עם cleanup
+      if (joinerFallbackRef.current) clearTimeout(joinerFallbackRef.current);
+      joinerFallbackRef.current = setTimeout(() => {
+        joinerFallbackRef.current = null;
+        setScenario(prev => prev ?? aiEngine.current.getDefaultScenarioPublic());
         setLoadingScenario(false);
       }, 30000);
     }
   };
 
-  // חיבור שותף - host יוצר תרחיש ושולח
+  // חיבור שותף — host יוצר תרחיש ושולח (idempotent)
   const handlePartnerConnected = async () => {
+    if (scenarioCreationRef.current) return; // מונע double-creation
+    scenarioCreationRef.current = true;
     setLoadingScenario(true);
+
+    const sync = new SyncService(channelId, 'MAN');
     try {
       const newScenario = await aiEngine.current.createScenario();
-
-      // גנר אווטרים ושמור בתוך הScenario — כך שני הצדדים יקבלו אותן תמונות
       const avatarImages = await aiEngine.current.generateAvatars(newScenario);
       if (avatarImages.MAN || avatarImages.WOMAN) {
         newScenario.avatars = avatarImages;
       }
-
       setScenario(newScenario);
-
-      // שלח את התרחיש לשותף
-      const sync = new SyncService(channelId, 'MAN');
       await sync.sendScenario(newScenario);
-      sync.disconnect();
-    } catch (error) {
-      console.error('Scenario creation error:', error);
-      // fallback
+    } catch {
       const fallback = aiEngine.current.getDefaultScenarioPublic();
       setScenario(fallback);
-
-      const sync = new SyncService(channelId, 'MAN');
       await sync.sendScenario(fallback);
+    } finally {
       sync.disconnect();
+      setLoadingScenario(false);
+      setScreen('BREATH_SYNC');
     }
-    setLoadingScenario(false);
-    setScreen('BREATH_SYNC');
   };
 
-  // כשהתרחיש מגיע לjoiner - עבור למסך הנשימה
+  // כשהתרחיש מגיע ל-joiner — עבור למסך נשימה + נקה fallback
   useEffect(() => {
     if (!isHost && scenario && loadingScenario) {
+      if (joinerFallbackRef.current) {
+        clearTimeout(joinerFallbackRef.current);
+        joinerFallbackRef.current = null;
+      }
       setLoadingScenario(false);
       setScreen('BREATH_SYNC');
     }
   }, [scenario, isHost, loadingScenario]);
 
-  // ניקוי SyncService
+  // ניקוי SyncService + timers ב-unmount
   useEffect(() => {
     return () => {
       syncRef.current?.disconnect();
+      syncRef.current = null;
+      if (joinerFallbackRef.current) {
+        clearTimeout(joinerFallbackRef.current);
+        joinerFallbackRef.current = null;
+      }
     };
   }, []);
+
+  // ניתוק tempSync של joiner ברגע שיש תרחיש (כדי לא להחזיק חיבור כפול)
+  useEffect(() => {
+    if (!isHost && scenario && syncRef.current) {
+      syncRef.current.disconnect();
+      syncRef.current = null;
+    }
+  }, [scenario, isHost]);
 
   return (
     <div className="min-h-screen">
@@ -203,18 +224,19 @@ function App() {
       {screen === 'INVITE_COMPOSE' && (
         <InvitationComposerScreen
           onBack={() => setScreen('LOGIN')}
-          onSend={(invitation) => {
-            // יצירת URL לשיתוף עם הפרטנרית
+          onSend={async (invitation) => {
             const code = SyncService.generateChannelId();
             const baseUrl = window.location.origin + window.location.pathname;
             const url = `${baseUrl}?msg=${encodeURIComponent(invitation.message)}&time=${invitation.time}&invite=${code}`;
-            // העתקה לclipboard + הצגת הודעה
-            navigator.clipboard.writeText(url).catch(() => {});
-            alert(`💌 הקישור הועתק!\n\nשלח לפרטנרית שלך:\n${url}\n\n⏰ שעת הפגישה: ${invitation.time}`);
+            try {
+              await navigator.clipboard.writeText(url);
+              showToast('💌 הקישור הועתק — שלח/י לפרטנרית');
+            } catch {
+              showToast('⚠️ לא הצלחתי להעתיק — העתק/י ידנית מהיומן');
+            }
             setChannelId(code);
             setMeetingTime(invitation.time);
             setIsHost(true);
-            // הגבר ממתין גם הוא — לא ישאר על CONNECT כל היום
             setScreen('WAITING');
           }}
         />
@@ -331,6 +353,22 @@ function App() {
           myGender={myGender}
           scenario={scenario}
         />
+      )}
+
+      {/* Toast — קצר ועדין */}
+      {toast && (
+        <div
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-2xl text-white text-sm backdrop-blur-xl shadow-2xl animate-slide-up"
+          role="status"
+          aria-live="polite"
+          style={{
+            background: 'rgba(15,15,20,0.92)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            maxWidth: 'calc(100vw - 32px)',
+          }}
+        >
+          {toast}
+        </div>
       )}
     </div>
   );
