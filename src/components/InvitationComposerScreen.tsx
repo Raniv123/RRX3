@@ -185,37 +185,37 @@ export const InvitationComposerScreen: React.FC<InvitationComposerProps> = ({
             </div>
           </div>
 
-          <p className="text-white/30 text-[10px] uppercase tracking-[0.45em] mb-3">
+          <p className="text-rose-300/65 text-xs tracking-widest mb-3 uppercase">
             הזמנה מיוחדת
           </p>
           <h1
-            className="text-2xl font-light text-white leading-snug"
+            className="text-3xl font-light text-white leading-snug"
             style={{ textShadow: '0 0 30px rgba(225,29,72,0.4)' }}
           >
             שלח לפרטנרית שלך
           </h1>
-          <p className="text-white/35 text-xs mt-2 leading-relaxed">
+          <p className="text-white/65 text-sm mt-3 leading-relaxed">
             הזמנה שלא תוכל לעמוד בה
           </p>
         </div>
 
         {/* Letter textarea */}
         <div
-          className="mb-5 rounded-2xl overflow-hidden"
+          className="mb-6 rounded-2xl overflow-hidden"
           style={{
-            background: 'rgba(255,255,255,0.05)',
+            background: 'rgba(20,8,15,0.65)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(225,29,72,0.2)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+            border: '1px solid rgba(225,29,72,0.28)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
           }}
         >
           {/* Paper header bar */}
           <div
-            className="flex items-center gap-2 px-4 py-3"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            className="flex items-center gap-2 px-5 py-3"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
           >
-            <div className="w-1.5 h-1.5 rounded-full bg-rose-500/60" />
-            <span className="text-white/20 text-[10px] uppercase tracking-widest">המכתב שלי אליה</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-rose-400/80" />
+            <span className="text-white/55 text-xs tracking-wider">המכתב שלי אליה</span>
           </div>
 
           <textarea
@@ -223,24 +223,24 @@ export const InvitationComposerScreen: React.FC<InvitationComposerProps> = ({
             value={message}
             onChange={e => setMessage(e.target.value)}
             rows={6}
-            className="w-full bg-transparent px-5 py-4 text-white/80 text-sm leading-relaxed resize-none outline-none placeholder-white/20"
-            style={{ fontFamily: "'Heebo', sans-serif", direction: 'rtl' }}
+            className="w-full bg-transparent px-5 py-4 text-white/95 leading-[1.75] resize-none outline-none placeholder-white/40"
+            style={{ fontFamily: "'Heebo', sans-serif", direction: 'rtl', fontSize: '15px', fontWeight: 300 }}
             placeholder="כתוב את ההזמנה שלך..."
           />
 
           {/* Char count hint */}
           <div
-            className="flex justify-between items-center px-4 py-2"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+            className="flex justify-between items-center px-5 py-2.5"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <span className="text-white/15 text-[10px]">ניתן לערוך</span>
-            <span className="text-white/15 text-[10px]">{message.length} תווים</span>
+            <span className="text-white/45 text-xs">ניתן לערוך</span>
+            <span className="text-white/45 text-xs">{message.length} תווים</span>
           </div>
         </div>
 
         {/* Time picker */}
         <div className="mb-6">
-          <p className="text-white/30 text-[10px] uppercase tracking-[0.35em] mb-3 text-center">
+          <p className="text-white/55 text-xs tracking-wider mb-3 text-center">
             מה שעת הפגישה?
           </p>
           <div className="grid grid-cols-4 gap-2">
@@ -304,7 +304,7 @@ export const InvitationComposerScreen: React.FC<InvitationComposerProps> = ({
           )}
         </button>
 
-        <p className="text-white/15 text-[10px] text-center mt-5 leading-relaxed">
+        <p className="text-white/45 text-xs text-center mt-5 leading-relaxed">
           ההזמנה תישלח דרך קישור אישי
         </p>
       </div>
@@ -413,7 +413,7 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
             transition: 'opacity 1s ease, transform 1s ease',
           }}
         >
-          <p className="text-white/25 text-[10px] uppercase tracking-[0.45em] mb-10">
+          <p className="text-rose-300/70 text-xs uppercase tracking-widest mb-10">
             {invitation.senderName ? `מכתב מ${invitation.senderName}` : 'מכתב מיוחד מחכה לך'}
           </p>
 
@@ -497,7 +497,7 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
             transformOrigin: 'top center',
           }}
         >
-          <p className="text-white/25 text-[10px] uppercase tracking-[0.45em] mb-6 text-center">
+          <p className="text-rose-300/70 text-xs uppercase tracking-widest mb-6 text-center">
             מכתב אישי
           </p>
 
@@ -528,10 +528,11 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
             {/* Message */}
             <div className="px-6 pb-6">
               <p
-                className="text-white/75 text-sm leading-8 whitespace-pre-line text-center"
+                className="text-white/92 leading-[1.85] whitespace-pre-line text-center"
                 style={{
                   fontFamily: "'Heebo', sans-serif",
                   fontWeight: 300,
+                  fontSize: '16px',
                   textShadow: '0 0 20px rgba(225,29,72,0.15)',
                 }}
               >
@@ -549,7 +550,7 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
 
             {/* Time block */}
             <div className="text-center px-6 pb-6">
-              <p className="text-white/25 text-[10px] uppercase tracking-[0.4em] mb-2">
+              <p className="text-rose-300/60 text-xs uppercase tracking-widest mb-2">
                 שעת הפגישה
               </p>
               <p
@@ -617,7 +618,7 @@ export const InvitationReceiverScreen: React.FC<InvitationReceiverProps> = ({
             </button>
           </div>
 
-          <p className="text-white/12 text-[10px] text-center mt-6">
+          <p className="text-white/55 text-xs text-center mt-6">
             את שולטת — יכולה לעצור בכל רגע
           </p>
         </div>

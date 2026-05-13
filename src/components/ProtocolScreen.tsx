@@ -417,7 +417,7 @@ const ChatBubble: React.FC<{
           <CGIAvatar gender={msg.senderGender} avatarUrl={avatarUrl} size="sm" scenarioId={scenarioId} />
         </button>
         {roleName && (
-          <span className="text-[9px] text-white/35 max-w-[44px] truncate text-center leading-tight">
+          <span className="text-[11px] text-white/55 max-w-[48px] truncate text-center leading-tight">
             {roleName}
           </span>
         )}
@@ -425,8 +425,8 @@ const ChatBubble: React.FC<{
 
       <div className={`max-w-[72%] ${isMine ? 'items-end' : 'items-start'} flex flex-col gap-0.5`}>
         {isAction && (
-          <span className="text-[10px] text-white/40 mx-2">
-            {isMine ? '✋ פעולה' : '✋ פעולה'}
+          <span className="text-xs text-white/55 mx-2">
+            פעולה
           </span>
         )}
         <div className={`px-4 py-2.5 rounded-2xl ${phaseGlow} ${
@@ -440,7 +440,7 @@ const ChatBubble: React.FC<{
         }`}>
           <p className="text-sm leading-relaxed">{msg.text}</p>
         </div>
-        <span className="text-[9px] text-white/25 mx-2">
+        <span className="text-[11px] text-white/45 mx-2">
           {new Date(msg.timestamp).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
@@ -518,7 +518,7 @@ const MissionCard: React.FC<{
               <span className="text-base">{myGender === 'MAN' ? '🌹' : '🎭'}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[9px] uppercase tracking-[2px] mb-0.5" style={{ color: `${pc.color}70` }}>
+              <div className="text-xs mb-0.5" style={{ color: `${pc.color}85` }}>
                 {myGender === 'MAN' ? 'היא מכינה לך הפתעה...' : 'הוא מכין לך הפתעה...'}
               </div>
               <div className="text-white/80 text-sm font-medium truncate">{mission.title}</div>
@@ -586,7 +586,7 @@ const MissionCard: React.FC<{
 
           {/* Top bar: phase badge + skip */}
           <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-4">
-            <span className="text-[9px] font-bold uppercase tracking-[3px] px-2.5 py-1 rounded-full"
+            <span className="text-xs font-semibold uppercase tracking-[2px] px-2.5 py-1 rounded-full"
               style={{ color: pc.color, background: `${pc.color}18`, border: `1px solid ${pc.color}35` }}>
               {pc.name}
             </span>
@@ -599,7 +599,7 @@ const MissionCard: React.FC<{
 
           {/* Title over photo bottom */}
           <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 pt-8">
-            <div className="text-[9px] uppercase tracking-[2px] mb-1.5" style={{ color: `${pc.color}75` }}>
+            <div className="text-xs font-medium mb-1.5" style={{ color: `${pc.color}85` }}>
               {mission.forWho === 'BOTH' ? 'שניכם יחד' : myGender === 'MAN' ? 'הוראה לגבר' : 'הוראה לאשה'}
             </div>
             <h2 className="text-white font-bold leading-tight" style={{ fontSize: '22px', letterSpacing: '-0.3px' }}>
@@ -623,7 +623,7 @@ const MissionCard: React.FC<{
             <div className="px-5 pb-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
-                <span className="text-[9px] uppercase tracking-[2.5px]" style={{ color: `${pc.color}55` }}>
+                <span className="text-xs" style={{ color: `${pc.color}70` }}>
                   איך לעשות נכון
                 </span>
                 <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
@@ -631,11 +631,11 @@ const MissionCard: React.FC<{
               <div className="space-y-3">
                 {mission.tips.map((tip, i) => (
                   <div key={i} className="flex gap-3 items-start">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5"
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
                       style={{ background: `${pc.color}18`, color: pc.color, border: `1px solid ${pc.color}30` }}>
                       {i + 1}
                     </span>
-                    <span className="text-white/60 text-[13px] leading-[1.7]">{tip}</span>
+                    <span className="text-white/70 text-sm leading-[1.7]">{tip}</span>
                   </div>
                 ))}
               </div>
@@ -647,7 +647,7 @@ const MissionCard: React.FC<{
             <div className="px-4 pb-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
-                <span className="text-[9px] uppercase tracking-[2.5px]" style={{ color: `${pc.color}55` }}>
+                <span className="text-xs" style={{ color: `${pc.color}70` }}>
                   בחרו סגנון
                 </span>
                 <div className="flex-1 h-px" style={{ background: `${pc.color}18` }} />
@@ -673,8 +673,8 @@ const MissionCard: React.FC<{
                       }}
                     >
                       <div className="text-xl mb-1.5">{choice.emoji}</div>
-                      <div className="text-white text-xs font-semibold mb-0.5 leading-snug">{choice.label}</div>
-                      <div className="text-[10px] leading-snug" style={{ color: 'rgba(255,255,255,0.38)' }}>{choice.description}</div>
+                      <div className="text-white text-sm font-semibold mb-0.5 leading-snug">{choice.label}</div>
+                      <div className="text-xs leading-snug" style={{ color: 'rgba(255,255,255,0.55)' }}>{choice.description}</div>
                     </button>
                   );
                 })}
@@ -1113,7 +1113,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             <span className="text-xl">{phaseIcon}</span>
             <div>
               <h3 className="text-white font-semibold text-sm leading-tight">{scenario.title}</h3>
-              <p className="text-white/40 text-[10px]">{scenario.location}</p>
+              <p className="text-white/55 text-xs">{scenario.location}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -1151,7 +1151,7 @@ export const ProtocolScreen: React.FC<ProtocolScreenProps> = ({
             </button>
             <div className="text-right">
               <div className="text-2xl font-bold text-white">{tensionState.level}%</div>
-              <div className="text-white/40 text-[10px]">מתח</div>
+              <div className="text-white/55 text-xs">מתח</div>
             </div>
           </div>
         </div>

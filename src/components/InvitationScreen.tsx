@@ -117,20 +117,20 @@ export const InvitationScreen: React.FC<InvitationScreenProps> = ({
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto mb-8" />
 
           {/* פרטים קטנים */}
-          <div className="flex items-center justify-center gap-6 mb-10">
+          <div className="flex items-center justify-center gap-5 mb-10">
             <div className="text-center">
-              <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">פרטי לחלוטין</div>
-              <div className="text-white/40 text-sm">🔐</div>
+              <div className="text-base mb-1.5">🔐</div>
+              <div className="text-white/65 text-xs tracking-wider">פרטי לחלוטין</div>
             </div>
-            <div className="w-px h-6 bg-white/10" />
+            <div className="w-px h-8 bg-white/15" />
             <div className="text-center">
-              <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">רק שנינו</div>
-              <div className="text-white/40 text-sm">💫</div>
+              <div className="text-base mb-1.5">💫</div>
+              <div className="text-white/65 text-xs tracking-wider">רק שנינו</div>
             </div>
-            <div className="w-px h-6 bg-white/10" />
+            <div className="w-px h-8 bg-white/15" />
             <div className="text-center">
-              <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">הלילה בלבד</div>
-              <div className="text-white/40 text-sm">🌙</div>
+              <div className="text-base mb-1.5">🌙</div>
+              <div className="text-white/65 text-xs tracking-wider">הלילה בלבד</div>
             </div>
           </div>
 
@@ -147,7 +147,7 @@ export const InvitationScreen: React.FC<InvitationScreenProps> = ({
             אני מוכנה לגלות ✨
           </button>
 
-          <p className="text-white/15 text-[10px] mt-6 tracking-widest">
+          <p className="text-white/55 text-xs mt-6 tracking-wider">
             את שולטת — יכולה לעצור בכל רגע
           </p>
         </div>

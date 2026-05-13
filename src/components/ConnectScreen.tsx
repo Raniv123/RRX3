@@ -61,22 +61,59 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4" dir="rtl">
 
-      {/* רקע */}
-      <div className="absolute inset-0 bg-gradient-to-br from-bordeaux via-dark to-electric-blue" />
+      {/* רקע — charcoal-plum אטמוספרי, עם orbs חמים */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 20% 20%, #2a0a18 0%, transparent 60%),' +
+            'radial-gradient(ellipse 70% 55% at 80% 80%, #1a0824 0%, transparent 60%),' +
+            'linear-gradient(180deg, #060308 0%, #09050e 100%)',
+        }}
+      />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sexy-fuchsia/15 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-electric-blue/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-60"
+          style={{
+            background: 'radial-gradient(circle, rgba(183,110,121,0.18) 0%, transparent 65%)',
+            filter: 'blur(80px)',
+          }}
+        />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-45"
+          style={{
+            background: 'radial-gradient(circle, rgba(100,40,140,0.14) 0%, transparent 65%)',
+            filter: 'blur(80px)',
+            animationDelay: '1s',
+          }}
+        />
       </div>
 
       <div className="relative z-10 max-w-md w-full">
 
         {/* כותרת */}
         <div className="text-center mb-8">
-          <div className="text-5xl mb-4">{status === 'connected' ? '✅' : '🔗'}</div>
-          <h1 className="text-3xl font-light text-white mb-2">
+          {/* אייקון — circle glow במקום emoji גס */}
+          <div
+            className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-5"
+            style={{
+              background: status === 'connected'
+                ? 'radial-gradient(circle, rgba(52,211,153,0.22) 0%, transparent 70%)'
+                : 'radial-gradient(circle, rgba(183,110,121,0.22) 0%, transparent 70%)',
+              border: status === 'connected'
+                ? '1px solid rgba(52,211,153,0.35)'
+                : '1px solid rgba(183,110,121,0.35)',
+              boxShadow: status === 'connected'
+                ? '0 0 32px rgba(52,211,153,0.25)'
+                : '0 0 32px rgba(183,110,121,0.25)',
+            }}
+          >
+            <span className="text-2xl">{status === 'connected' ? '🔗' : '💌'}</span>
+          </div>
+          <h1 className="text-2xl font-light text-white mb-2 tracking-tight">
             {status === 'connected' ? 'מחוברים!' : 'שלח הזמנה'}
           </h1>
-          <p className="text-white/50">
+          <p className="text-white/55 text-sm">
             {status === 'connected' ? 'ממשיכים למסע...' : 'בחר איך לשלוח לפרטנרית שלך'}
           </p>
         </div>
@@ -114,7 +151,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
               {tab === 'link' && (
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-white/50 text-xs uppercase tracking-widest mb-2">
+                    <label className="block text-white/60 text-xs font-medium mb-2">
                       השם שלה (לפרסונליזציה)
                     </label>
                     <input
@@ -129,8 +166,8 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
 
                   {/* Preview של הקישור */}
                   <div className="bg-black/30 rounded-xl p-4 border border-white/8">
-                    <div className="text-white/25 text-[10px] uppercase tracking-widest mb-2">הקישור שישלח אליה</div>
-                    <p className="text-white/50 text-xs font-mono break-all leading-relaxed">
+                    <div className="text-white/45 text-xs mb-2">הקישור שישלח אליה</div>
+                    <p className="text-white/55 text-xs font-mono break-all leading-relaxed">
                       {inviteLink}
                     </p>
                   </div>
@@ -141,11 +178,11 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
                     style={{ background: 'linear-gradient(135deg, rgba(180,60,40,0.15), rgba(80,20,40,0.2))' }}
                   >
                     <div className="text-2xl mb-2">🕯️</div>
-                    <p className="text-white/60 text-xs uppercase tracking-widest mb-1">היא תראה</p>
+                    <p className="text-white/65 text-xs mb-1">היא תראה</p>
                     <p className="text-white text-sm font-light">
                       "{partnerName || 'את'} ❤ — הכנתי לך משהו"
                     </p>
-                    <p className="text-white/30 text-xs mt-1">דף נחיתה מסתורי ואינטימי</p>
+                    <p className="text-white/45 text-xs mt-1">דף נחיתה מסתורי ואינטימי</p>
                   </div>
 
                   {/* כפתורי שיתוף */}
@@ -180,7 +217,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
               {tab === 'code' && (
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-white/50 text-xs uppercase tracking-widest mb-2 text-center">
+                    <label className="block text-white/60 text-xs font-medium mb-2 text-center">
                       קוד החיבור
                     </label>
                     <div
@@ -202,19 +239,17 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
                     {copied ? '✅ הועתק!' : '📋 העתק קוד'}
                   </button>
 
-                  <div className="space-y-2.5 text-sm text-white/50">
-                    <div className="flex items-start gap-2">
-                      <span className="text-sexy-fuchsia">1.</span>
-                      <span>שלח את הקוד לפרטנרית</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-sexy-fuchsia">2.</span>
-                      <span>היא פותחת את האפליקציה → "הצטרפי למסע"</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-sexy-fuchsia">3.</span>
-                      <span>מדביקה את הקוד ומתחברת</span>
-                    </div>
+                  <div className="space-y-2.5">
+                    {[
+                      'שלח את הקוד לפרטנרית',
+                      'היא פותחת את האפליקציה ← "הצטרפי למסע"',
+                      'מדביקה את הקוד ומתחברת',
+                    ].map((step, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <span className="text-sm flex-shrink-0" style={{ color: 'rgba(183,110,121,0.85)' }}>{i + 1}.</span>
+                        <span className="text-sm text-white/65">{step}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -230,7 +265,7 @@ export const ConnectScreen: React.FC<ConnectScreenProps> = ({
                       style={{ animationDelay: `${d}ms` }} />
                   ))}
                 </div>
-                <span className="text-white/40 text-sm">מחכה לחיבור שלה...</span>
+                <span className="text-white/55 text-sm">מחכה לחיבור שלה...</span>
               </div>
             </div>
           </div>

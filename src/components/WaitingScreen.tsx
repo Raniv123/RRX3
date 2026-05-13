@@ -197,7 +197,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
           <div className="text-5xl mb-4 animate-bounce" style={{ animationDuration: '2s' }}>
             {isPrepMode ? '✨' : '🌙'}
           </div>
-          <p className="text-white/25 text-[10px] uppercase tracking-[0.45em] mb-3">
+          <p className="text-white/50 text-xs font-medium tracking-wider mb-3">
             {isPrepMode ? 'מתכוננים לערב' : 'הערב מגיע'}
           </p>
           <h1
@@ -207,7 +207,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
             {isPrepMode ? '30 דקות לפני...' : `הערב בשעה ${meetingTime}`}
           </h1>
           {!isPrepMode && (
-            <p className="text-white/35 text-sm mt-3 leading-relaxed">
+            <p className="text-white/55 text-sm mt-3 leading-relaxed">
               {isHost
                 ? `שמור את הקישור הזה — כאן תיכנס בשעה ${meetingTime}`
                 : `שמרי את הקישור הזה — כאן תיכנסי בשעה ${meetingTime}`
@@ -233,7 +233,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
             </div>
           ) : (
             <div>
-              <p className="text-white/25 text-[10px] uppercase tracking-widest mb-3">
+              <p className="text-white/50 text-xs font-medium tracking-widest mb-3">
                 עוד
               </p>
               <div className="flex items-center justify-center gap-3">
@@ -241,19 +241,19 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
                   <>
                     <div className="text-center">
                       <div className="text-4xl font-light text-white font-mono">{pad(timeLeft.h)}</div>
-                      <div className="text-white/30 text-[10px] mt-1">שעות</div>
+                      <div className="text-white/50 text-xs mt-1">שעות</div>
                     </div>
                     <div className="text-white/20 text-3xl font-light">:</div>
                   </>
                 )}
                 <div className="text-center">
                   <div className="text-4xl font-light text-white font-mono">{pad(timeLeft.m)}</div>
-                  <div className="text-white/30 text-[10px] mt-1">דקות</div>
+                  <div className="text-white/50 text-xs mt-1">דקות</div>
                 </div>
-                <div className="text-white/20 text-3xl font-light">:</div>
+                <div className="text-white/35 text-3xl font-light">:</div>
                 <div className="text-center">
                   <div className="text-4xl font-light text-white font-mono">{pad(timeLeft.s)}</div>
-                  <div className="text-white/30 text-[10px] mt-1">שניות</div>
+                  <div className="text-white/50 text-xs mt-1">שניות</div>
                 </div>
               </div>
             </div>
@@ -263,7 +263,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
         {/* Prep tips — מוצגים בכל מצב אבל בעדיפות ב-prepMode */}
         {(isPrepMode || isNearTime) && (
           <div className="mb-6">
-            <p className="text-white/25 text-[10px] uppercase tracking-[0.4em] text-center mb-4">
+            <p className="text-white/50 text-xs font-medium tracking-wider text-center mb-4">
               איך להתכונן
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -278,8 +278,8 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
                   }}
                 >
                   <div className="text-2xl mb-1">{tip.icon}</div>
-                  <div className="text-white/70 text-xs font-medium mb-1">{tip.title}</div>
-                  <div className="text-white/30 text-[10px] leading-relaxed">{tip.text}</div>
+                  <div className="text-white/80 text-xs font-medium mb-1">{tip.title}</div>
+                  <div className="text-white/55 text-xs leading-relaxed">{tip.text}</div>
                 </div>
               ))}
             </div>
@@ -325,7 +325,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
                   <span className="text-xl">🗓️</span>
                   <div>
                     <div className="font-medium">Google Calendar</div>
-                    <div className="text-white/35 text-xs">תזכורת הכנה ב-{
+                    <div className="text-white/50 text-xs">תזכורת הכנה ב-{
                       (() => {
                         const [h, m] = meetingTime.split(':').map(Number);
                         const prepH = h;
@@ -346,7 +346,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
                   <span className="text-xl">🍎</span>
                   <div className="text-right">
                     <div className="font-medium">Apple / Outlook / אחר</div>
-                    <div className="text-white/35 text-xs">הורדת קובץ .ics</div>
+                    <div className="text-white/50 text-xs">הורדת קובץ .ics</div>
                   </div>
                 </button>
               </div>
@@ -382,7 +382,7 @@ export const WaitingScreen: React.FC<WaitingScreenProps> = ({
         )}
 
         {!isTimeUp && (
-          <p className="text-white/15 text-[10px] text-center mt-5 leading-relaxed">
+          <p className="text-white/35 text-xs text-center mt-5 leading-relaxed">
             הדף הזה ישמר עם הקישור ביומן שלך
           </p>
         )}

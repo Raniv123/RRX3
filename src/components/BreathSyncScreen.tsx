@@ -229,7 +229,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
             {bothReady ? (
               /* Both confirmed */
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-3">
+                <p className="text-white/60 text-xs font-medium tracking-wider mb-3">
                   שניכם כאן
                 </p>
                 <h2
@@ -252,7 +252,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
             ) : myReady ? (
               /* I confirmed, waiting for partner */
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-3">
+                <p className="text-white/60 text-xs font-medium tracking-wider mb-3">
                   אישרת הגעה
                 </p>
                 <h2 className="text-3xl font-light text-white mb-3">
@@ -274,7 +274,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
             ) : (
               /* Not confirmed yet */
               <div>
-                <p className="text-white/30 text-xs uppercase tracking-[0.4em] mb-4">
+                <p className="text-white/55 text-xs font-medium tracking-wider mb-4">
                   אישור הגעה
                 </p>
                 <h2
@@ -307,7 +307,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
 
                 <button
                   onClick={onComplete}
-                  className="w-full py-3 mt-3 text-white/20 hover:text-white/40 transition-colors text-sm"
+                  className="w-full py-3 mt-3 text-white/50 hover:text-white/75 transition-colors text-sm"
                 >
                   דלג
                 </button>
@@ -332,7 +332,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
               </div>
             </div>
 
-            <p className="text-white/30 text-xs uppercase tracking-[0.4em] mb-4">לפני שמתחילים</p>
+            <p className="text-white/55 text-xs font-medium tracking-wider mb-4">לפני שמתחילים</p>
             <h2 className="text-3xl font-light text-white mb-3" style={{ textShadow: '0 0 30px rgba(180,60,40,0.4)' }}>
               רגע ביחד
             </h2>
@@ -342,18 +342,18 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
 
             <div className="flex items-center justify-center gap-8 mb-10">
               <div className="text-center">
-                <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">שאיפה</div>
-                <div className="text-white/50 text-sm">4 שניות</div>
+                <div className="text-white/50 text-xs font-medium mb-1">שאיפה</div>
+                <div className="text-white/70 text-sm">4 שניות</div>
               </div>
-              <div className="w-px h-6 bg-white/10" />
+              <div className="w-px h-6 bg-white/15" />
               <div className="text-center">
-                <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">עצירה</div>
-                <div className="text-white/50 text-sm">4 שניות</div>
+                <div className="text-white/50 text-xs font-medium mb-1">עצירה</div>
+                <div className="text-white/70 text-sm">4 שניות</div>
               </div>
-              <div className="w-px h-6 bg-white/10" />
+              <div className="w-px h-6 bg-white/15" />
               <div className="text-center">
-                <div className="text-white/20 text-[10px] uppercase tracking-widest mb-1">נשיפה</div>
-                <div className="text-white/50 text-sm">8 שניות</div>
+                <div className="text-white/50 text-xs font-medium mb-1">נשיפה</div>
+                <div className="text-white/70 text-sm">8 שניות</div>
               </div>
             </div>
 
@@ -375,7 +375,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
 
             <button
               onClick={onComplete}
-              className="w-full py-3 mt-2 text-white/20 hover:text-white/40 transition-colors text-sm"
+              className="w-full py-3 mt-2 text-white/50 hover:text-white/75 transition-colors text-sm"
             >
               דלג (לא מומלץ)
             </button>
@@ -387,8 +387,8 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
           <div style={{ animation: 'fadeSlideIn 0.6s ease forwards' }}>
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-white/25 text-[10px] uppercase tracking-widest">סבב {round}/{TOTAL_ROUNDS}</span>
-                <span className="text-white/25 text-[10px]">{Math.round(progress * 100)}%</span>
+                <span className="text-white/50 text-xs font-medium">סבב {round}/{TOTAL_ROUNDS}</span>
+                <span className="text-white/50 text-xs">{Math.round(progress * 100)}%</span>
               </div>
               <div className="h-px bg-white/8 rounded-full overflow-hidden">
                 <div
@@ -460,7 +460,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
               ))}
             </div>
 
-            <p className="text-white/25 text-xs">נשמו יחד. אתם מסונכרנים.</p>
+            <p className="text-white/50 text-xs">נשמו יחד. אתם מסונכרנים.</p>
           </div>
         )}
 
@@ -480,7 +480,7 @@ export const BreathSyncScreen: React.FC<BreathSyncScreenProps> = ({
                 <span className="text-5xl">🔥</span>
               </div>
             </div>
-            <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-4">מסונכרנים</p>
+            <p className="text-white/60 text-xs font-medium tracking-wider mb-4">מסונכרנים</p>
             <h2 className="text-3xl font-light text-white mb-3">המסע מתחיל.</h2>
             <p className="text-white/40 text-sm" style={{ animation: 'fadeSlideIn 1s ease forwards' }}>עכשיו.</p>
           </div>
