@@ -149,7 +149,7 @@ export class AIEngine {
   async createScenario(): Promise<Scenario> {
     try {
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), 10000)
+        setTimeout(() => reject(new Error('Timeout')), 25000)
       );
       return await Promise.race([this.generateScenarioWithAI(), timeoutPromise]);
     } catch (error) {
