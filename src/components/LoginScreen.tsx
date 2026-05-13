@@ -5,9 +5,10 @@ interface LoginScreenProps {
   onLogin: (channelId: string, isHost: boolean) => void;
   onResume?: () => void;
   onInvite?: () => void;  // כפתור הפתעה לפרטנרית
+  onSoloTest?: (gender: 'MAN' | 'WOMAN') => void; // מצב טסט סולו
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onInvite }) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onInvite, onSoloTest }) => {
   const [mode, setMode] = useState<'select' | 'create' | 'join'>('select');
   const [channelId, setChannelId] = useState('');
   const [error, setError] = useState('');
@@ -173,6 +174,37 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onResume, onI
               <p className="text-center text-white/35 text-xs pt-3 leading-relaxed">
                 שני המכשירים צריכים להיות מחוברים לאינטרנט
               </p>
+
+              {/* ── מצב טסט סולו — לפיתוח/בדיקות, בלי קוד ובלי שותף ── */}
+              {onSoloTest && (
+                <div className="pt-4 mt-2 border-t border-white/5">
+                  <p className="text-center text-amber-400/40 text-[9px] uppercase tracking-[3px] mb-2">
+                    🧪 מצב טסט — בלי קוד
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => onSoloTest('MAN')}
+                      className="py-2.5 rounded-xl text-xs font-medium text-blue-200/85 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                      style={{
+                        background: 'rgba(60,80,200,0.18)',
+                        border: '1px solid rgba(120,150,240,0.22)',
+                      }}
+                    >
+                      בדוק כגבר
+                    </button>
+                    <button
+                      onClick={() => onSoloTest('WOMAN')}
+                      className="py-2.5 rounded-xl text-xs font-medium text-pink-200/85 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                      style={{
+                        background: 'rgba(220,40,140,0.18)',
+                        border: '1px solid rgba(244,114,182,0.22)',
+                      }}
+                    >
+                      בדקי כאשה
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

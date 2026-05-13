@@ -197,6 +197,26 @@ function App() {
     }
   }, [scenario, isHost]);
 
+  // ── מצב טסט סולו — מדלג על כל ההתחברות ועובר ישר ל-PROTOCOL ──
+  const handleSoloTest = async (gender: 'MAN' | 'WOMAN') => {
+    const testChannelId = `test-${Math.floor(Math.random() * 9000) + 1000}`;
+    setChannelId(testChannelId);
+    setIsHost(gender === 'MAN');
+    setMyGender(gender);
+    setLoadingScenario(true);
+
+    try {
+      const newScenario = await aiEngine.current.createScenario();
+      const avatars = await aiEngine.current.generateAvatars(newScenario);
+      if (avatars.MAN || avatars.WOMAN) newScenario.avatars = avatars;
+      setScenario(newScenario);
+    } catch {
+      setScenario(aiEngine.current.getDefaultScenarioPublic());
+    }
+    setLoadingScenario(false);
+    setScreen('PROTOCOL');
+  };
+
   return (
     <div className="min-h-screen">
       {screen === 'INVITATION' && inviteParams && (
@@ -218,6 +238,7 @@ function App() {
           onLogin={handleLogin}
           onResume={handleResume}
           onInvite={() => setScreen('INVITE_COMPOSE')}
+          onSoloTest={handleSoloTest}
         />
       )}
 
